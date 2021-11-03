@@ -1,6 +1,6 @@
-This is what I used for frontend: https://mui.com (this is a react component library)
-Some useful templates: https://mui.com/getting-started/templates/
-Sourcecode: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates
+* This is what I used for frontend: https://mui.com (this is a react component library)
+* Some useful templates: https://mui.com/getting-started/templates/
+* Sourcecode: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates
 
 To resolve issues such as:
 ./src/components/Signup.js
