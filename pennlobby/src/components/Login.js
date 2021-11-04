@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid';
 // import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import './Login.css';
 
 // referenced from https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
 function Copyright() {
@@ -51,7 +52,7 @@ function Login() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
+            backgroundImage: 'url(../../login.png)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) => (t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900]),
             backgroundSize: 'cover',
@@ -59,6 +60,7 @@ function Login() {
           }}
         />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <img className="logo" src="../../logo.png" alt="logo_pic" />
           <Box
             sx={{
               my: 8,
@@ -80,9 +82,9 @@ function Login() {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Username"
                 name="email"
-                autoComplete="email"
+                autoComplete="Username"
                 autoFocus
               />
               <TextField
