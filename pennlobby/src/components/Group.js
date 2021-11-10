@@ -6,11 +6,16 @@ import { Container, Box } from "@mui/material";
 
 function Group() {
   const [groupName] = useState("Penn Football Club");
+  const [memberCnt] = useState(298);
+  const [groupDesc] = useState(
+    "Everything you need to know about Penn Football"
+  );
+  const [groupTags] = useState(["Football", "Sports", "Ivy Leagues"]);
 
   const buttons = [
-    <Button key="one">One</Button>,
-    <Button key="two">Two</Button>,
-    <Button key="three">Three</Button>,
+    <Button key="one">View Details</Button>,
+    <Button key="two">Join Group</Button>,
+    <Button key="three">Members</Button>,
   ];
 
   return (
