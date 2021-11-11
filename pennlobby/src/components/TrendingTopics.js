@@ -26,22 +26,22 @@ export default function TrendingTopics(props) {
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Grid className="topic">Top Trending Topics</Grid>
-          <TabList className="tablist" onChange={handleChange}>
+          <TabList className="tablist" onChange={handleChange} centered>
             <Tab label="Today" value="1" />
             <Tab label="Weekly" value="2" />
           </TabList>
         </Box>
         <TabPanel value="1">
-          {trendingTopicsToday.map((topic) => (
+          {trendingTopicsToday.map((topic, index) => (
             <ListItem>
-              {topic}
+              {`${(index + 1)}. ${topic}`}
             </ListItem>
           ))}
         </TabPanel>
         <TabPanel value="2">
-          {trendingTopicsWeekly.map((topic) => (
+          {trendingTopicsWeekly.map((topic, index) => (
             <ListItem>
-              {topic}
+              {`${(index + 1)}. ${topic}`}
             </ListItem>
           ))}
         </TabPanel>

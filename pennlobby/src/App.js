@@ -9,10 +9,6 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Home from './components/Home';
 import Lobby from './components/Lobby';
-import TrendingTopics from './components/TrendingTopics';
-
-const trendingTopicsToday = ['hi', 'hey', 'hhim'];
-const trendingTopicsWeekly = ['hiii', 'haaa', 'hhh'];
 
 function App() {
   return (
@@ -37,10 +33,6 @@ function App() {
           </Route>
         </Switch>
       </Router>
-      <TrendingTopics
-        trendingTopicsToday={trendingTopicsToday}
-        trendingTopicsWeekly={trendingTopicsWeekly}
-      />
     </div>
   );
 }

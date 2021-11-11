@@ -3,10 +3,10 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 // import CameraIcon from '@mui/icons-material/PhotoCamera';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+// import Card from '@mui/material/Card';
+// import CardActions from '@mui/material/CardActions';
+// import CardContent from '@mui/material/CardContent';
+// import CardMedia from '@mui/material/CardMedia';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 // import Stack from '@mui/material/Stack';
@@ -23,6 +23,8 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
+import TrendingTopics from './TrendingTopics';
+import FeaturedPost from './FeaturedPost';
 import './Lobby.css';
 
 function Copyright() {
@@ -39,7 +41,7 @@ function Copyright() {
   );
 }
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+// const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const theme = createTheme();
 
@@ -71,7 +73,64 @@ const sortMethod = [
   'Size: Small-Large',
   'Most Active',
 ];
-
+const featuredPosts = [
+  {
+    title: 'Penn Football',
+    size: '293',
+    description:
+      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+    image: 'https://source.unsplash.com/random',
+    imageLabel: 'Image Text',
+  },
+  {
+    title: 'Penn Musical Lovers',
+    size: '200',
+    description:
+      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+    image: 'https://source.unsplash.com/random',
+    imageLabel: 'Image Text',
+  },
+  {
+    title: 'Penn Residential',
+    size: '200',
+    description:
+      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+    image: 'https://source.unsplash.com/random',
+    imageLabel: 'Image Text',
+  },
+  {
+    title: 'Daily Philadelphia',
+    size: '200',
+    description:
+      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+    image: 'https://source.unsplash.com/random',
+    imageLabel: 'Image Text',
+  },
+];
+const trendingTopicsToday = [
+  'Music',
+  'Football',
+  'Sports',
+  'Ivy Leagues',
+  'Arts',
+  'Musical',
+  'Residential',
+  'Rent',
+  'Living',
+  'News',
+];
+const trendingTopicsWeekly = [
+  'Sports',
+  'Ivy Leagues',
+  'Arts',
+  'Musical',
+  'Residential',
+  'Rent',
+  'Living',
+  'News',
+  'Music',
+  'Football',
+];
 export default function Album() {
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
@@ -151,12 +210,12 @@ export default function Album() {
         {/* Filter and Sort options */}
         <Container maxWidth="lg" justify="flex-end">
           <Grid container spacing={4}>
-            <Grid item key={1} xs={9}>
+            <Grid item key={1} xs={6} md={9}>
               <Box
                 sx={{
                   bgcolor: 'background.paper',
                   pt: 4,
-                  pb: 6,
+                  pb: 2,
                 }}
               >
                 <Container maxWidth="md" justify="flex-end">
@@ -203,40 +262,19 @@ export default function Album() {
                 </Container>
               </Box>
               {/* Groups */}
-              <Container sx={{ py: 8 }} maxWidth="lg">
+              <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container spacing={4}>
-                  {cards.map((card) => (
-                    <Grid item key={card} xs={12} sm={6} md={4}>
-                      <Card
-                        sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-                      >
-                        <CardMedia
-                          component="img"
-                          sx={{
-                            // 16:9
-                            pt: '56.25%',
-                          }}
-                          image="https://source.unsplash.com/random"
-                          alt="random"
-                        />
-                        <CardContent sx={{ flexGrow: 1 }}>
-                          <Typography gutterBottom variant="h5" component="h2">
-                            Heading
-                          </Typography>
-                          <Typography>
-                            This is a media card. You can use this section to describe the
-                            content.
-                          </Typography>
-                        </CardContent>
-                        <CardActions>
-                          <Button size="small">View</Button>
-                          <Button size="small">Edit</Button>
-                        </CardActions>
-                      </Card>
-                    </Grid>
+                  {featuredPosts.map((post) => (
+                    <FeaturedPost key={post.title} post={post} />
                   ))}
                 </Grid>
               </Container>
+            </Grid>
+            <Grid item key={2} xs={6} md={3}>
+              <TrendingTopics
+                trendingTopicsToday={trendingTopicsToday}
+                trendingTopicsWeekly={trendingTopicsWeekly}
+              />
             </Grid>
           </Grid>
         </Container>
