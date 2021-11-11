@@ -8,6 +8,7 @@ import {
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Home from './components/Home';
+import Lobby from './components/Lobby';
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
           </Route>
           <Route path="/signup">
             <Signup />
+          </Route>
+          <Route path="/lobby">
+            <Lobby />
           </Route>
           {/* put this last because since it is empty, it will always be the first
             child to match the URL */}
