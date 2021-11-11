@@ -1,9 +1,6 @@
-import React from 'react';
-import {
-  Link,
-} from 'react-router-dom';
-// import Login from './Login';
-// import Signup from './Signup';
+import React from "react";
+import { Link } from "react-router-dom";
+import Group from "./Group";
 
 function Home() {
   return (
@@ -16,6 +13,7 @@ function Home() {
           <Link to="/signup">Click to see the sign up page</Link>
         </li>
       </ul>
+      <Group />
     </div>
   );
 }
