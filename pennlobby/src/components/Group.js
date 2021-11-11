@@ -5,12 +5,13 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import { Container, Box } from "@mui/material";
 
 function Group() {
+  // use Card
   const [groupName] = useState("Penn Football Club");
-  const [memberCnt] = useState(298);
-  const [groupDesc] = useState(
-    "Everything you need to know about Penn Football"
-  );
-  const [groupTags] = useState(["Football", "Sports", "Ivy Leagues"]);
+  // const [memberCnt] = useState(298);
+  // const [groupDesc] = useState(
+  //   "Everything you need to know about Penn Football"
+  // );
+  // const [groupTags] = useState(["Football", "Sports", "Ivy Leagues"]);
 
   const buttons = [
     <Button key="one">View Details</Button>,
