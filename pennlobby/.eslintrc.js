@@ -4,23 +4,23 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: [
-    'plugin:react/recommended',
-    'airbnb',
-  ],
+  extends: ["plugin:react/recommended", "airbnb"],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
     ecmaVersion: 2020,
-    sourceType: 'module',
+    sourceType: "module",
   },
-  plugins: [
-    'react',
-  ],
+  plugins: ["react"],
   rules: {
-    'react/jsx-filename-extension': 'off',
-    'react/prop-types': 'off',
-    'linebreak-style': 0,
+    "react/jsx-filename-extension": "off",
+    quotes: "off",
+    "react/jsx-one-expression-per-line": "off",
+    "implicit-arrow-linebreak": "off",
+    "no-confusing-arrow": "off",
+    "react/jsx-filename-extension": "off",
+    "react/prop-types": "off",
+    "linebreak-style": 0,
   },
 };
