@@ -15,6 +15,9 @@ function Home() {
         <li>
           <Link to="/lobby">Click to see the main page</Link>
         </li>
+        <li>
+          <Link to="/profile">Click to see the profile page</Link>
+        </li>
       </ul>
       <Group />
     </div>
