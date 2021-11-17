@@ -34,14 +34,14 @@ export default function TrendingTopics(props) {
         <TabPanel value="1">
           {trendingTopicsToday.map((topic, index) => (
             <ListItem>
-              {`${(index + 1)}. ${topic}`}
+              {`${(index + 1)}.  ${topic}`}
             </ListItem>
           ))}
         </TabPanel>
         <TabPanel value="2">
           {trendingTopicsWeekly.map((topic, index) => (
             <ListItem>
-              {`${(index + 1)}. ${topic}`}
+              {`${(index + 1)}.  ${topic}`}
             </ListItem>
           ))}
         </TabPanel>
