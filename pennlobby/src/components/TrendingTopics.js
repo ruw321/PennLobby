@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import * as React from 'react';
+
 import './TrendingTopics.css';
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
@@ -24,11 +25,19 @@ export default function TrendingTopics(props) {
   return (
     <Box className="trendingTopicsContainer">
       <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box sx={{
+          borderBottom: 1, borderColor: 'divider',
+        }}
+        >
           <Grid className="topic">Top Trending Topics</Grid>
-          <TabList className="tablist" onChange={handleChange}>
+          <TabList
+            className="tablist"
+            onChange={handleChange}
+          >
+
             <Tab label="Today" value="1" />
             <Tab label="Weekly" value="2" />
+
           </TabList>
         </Box>
         <TabPanel value="1">
