@@ -12,6 +12,9 @@ function Home() {
         <li>
           <Link to="/signup">Click to see the sign up page</Link>
         </li>
+        <li>
+          <Link to="/lobby">Click to see the main page</Link>
+        </li>
       </ul>
       <Group />
     </div>

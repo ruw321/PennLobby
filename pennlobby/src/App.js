@@ -8,10 +8,7 @@ import {
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Home from './components/Home';
-import TrendingTopics from './components/TrendingTopics';
-
-const trendingTopicsToday = ['hi', 'hey', 'hhim'];
-const trendingTopicsWeekly = ['hiii', 'haaa', 'hhh'];
+import Lobby from './components/Lobby';
 
 function App() {
   return (
@@ -26,6 +23,9 @@ function App() {
           <Route path="/signup">
             <Signup />
           </Route>
+          <Route path="/lobby">
+            <Lobby />
+          </Route>
           {/* put this last because since it is empty, it will always be the first
             child to match the URL */}
           <Route path="/">
@@ -33,10 +33,6 @@ function App() {
           </Route>
         </Switch>
       </Router>
-      <TrendingTopics
-        trendingTopicsToday={trendingTopicsToday}
-        trendingTopicsWeekly={trendingTopicsWeekly}
-      />
     </div>
   );
 }
