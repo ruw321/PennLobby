@@ -1,0 +1,36 @@
+.groupBtn1{
+  height: 33.3%;
+  background-color: #1991FF !important;
+  border: #1991FF !important;
+}
+.groupBtn1:hover{
+  background-color: #166bb9 !important;
+  border: #166bb9 !important;
+}
+.groupBtn2{
+  height: 33.3%;
+  background-color: #2DC0A6 !important;
+  border: #2DC0A6 !important;
+}
+.groupBtn2:hover{
+  background-color: #0Da096 !important;
+  border: #0Da096 !important;
+}
+.groupBtn3{
+  height: 33.3%;
+  background-color: #F6C244 !important;
+  border: #F6C244 !important;
+}
+.groupBtn3:hover{
+  background-color: #c79623 !important;
+  border: #c79623 !important;
+}
+.groupBtnGroup{
+  width: 100%;
+  margin: 0px 0px 1px 5px !important;
+}
+.tagsBtn{
+  text-transform: none !important;
+  border: #1976d2 1px solid !important;
+  margin: 0px 2px 0px 2px !important;
+}

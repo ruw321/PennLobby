@@ -209,7 +209,7 @@ export default function Album() {
         {/* Hero unit */}
         {/* Filter and Sort options */}
         <Container maxWidth="lg" justify="flex-end">
-          <Grid container spacing={4}>
+          <Grid container spacing={2}>
             <Grid item key={1} xs={6} md={9}>
               <Box
                 sx={{
@@ -263,7 +263,7 @@ export default function Album() {
               </Box>
               {/* Groups */}
               <Container sx={{ pt: 2 }} maxWidth="lg">
-                <Grid container spacing={4}>
+                <Grid container rowSpacing={3} columnSpacing={0}>
                   {featuredPosts.map((post) => (
                     <FeaturedPost key={post.title} post={post} />
                   ))}
