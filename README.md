@@ -6,10 +6,10 @@
 | :----: | :----: |
 | master | main branch to accept production-ready codes only |
 | development | dev branch to merge incoming changes from 4 personal branches |
-| miaoyan | personal branch |
-| ruichen | personal branch |
-| wang | personal branch |
-| yang | personal branch |
+| miaoyan | Miaoyan Zhang's personal branch |
+| ruichen | Ruichen Zhang's personal branch |
+| wang | Ruifan Wang's personal branch |
+| yang | Yang Zhang's personal branch |
 | unit-test | unit test branch |
 | end-to-end-test | cypress test branch |
 
