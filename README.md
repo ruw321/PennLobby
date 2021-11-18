@@ -2,33 +2,33 @@
 
 ### 1. Branches
 
-| branch name | description |
-| :----: | :----: |
-| master | main branch to accept production-ready codes only |
-| development | dev branch to merge incoming changes from 4 personal branches |
-| miaoyan | Miaoyan Zhang's personal branch |
-| ruichen | Ruichen Zhang's personal branch |
-| wang | Ruifan Wang's personal branch |
-| yang | Yang Zhang's personal branch |
-| unit-test | unit test branch |
-| end-to-end-test | cypress test branch |
+|   branch name   |                          description                          |
+| :-------------: | :-----------------------------------------------------------: |
+|     master      |       main branch to accept production-ready codes only       |
+|   development   | dev branch to merge incoming changes from 4 personal branches |
+|     miaoyan     |                Miaoyan Zhang's personal branch                |
+|     ruichen     |                Ruichen Zhang's personal branch                |
+|      wang       |                 Ruifan Wang's personal branch                 |
+|      yang       |                 Yang Zhang's personal branch                  |
+|    unit-test    |                       unit test branch                        |
+| end-to-end-test |                      cypress test branch                      |
 
 ### 2. File Structure
 
 ```
 pennlobby
 ├── public                 # store static files (logos, pictures, etc.)
-├── src            
-|   ├── components         # js files (e.g. Home.js)          
-|   ├── styles             # css files (e.g. Home.css) 
+├── src
+|   ├── components         # js files (e.g. Home.js)
+|   ├── styles             # css files (e.g. Home.css)
 |   ├── tests              # test files (e.g. Home.test.js)
-|   ├── App.js           
-|   └── App.css    
-|   ├── index.js       
-|   ├── index.css             
-|   ├── setupTests.js         
-|   └── reportWebVitals.js  
-├── .eslintrc.js           
+|   ├── App.js
+|   └── App.css
+|   ├── index.js
+|   ├── index.css
+|   ├── setupTests.js
+|   └── reportWebVitals.js
+├── .eslintrc.js
 ├── .gitignore
 ├── package.json
 ├── package-lock.json
@@ -52,3 +52,4 @@ pennlobby
 2. [SwaggerHub APIs](https://app.swaggerhub.com/organizations/cis557-penn-lobby)
 3. [MUI Component Library](https://mui.com)
 4. [MUI Templates](https://mui.com/getting-started/templates/)
+5. [DB Schema Design](https://docs.google.com/document/d/e/2PACX-1vT2osuKE9V8LGh9TzX6qkJAsVPpPvGKPkk7NOG0wbeyTRxq2XeLGg2FKLGx7k8tHtiAWDlZ7yqztzI4/pub)

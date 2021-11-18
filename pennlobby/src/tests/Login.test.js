@@ -7,3 +7,9 @@ test("renders app name", () => {
   const linkElement = screen.getByText(/PennLobby/i);
   expect(linkElement).toBeInTheDocument();
 });
+
+test("login button test", () => {
+  render(<Login />);
+  const signup = document.querySelector(".login-button");
+  signup.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+});
