@@ -117,7 +117,7 @@ export default function Album() {
                   borderRadius: '50%', height: 120, width: 120, display: { xs: 'none', sm: 'block' },
                 }}
                 image="https://picsum.photos/536/354"
-              />  
+              />
             </Grid>
           </Container>
 
