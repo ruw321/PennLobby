@@ -106,6 +106,7 @@ function Login() {
                 label="Remember me"
               />
               <Button
+                className = "login-button"
                 type="submit"
                 fullWidth
                 variant="contained"
