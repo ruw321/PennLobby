@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Group from "./Group";
 
 function Home() {
   return (
@@ -19,7 +18,6 @@ function Home() {
           <Link to="/profile">Click to see the profile page</Link>
         </li>
       </ul>
-      <Group />
     </div>
   );
 }

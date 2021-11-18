@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 // import CardMedia from '@mui/material/CardMedia';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-// import Stack from '@mui/material/Stack';
+import { makeStyles } from "@material-ui/core/styles";
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -40,8 +40,6 @@ function Copyright() {
     </Typography>
   );
 }
-
-// const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const theme = createTheme();
 
@@ -131,7 +129,7 @@ const trendingTopicsWeekly = [
   'Music',
   'Football',
 ];
-export default function Album() {
+function Album() {
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
 
@@ -153,6 +151,18 @@ export default function Album() {
       typeof value === 'string' ? value.split(',') : value,
     );
   };
+  const useStyles = makeStyles({
+    // This group of buttons will be aligned to the right
+    rightToolbar: {
+      marginLeft: "auto",
+      marginRight: -12,
+    },
+    menuButton: {
+      marginRight: 16,
+      marginLeft: -12,
+    },
+  });
+  const classes = useStyles();
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -163,7 +173,7 @@ export default function Album() {
         sx={{ borderBottom: (themes) => `1px solid ${themes.palette.divider}` }}
       >
         <Toolbar sx={{ flexWrap: 'wrap' }}>
-          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 0.3 }}>
             <img className="barLogo" src="../../logo.png" alt="logo_pic" />
           </Typography>
           <nav>
@@ -171,7 +181,8 @@ export default function Album() {
               variant="button"
               color="text.primary"
               href="#"
-              sx={{ my: 1, mx: 1.5 }}
+              sx={{ my: 1, mx: 7 }}
+              id="home"
             >
               Home
             </Link>
@@ -179,7 +190,8 @@ export default function Album() {
               variant="button"
               color="text.primary"
               href="#"
-              sx={{ my: 1, mx: 1.5 }}
+              sx={{ my: 1, mx: 7 }}
+              id="mygroups"
             >
               My Groups
             </Link>
@@ -187,7 +199,8 @@ export default function Album() {
               variant="button"
               color="text.primary"
               href="#"
-              sx={{ my: 1, mx: 1.5 }}
+              sx={{ my: 1, mx: 7 }}
+              id="myposts"
             >
               My Posts
             </Link>
@@ -195,21 +208,24 @@ export default function Album() {
               variant="button"
               color="text.primary"
               href="#"
-              sx={{ my: 1, mx: 1.5 }}
+              sx={{ my: 1, mx: 7 }}
+              id="messages"
             >
               Messages
             </Link>
           </nav>
-          <Button href="#" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-            Login
-          </Button>
+          <section className={classes.rightToolbar}>
+            <Button href="./login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+              Login
+            </Button>
+          </section>
         </Toolbar>
       </AppBar>
       <main>
         {/* Hero unit */}
         {/* Filter and Sort options */}
         <Container maxWidth="lg" justify="flex-end">
-          <Grid container spacing={4}>
+          <Grid container spacing={2}>
             <Grid item key={1} xs={6} md={9}>
               <Box
                 sx={{
@@ -263,7 +279,7 @@ export default function Album() {
               </Box>
               {/* Groups */}
               <Container sx={{ pt: 2 }} maxWidth="lg">
-                <Grid container spacing={4}>
+                <Grid container rowSpacing={3} columnSpacing={0}>
                   {featuredPosts.map((post) => (
                     <FeaturedPost key={post.title} post={post} />
                   ))}
@@ -298,3 +314,5 @@ export default function Album() {
     </ThemeProvider>
   );
 }
+
+export default Album;

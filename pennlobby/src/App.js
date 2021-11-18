@@ -7,7 +7,6 @@ import {
 } from 'react-router-dom';
 import Login from './components/Login';
 import Signup from './components/Signup';
-import Home from './components/Home';
 import Lobby from './components/Lobby';
 import Profile from './components/Profile';
 
@@ -33,7 +32,7 @@ function App() {
           {/* put this last because since it is empty, it will always be the first
             child to match the URL */}
           <Route path="/">
-            <Home />
+            <Lobby />
           </Route>
         </Switch>
       </Router>
