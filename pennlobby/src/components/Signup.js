@@ -135,6 +135,7 @@ function Signup() {
                 </Grid>
               </Grid>
               <Button
+                className="signup-button"
                 type="submit"
                 fullWidth
                 variant="contained"
@@ -144,7 +145,7 @@ function Signup() {
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link href="/login" variant="body2">
+                  <Link href="/login" variant="body2" className="signup-link">
                     Already have an account? Sign in
                   </Link>
                 </Grid>
