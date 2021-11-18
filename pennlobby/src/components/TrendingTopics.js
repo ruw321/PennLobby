@@ -37,14 +37,7 @@ export default function TrendingTopics(props) {
         </Box>
         <TabPanel value="1">
           {trendingTopicsToday.map((topic, index) => (
-            <ListItem>
-              {`${(index + 1)}.  ${topic}`}
-            </ListItem>
-          ))}
-        </TabPanel>
-        <TabPanel value="2">
-          {trendingTopicsWeekly.map((topic, index) => (
-            <ListItem>
+            <ListItem key={topic}>
               {`${(index + 1)}.  ${topic}`}
             </ListItem>
           ))}
