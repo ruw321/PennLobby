@@ -1,6 +1,9 @@
 @import "./styles/Login.css";
 @import "./styles/Signup.css";
 @import "./styles/Group.css";
+@import "./styles/TrendingTopics.css";
+@import "./styles/FeaturedPost.css";
+@import "./styles/Lobby.css";
 
 body {
   margin: 0;

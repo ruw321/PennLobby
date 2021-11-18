@@ -1,28 +1,29 @@
-import * as React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import PropTypes from 'prop-types';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Box from '@mui/material/Box';
-import './FeaturedPost.css';
+import * as React from "react";
+import PropTypes from "prop-types";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Box from "@mui/material/Box";
 
 const buttons = [
-  <Button key="one" className="groupBtn1" style={{ textTransform: 'none' }}>View Detail</Button>,
-  <Button key="two" className="groupBtn2" style={{ textTransform: 'none' }}>Join Group</Button>,
-  <Button key="three" className="groupBtn3" style={{ textTransform: 'none' }}>Members</Button>,
+  <Button key="one" className="groupBtn1" style={{ textTransform: "none" }}>
+    View Detail
+  </Button>,
+  <Button key="two" className="groupBtn2" style={{ textTransform: "none" }}>
+    Join Group
+  </Button>,
+  <Button key="three" className="groupBtn3" style={{ textTransform: "none" }}>
+    Members
+  </Button>,
 ];
 
-const tags = [
-  'Football',
-  'Sports',
-  'tag3',
-];
+const tags = ["Football", "Sports", "tag3"];
 
 function FeaturedPost(props) {
   const { post } = props;
@@ -31,7 +32,7 @@ function FeaturedPost(props) {
     <>
       <Grid item xs={9} md={9}>
         <CardActionArea component="a" href="#">
-          <Card sx={{ display: 'flex', height: '200px' }}>
+          <Card sx={{ display: "flex", height: "200px" }}>
             <CardContent sx={{ flex: 1 }}>
               <Typography component="h2" variant="h5">
                 {post.title}
@@ -45,13 +46,15 @@ function FeaturedPost(props) {
               </Typography>
               <Typography variant="subtitle1" color="primary">
                 {tags.map((tag) => (
-                  <Button key={tag} value={tag} className="tagsBtn">{tag}</Button>
+                  <Button key={tag} value={tag} className="tagsBtn">
+                    {tag}
+                  </Button>
                 ))}
               </Typography>
             </CardContent>
             <CardMedia
               component="img"
-              sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
+              sx={{ width: 160, display: { xs: "none", sm: "block" } }}
               image={post.image}
               alt={post.imageLabel}
             />
@@ -61,10 +64,10 @@ function FeaturedPost(props) {
       <Grid item xs={3} md={3}>
         <Box
           sx={{
-            display: 'flex',
-            width: '100%',
-            height: '100%',
-            '& > *': {
+            display: "flex",
+            width: "100%",
+            height: "100%",
+            "& > *": {
               m: 1,
             },
           }}
