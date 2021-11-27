@@ -1,42 +1,34 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Button from '@mui/material/Button';
-// import CameraIcon from '@mui/icons-material/PhotoCamera';
-// import Card from '@mui/material/Card';
-// import CardActions from '@mui/material/CardActions';
-// import CardContent from '@mui/material/CardContent';
-// import CardMedia from '@mui/material/CardMedia';
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import ListItemText from '@mui/material/ListItemText';
-import Select from '@mui/material/Select';
-import Checkbox from '@mui/material/Checkbox';
-import TrendingTopics from './TrendingTopics';
-import FeaturedPost from './FeaturedPost';
-import './Lobby.css';
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import ListItemText from "@mui/material/ListItemText";
+import Select from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
+import TrendingTopics from "./TrendingTopics";
+import FeaturedPost from "./FeaturedPost";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
+      {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
         Your Website
-      </Link>
-      {' '}
-      {new Date().getFullYear()}
-      .
+      </Link>{" "}
+      {new Date().getFullYear()}.
     </Typography>
   );
 }
@@ -54,80 +46,80 @@ const MenuProps = {
   },
 };
 const topics = [
-  'Music',
-  'Football',
-  'Sports',
-  'Ivy Leagues',
-  'Arts',
-  'Musical',
-  'Residential',
-  'Rent',
-  'Living',
-  'News',
+  "Music",
+  "Football",
+  "Sports",
+  "Ivy Leagues",
+  "Arts",
+  "Musical",
+  "Residential",
+  "Rent",
+  "Living",
+  "News",
 ];
 const sortMethod = [
-  'Recently Active',
-  'Size: Large-Small',
-  'Size: Small-Large',
-  'Most Active',
+  "Recently Active",
+  "Size: Large-Small",
+  "Size: Small-Large",
+  "Most Active",
 ];
 const featuredPosts = [
   {
-    title: 'Penn Football',
-    size: '293',
+    title: "Penn Football",
+    size: "293",
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random',
-    imageLabel: 'Image Text',
+      "This is a wider card with supporting text below as a natural lead-in to additional content.",
+    image: "https://source.unsplash.com/random",
+    imageLabel: "Image Text",
   },
   {
-    title: 'Penn Musical Lovers',
-    size: '200',
+    title: "Penn Musical Lovers",
+    size: "200",
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random',
-    imageLabel: 'Image Text',
+      "This is a wider card with supporting text below as a natural lead-in to additional content.",
+    image: "https://source.unsplash.com/random",
+    imageLabel: "Image Text",
   },
   {
-    title: 'Penn Residential',
-    size: '200',
+    title: "Penn Residential",
+    size: "200",
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random',
-    imageLabel: 'Image Text',
+      "This is a wider card with supporting text below as a natural lead-in to additional content.",
+    image: "https://source.unsplash.com/random",
+    imageLabel: "Image Text",
   },
   {
-    title: 'Daily Philadelphia',
-    size: '200',
+    title: "Daily Philadelphia",
+    size: "200",
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random',
-    imageLabel: 'Image Text',
+      "This is a wider card with supporting text below as a natural lead-in to additional content.",
+    image: "https://source.unsplash.com/random",
+    imageLabel: "Image Text",
   },
 ];
 const trendingTopicsToday = [
-  'Music',
-  'Football',
-  'Sports',
-  'Ivy Leagues',
-  'Arts',
-  'Musical',
-  'Residential',
-  'Rent',
-  'Living',
-  'News',
+  "Music",
+  "Football",
+  "Sports",
+  "Ivy Leagues",
+  "Arts",
+  "Musical",
+  "Residential",
+  "Rent",
+  "Living",
+  "News",
 ];
 const trendingTopicsWeekly = [
-  'Sports',
-  'Ivy Leagues',
-  'Arts',
-  'Musical',
-  'Residential',
-  'Rent',
-  'Living',
-  'News',
-  'Music',
-  'Football',
+  "Sports",
+  "Ivy Leagues",
+  "Arts",
+  "Musical",
+  "Residential",
+  "Rent",
+  "Living",
+  "News",
+  "Music",
+  "Football",
 ];
 function Album() {
   const [selectTopics, setSelectTopics] = React.useState([]);
@@ -139,7 +131,7 @@ function Album() {
     } = event;
     setSelectTopics(
       // On autofill we get a the stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(",") : value,
     );
   };
   const handleChangeSortBy = (event) => {
@@ -148,7 +140,7 @@ function Album() {
     } = event;
     setSelectSortBy(
       // On autofill we get a the stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(",") : value,
     );
   };
   const useStyles = makeStyles({
@@ -172,8 +164,13 @@ function Album() {
         elevation={0}
         sx={{ borderBottom: (themes) => `1px solid ${themes.palette.divider}` }}
       >
-        <Toolbar sx={{ flexWrap: 'wrap' }}>
-          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 0.3 }}>
+        <Toolbar sx={{ flexWrap: "wrap" }}>
+          <Typography
+            variant="h6"
+            color="inherit"
+            noWrap
+            sx={{ flexGrow: 0.3 }}
+          >
             <img className="barLogo" src="../../logo.png" alt="logo_pic" />
           </Typography>
           <nav>
@@ -229,7 +226,7 @@ function Album() {
             <Grid item key={1} xs={6} md={9}>
               <Box
                 sx={{
-                  bgcolor: 'background.paper',
+                  bgcolor: "background.paper",
                   pt: 4,
                   pb: 2,
                 }}
@@ -237,7 +234,9 @@ function Album() {
                 <Container maxWidth="md" justify="flex-end">
                   <div>
                     <FormControl sx={{ m: 1, width: 250 }}>
-                      <InputLabel id="demo-multiple-checkbox-label">Filter Topics</InputLabel>
+                      <InputLabel id="demo-multiple-checkbox-label">
+                        Filter Topics
+                      </InputLabel>
                       <Select
                         labelId="demo-multiple-checkbox-label"
                         id="demo-multiple-checkbox"
@@ -245,26 +244,30 @@ function Album() {
                         value={selectTopics}
                         onChange={handleChangeTopics}
                         input={<OutlinedInput label="Filter Topics" />}
-                        renderValue={(selected) => selected.join(', ')}
+                        renderValue={(selected) => selected.join(", ")}
                         MenuProps={MenuProps}
                       >
                         {topics.map((name) => (
                           <MenuItem key={name} value={name}>
-                            <Checkbox checked={selectTopics.indexOf(name) > -1} />
+                            <Checkbox
+                              checked={selectTopics.indexOf(name) > -1}
+                            />
                             <ListItemText primary={name} />
                           </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
                     <FormControl sx={{ m: 1, width: 250 }}>
-                      <InputLabel id="demo-multiple-checkbox-label">Sort by</InputLabel>
+                      <InputLabel id="demo-multiple-checkbox-label">
+                        Sort by
+                      </InputLabel>
                       <Select
                         labelId="demo-multiple-checkbox-label"
                         id="demo-multiple-checkbox"
                         value={selectSortBy}
                         onChange={handleChangeSortBy}
                         input={<OutlinedInput label="Topics" />}
-                        renderValue={(selected) => selected.join(', ')}
+                        renderValue={(selected) => selected.join(", ")}
                         MenuProps={MenuProps}
                       >
                         {sortMethod.map((name) => (
@@ -296,7 +299,7 @@ function Album() {
         </Container>
       </main>
       {/* Footer */}
-      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
+      <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
           Footer
         </Typography>

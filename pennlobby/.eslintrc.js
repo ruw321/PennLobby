@@ -22,5 +22,6 @@ module.exports = {
     "react/jsx-filename-extension": "off",
     "react/prop-types": "off",
     "linebreak-style": 0,
+    "import/no-extraneous-dependencies": "off",
   },
 };

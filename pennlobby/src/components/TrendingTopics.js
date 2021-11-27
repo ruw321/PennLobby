@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-vars */
 import * as React from 'react';
-
-import './TrendingTopics.css';
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
