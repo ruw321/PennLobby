@@ -64,7 +64,7 @@ export default function Album() {
             <Link
               variant="button"
               color="text.primary"
-              href="#"
+              href="/"
               sx={{ my: 1, mx: 1.5 }}
             >
               Home
@@ -88,7 +88,7 @@ export default function Album() {
             <Link
               variant="button"
               color="text.primary"
-              href="#"
+              href="/message"
               sx={{ my: 1, mx: 1.5 }}
             >
               Messages
