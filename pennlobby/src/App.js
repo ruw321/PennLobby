@@ -8,6 +8,8 @@ import {
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Lobby from './components/Lobby';
+import Group from './components/Group';
+import Post from './components/Post';
 import Profile from './components/Profile';
 import Message from './components/Message';
 
@@ -26,6 +28,12 @@ function App() {
           </Route>
           <Route path="/lobby">
             <Lobby />
+          </Route>
+          <Route path="/group">
+            <Group />
+          </Route>
+          <Route path="/post">
+            <Post />
           </Route>
           <Route path="/profile">
             <Profile />

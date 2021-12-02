@@ -1,0 +1,16 @@
+.comments{
+    background: #eeeeee;
+    padding: 2px 0px 2px 40px;
+    border-bottom: 1px solid #666666;
+}
+.reply{
+    background: #eeeeee;
+    padding: 15px 10px 10px 10px;
+    border-bottom: 1px solid #666666;
+}
+.replyButton{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin: 15px 0px 0px 0px;
+}

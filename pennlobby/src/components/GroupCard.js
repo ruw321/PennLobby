@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Box from "@mui/material/Box";
 
-const buttons = [
+const buttonsNotIn = [
   <Button key="one" className="groupBtn1" style={{ textTransform: "none" }}>
     View Detail
   </Button>,
@@ -22,11 +22,22 @@ const buttons = [
     Members
   </Button>,
 ];
+const buttonsIn = [
+  <Button key="one" className="groupBtn1" style={{ textTransform: "none" }}>
+    View Detail
+  </Button>,
+  <Button key="two" className="groupBtn4" style={{ textTransform: "none" }}>
+    Quit Group
+  </Button>,
+  <Button key="three" className="groupBtn3" style={{ textTransform: "none" }}>
+    Members
+  </Button>,
+];
 
 const tags = ["Football", "Sports", "tag3"];
 
-function FeaturedPost(props) {
-  const { post } = props;
+function GroupCard(props) {
+  const { post, whetherIn } = props;
 
   return (
     <>
@@ -78,7 +89,7 @@ function FeaturedPost(props) {
             variant="contained"
             className="groupBtnGroup"
           >
-            {buttons}
+            {whetherIn ? buttonsIn : buttonsNotIn}
           </ButtonGroup>
         </Box>
       </Grid>
@@ -86,7 +97,7 @@ function FeaturedPost(props) {
   );
 }
 
-FeaturedPost.propTypes = {
+GroupCard.propTypes = {
   post: PropTypes.shape({
     size: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
@@ -96,4 +107,4 @@ FeaturedPost.propTypes = {
   }).isRequired,
 };
 
-export default FeaturedPost;
+export default GroupCard;
