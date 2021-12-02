@@ -179,6 +179,7 @@ function Lobby() {
               color="text.primary"
               href="#"
               sx={{ my: 1, mx: 7 }}
+              fontWeight="600"
               id="home"
             >
               Home
@@ -204,7 +205,7 @@ function Lobby() {
             <Link
               variant="button"
               color="text.primary"
-              href="#"
+              href="/message"
               sx={{ my: 1, mx: 7 }}
               id="messages"
             >

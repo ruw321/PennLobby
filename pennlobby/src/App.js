@@ -11,6 +11,7 @@ import Lobby from './components/Lobby';
 import Group from './components/Group';
 import Post from './components/Post';
 import Profile from './components/Profile';
+import Message from './components/Message';
 
 function App() {
   return (
@@ -36,6 +37,9 @@ function App() {
           </Route>
           <Route path="/profile">
             <Profile />
+          </Route>
+          <Route path="/message">
+            <Message />
           </Route>
           {/* put this last because since it is empty, it will always be the first
             child to match the URL */}
