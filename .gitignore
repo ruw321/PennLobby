@@ -1,1 +1,6 @@
-/node_modules
+coverage
+api/node_modules
+api/coverage
+client/node_modules
+client/coverage
+node_modules

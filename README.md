@@ -13,7 +13,7 @@
 |    unit-test    |                       unit test branch                        |
 | end-to-end-test |                      cypress test branch                      |
 
-### 2. File Structure
+### 2. Frontend File Structure
 
 ```
 pennlobby
