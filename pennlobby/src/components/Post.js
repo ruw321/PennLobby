@@ -11,15 +11,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import ListItemText from "@mui/material/ListItemText";
-import Select from "@mui/material/Select";
-import Checkbox from "@mui/material/Checkbox";
 import TrendingTopics from "./TrendingTopics";
-import GroupCard from "./GroupCard";
+import PostCard from "./PostCard";
 
 function Copyright() {
   return (
@@ -35,35 +28,7 @@ function Copyright() {
 
 const theme = createTheme();
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-const topics = [
-  "Music",
-  "Football",
-  "Sports",
-  "Ivy Leagues",
-  "Arts",
-  "Musical",
-  "Residential",
-  "Rent",
-  "Living",
-  "News",
-];
-const sortMethod = [
-  "Recently Active",
-  "Size: Large-Small",
-  "Size: Small-Large",
-  "Most Active",
-];
-const groupCards = [
+const postCards = [
   {
     title: "Penn Football",
     size: "293",
@@ -121,28 +86,7 @@ const trendingTopicsWeekly = [
   "Music",
   "Football",
 ];
-function Lobby() {
-  const [selectTopics, setSelectTopics] = React.useState([]);
-  const [selectSortBy, setSelectSortBy] = React.useState([]);
-
-  const handleChangeTopics = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setSelectTopics(
-      // On autofill we get a the stringified value.
-      typeof value === "string" ? value.split(",") : value,
-    );
-  };
-  const handleChangeSortBy = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setSelectSortBy(
-      // On autofill we get a the stringified value.
-      typeof value === "string" ? value.split(",") : value,
-    );
-  };
+function MyGroup() {
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
@@ -230,61 +174,12 @@ function Lobby() {
                   pt: 4,
                   pb: 2,
                 }}
-              >
-                <Container maxWidth="md" justify="flex-end">
-                  <div>
-                    <FormControl sx={{ m: 1, width: 250 }}>
-                      <InputLabel id="demo-multiple-checkbox-label">
-                        Filter Topics
-                      </InputLabel>
-                      <Select
-                        labelId="demo-multiple-checkbox-label"
-                        id="demo-multiple-checkbox"
-                        multiple
-                        value={selectTopics}
-                        onChange={handleChangeTopics}
-                        input={<OutlinedInput label="Filter Topics" />}
-                        renderValue={(selected) => selected.join(", ")}
-                        MenuProps={MenuProps}
-                      >
-                        {topics.map((name) => (
-                          <MenuItem key={name} value={name}>
-                            <Checkbox
-                              checked={selectTopics.indexOf(name) > -1}
-                            />
-                            <ListItemText primary={name} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                    <FormControl sx={{ m: 1, width: 250 }}>
-                      <InputLabel id="demo-multiple-checkbox-label">
-                        Sort by
-                      </InputLabel>
-                      <Select
-                        labelId="demo-multiple-checkbox-label"
-                        id="demo-multiple-checkbox"
-                        value={selectSortBy}
-                        onChange={handleChangeSortBy}
-                        input={<OutlinedInput label="Topics" />}
-                        renderValue={(selected) => selected.join(", ")}
-                        MenuProps={MenuProps}
-                      >
-                        {sortMethod.map((name) => (
-                          <MenuItem key={name} value={name}>
-                            <ListItemText primary={name} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </div>
-                </Container>
-              </Box>
+              />
               {/* Groups */}
               <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container rowSpacing={3} columnSpacing={0}>
-                  {groupCards.map((post) => (
-                    <GroupCard key={post.title} post={post} whetherIn={false} />
+                  {postCards.map((post) => (
+                    <PostCard key={post.title} post={post} whetherIn />
                   ))}
                 </Grid>
               </Container>
@@ -318,4 +213,4 @@ function Lobby() {
   );
 }
 
-export default Lobby;
+export default MyGroup;

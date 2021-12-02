@@ -25,6 +25,15 @@
   background-color: #c79623 !important;
   border: #c79623 !important;
 }
+.groupBtn4{
+  height: 33.3%;
+  background-color: #AAAAAA !important;
+  border: #AAAAAA !important;
+}
+.groupBtn4:hover{
+  background-color: #888888 !important;
+  border: #888888 !important;
+}
 .groupBtnGroup{
   width: 100%;
   margin: 0px 0px 1px 5px !important;

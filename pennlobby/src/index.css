@@ -2,9 +2,9 @@
 @import "./styles/Signup.css";
 @import "./styles/Group.css";
 @import "./styles/TrendingTopics.css";
-@import "./styles/FeaturedPost.css";
+@import "./styles/GroupCard.css";
 @import "./styles/Lobby.css";
-
+@import "./styles/PostCard.css";
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
