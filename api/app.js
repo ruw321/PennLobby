@@ -33,6 +33,7 @@ const app = express();
 
 app.use(logger("dev"));
 app.use(express.json());
+// TODO: delete CORS in production
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
