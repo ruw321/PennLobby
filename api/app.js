@@ -41,6 +41,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/api/user", userRouter);
+// TODO: more routes
 
 // '*': match any other url if all previous urls do not match
 app.all('*', (req, res, next) => {
