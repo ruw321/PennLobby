@@ -8,7 +8,7 @@ const User = require('../models/User')
 const Ajv = require("ajv")
 
 //data validator
-const ajv = new Ajv({coerceTypes: true})
+const ajv = new Ajv({ coerceTypes: true })
 const schema = {
   type: "object",
   properties: {
@@ -16,7 +16,7 @@ const schema = {
     email: { type: 'string' },
     firstName: { type: 'string' },
     lastName: { type: 'string' },
-    hashed_password: { type: 'string' },
+    password: { type: 'string' },
     group_ids: { type: 'array' },
     posts_ids: { type: 'array' },
     following: { type: 'array' },
@@ -24,7 +24,7 @@ const schema = {
     blocking: { type: 'array' },
     blocked_by: { type: 'array' },
   },
-  required: ['username', 'email', 'firstName', 'lastName', 'hashed_password'],
+  required: ['username', 'email', 'firstName', 'lastName', 'password'],
 }
 
 // in this file, we will assume the database connection is
@@ -57,13 +57,13 @@ router.route("/").post(async (req, res) => {
   }
   try {
     // check if the user already exists in the database
-    const exists = await Users.getUserbyEmail(User, req.body.email); 
+    const exists = await Users.getUserbyEmail(User, req.body.email);
     if (exists) {
-      res.status(409).json({ error: 'user email is already in the database' });
+      res.status(409).json({ error: 'this email is already in the database' });
       return;
     }
     if (await Users.getUserbyUsername(User, req.body.username)) {
-      res.status(409).json({ error: 'user username is already in the database' });
+      res.status(409).json({ error: 'this username is already in the database' });
       return;
     }
     const result = await Users.addUser(User, req.body);
@@ -72,15 +72,5 @@ router.route("/").post(async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
-
-// router.route("/").get(catchAsync(users.getUsers));
-
-// router.route("/:id").get(catchAsync(users.getUser));
-
-// router.route("/:id").get(catchAsync(users.updateUser));
-// // put
-
-// router.route("/:id").get(catchAsync(users.deleteUser));
-// delete
 
 module.exports = router;

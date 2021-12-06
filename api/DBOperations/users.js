@@ -1,5 +1,4 @@
 module.exports.getUsers = async (collection) => {
-  console.log("jere");
   try {
     const users = await collection.find({});
     return users;
@@ -7,6 +6,9 @@ module.exports.getUsers = async (collection) => {
     throw new Error(`Error getting all the users: ${err.message}`);
   }
 };
+
+// TODO: add the function: req.isAuthenticated() 
+// to make sure that only logged in users can access
 
 module.exports.getUserbyEmail = async (collection, theEmail) => {
   try {
