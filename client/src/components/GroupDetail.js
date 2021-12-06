@@ -12,9 +12,14 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import ListItem from '@mui/material/ListItem';
+import {
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField,
+} from "@mui/material";
 import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
 import Menu from "./Menu";
+import GroupMembers from "./GroupMembers";
 
 function Copyright() {
   return (
@@ -64,31 +69,17 @@ const postCards = [
     imageLabel: "Image Text",
   },
 ];
-const trendingTopicsToday = [
-  "Music",
-  "Football",
-  "Sports",
-  "Ivy Leagues",
-  "Arts",
-  "Musical",
-  "Residential",
-  "Rent",
-  "Living",
-  "News",
+
+const groupMembers = [
+  "user1",
+  "user2",
+  "user3",
+  "user4",
+  "user5",
+  "user6",
 ];
-const trendingTopicsWeekly = [
-  "Sports",
-  "Ivy Leagues",
-  "Arts",
-  "Musical",
-  "Residential",
-  "Rent",
-  "Living",
-  "News",
-  "Music",
-  "Football",
-];
-function MyGroup() {
+
+function GroupDetail() {
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
@@ -101,24 +92,70 @@ function MyGroup() {
     },
   });
   const classes = useStyles();
+
+  // for new post dialog
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-
       <Menu />
       <main>
         {/* Hero unit */}
         {/* Filter and Sort options */}
+
         <Container maxWidth="lg" justify="flex-end">
+
+          <Box sx={{
+            pt: 2, pl: 2, pb: 2, display: 'flex', justifyContent: 'space-between', margin: '10px', borderBottom: 1, borderColor: 'grey.500',
+          }}
+          >
+            <Typography variant="h4">
+              Group Name
+            </Typography>
+            <Button variant="contained" sx={{ m: 1, height: 50, width: 262 }} onClick={handleClickOpen}>New Post</Button>
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>Create a new post</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Please type the new post content here. Your group is waiting for your input!
+                </DialogContentText>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  multiline
+                  rows={8}
+                  label="new post"
+                  type="email"
+                  fullWidth
+                  variant="standard"
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleClose}>Send</Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
+
           <Grid container spacing={2}>
             <Grid item key={1} xs={6} md={9}>
-              <Box
+              {/* <Box
                 sx={{
                   bgcolor: "background.paper",
-                  pt: 4,
+                  pt: 0,
                   pb: 2,
                 }}
-              />
+              /> */}
               {/* Groups */}
               <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container rowSpacing={3} columnSpacing={0}>
@@ -128,11 +165,21 @@ function MyGroup() {
                 </Grid>
               </Container>
             </Grid>
-            <Grid item key={2} xs={6} md={3}>
-              <TrendingTopics
-                trendingTopicsToday={trendingTopicsToday}
-                trendingTopicsWeekly={trendingTopicsWeekly}
-              />
+            <Grid
+              item
+              xs={3}
+              md={3}
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
+              <GroupMembers />
+              {/* {groupMembers.map((topic, index) => (
+                <ListItem key={topic}>
+                  {`${(index + 1)}.  ${topic}`}
+                </ListItem>
+              ))} */}
+
             </Grid>
           </Grid>
         </Container>
@@ -157,4 +204,4 @@ function MyGroup() {
   );
 }
 
-export default MyGroup;
+export default GroupDetail;

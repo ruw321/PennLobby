@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
@@ -18,8 +20,13 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
+import {
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormLabel, Radio, RadioGroup, TextField,
+} from "@mui/material";
+import { FormControlLabel } from "@material-ui/core";
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
+import Menu from "./Menu";
 
 function Copyright() {
   return (
@@ -155,69 +162,30 @@ function MyGroup() {
     },
   });
   const classes = useStyles();
+
+  // for Create a new group
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // for radio button
+
+  const [value, setValue] = React.useState('female');
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar
-        position="static"
-        color="default"
-        elevation={0}
-        sx={{ borderBottom: (themes) => `1px solid ${themes.palette.divider}` }}
-      >
-        <Toolbar sx={{ flexWrap: "wrap" }}>
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            sx={{ flexGrow: 0.3 }}
-          >
-            <img className="barLogo" src="../../logo.png" alt="logo_pic" />
-          </Typography>
-          <nav>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 7 }}
-              id="home"
-            >
-              Home
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 7 }}
-              id="mygroups"
-            >
-              My Groups
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 7 }}
-              id="myposts"
-            >
-              My Posts
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 7 }}
-              id="messages"
-            >
-              Messages
-            </Link>
-          </nav>
-          <section className={classes.rightToolbar}>
-            <Button href="./login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-              Login
-            </Button>
-          </section>
-        </Toolbar>
-      </AppBar>
+      <Menu />
       <main>
         {/* Hero unit */}
         {/* Filter and Sort options */}
@@ -277,6 +245,50 @@ function MyGroup() {
                         ))}
                       </Select>
                     </FormControl>
+                    <Button variant="contained" sx={{ m: 1, height: 55, width: 262 }} onClick={handleClickOpen}>Create a New Group</Button>
+                    <Dialog open={open} onClose={handleClose}>
+                      <DialogTitle>Please provide group information</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText>
+                          Please provide some group information before creating a new group.
+                        </DialogContentText>
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          id="name"
+                          label="Group Name"
+                          type="email"
+                          fullWidth
+                          variant="standard"
+                        />
+                        <FormControl component="fieldset">
+                          <FormLabel component="legend">Group Type</FormLabel>
+                          <RadioGroup
+                            row
+                            aria-label="Group Type"
+                            name="controlled-radio-buttons-group"
+                            value={value}
+                            onChange={handleChange}
+                          >
+                            <FormControlLabel value="public" control={<Radio />} label="Public" />
+                            <FormControlLabel value="private" control={<Radio />} label="Private" />
+                          </RadioGroup>
+                        </FormControl>
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          id="name"
+                          label="Description"
+                          type="email"
+                          fullWidth
+                          variant="standard"
+                        />
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button onClick={handleClose}>Confirm</Button>
+                      </DialogActions>
+                    </Dialog>
                   </div>
                 </Container>
               </Box>
@@ -290,10 +302,13 @@ function MyGroup() {
               </Container>
             </Grid>
             <Grid item key={2} xs={6} md={3}>
-              <TrendingTopics
-                trendingTopicsToday={trendingTopicsToday}
-                trendingTopicsWeekly={trendingTopicsWeekly}
-              />
+              <Grid container align="center" justify="center" alignItems="center" spacing={2}>
+                {/* <Button variant="contained">Create a New Group</Button> */}
+                <TrendingTopics
+                  trendingTopicsToday={trendingTopicsToday}
+                  trendingTopicsWeekly={trendingTopicsWeekly}
+                />
+              </Grid>
             </Grid>
           </Grid>
         </Container>

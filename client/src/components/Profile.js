@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable import/no-unresolved */
 import * as React from 'react';
@@ -21,6 +22,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import Menu from "./Menu";
 
 function Copyright() {
   return (
@@ -50,56 +52,7 @@ export default function Album() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <AppBar
-        position="static"
-        color="default"
-        elevation={0}
-        sx={{ borderBottom: (themes) => `1px solid ${themes.palette.divider}` }}
-      >
-        <Toolbar sx={{ flexWrap: 'wrap' }}>
-          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-            <img className="barLogo" src="../../logo.png" alt="logo_pic" />
-          </Typography>
-          <nav>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Home
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              My Groups
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              My Posts
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/message"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Messages
-            </Link>
-          </nav>
-          <Button href="#" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-            Login
-          </Button>
-        </Toolbar>
-      </AppBar>
-
+      <Menu />
       <main>
         {/* Hero unit */}
         <Box
