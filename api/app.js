@@ -8,6 +8,10 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const indexRouter = require("./routes/index");
 const userRouter = require("./routes/user");
+const groupRouter = require("./routes/group");
+const postRouter = require("./routes/post");
+const commentRouter = require("./routes/comment");
+const topicRouter = require("./routes/topic");
 const ExpressError = require("./utils/ExpressError");
 
 dotenv.config({ path: ".env" });
@@ -41,6 +45,10 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/api/user", userRouter);
+app.use("/api/group", groupRouter);
+app.use("/api/post", postRouter);
+app.use("/api/comment", commentRouter);
+app.use("/api/topic", topicRouter);
 // TODO: more routes
 
 // '*': match any other url if all previous urls do not match

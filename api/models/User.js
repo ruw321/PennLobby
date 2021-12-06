@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   hashed_password: { type: String, required: true },
   // profile pic
   group_ids: [{ type: Schema.Types.ObjectId, ref: 'Group' }],
-  posts_ids: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+  post_ids: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   blocking: [{ type: Schema.Types.ObjectId, ref: 'User' }],

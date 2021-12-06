@@ -3,9 +3,9 @@ const router = express.Router();
 // make sure the name is different from the class instance 
 // for example, it cannot be users = require(./users)
 const Users = require("../DBOperations/users");
-const User = require('../models/User')
+const User = require('../models/User');
 // data validator 
-const Ajv = require("ajv")
+const Ajv = require("ajv");
 
 //data validator
 const ajv = new Ajv({coerceTypes: true})
@@ -18,7 +18,7 @@ const schema = {
     lastName: { type: 'string' },
     hashed_password: { type: 'string' },
     group_ids: { type: 'array' },
-    posts_ids: { type: 'array' },
+    post_ids: { type: 'array' },
     following: { type: 'array' },
     followers: { type: 'array' },
     blocking: { type: 'array' },
