@@ -3,4 +3,6 @@ api/node_modules
 api/coverage
 client/node_modules
 client/coverage
+controller/node_modules
+controller/coverage
 node_modules

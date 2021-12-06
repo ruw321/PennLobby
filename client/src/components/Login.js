@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+import { joinChat } from './getData';
 // referenced from https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
 function Copyright() {
   return (
@@ -28,7 +28,7 @@ function Copyright() {
 const theme = createTheme();
 
 function Login() {
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
@@ -36,6 +36,15 @@ function Login() {
       email: data.get("email"),
       password: data.get("password"),
     });
+    const name = data.get("email");
+    if (sessionStorage.getItem('token') === null) {
+      const token = await joinChat(name); // get the token (jwt) from the web server
+      if (token) {
+        sessionStorage.setItem('token', token); // store token in session storage
+      }
+    }
+    localStorage.setItem('myUserName', name);
+    // setupWSConnection(updateContacts, updateMessages, texts); // setup ws connection
   };
 
   return (

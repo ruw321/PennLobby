@@ -12,6 +12,7 @@ import Group from './components/Group';
 import Post from './components/Post';
 import Profile from './components/Profile';
 import Message from './components/Message';
+import Messages from './components/Messages';
 
 function App() {
   return (
@@ -40,6 +41,9 @@ function App() {
           </Route>
           <Route path="/message">
             <Message />
+          </Route>
+          <Route path="/messages">
+            <Messages />
           </Route>
           {/* put this last because since it is empty, it will always be the first
             child to match the URL */}
