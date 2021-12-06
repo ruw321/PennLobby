@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/destructuring-assignment */
@@ -36,7 +37,7 @@ const theme = createTheme();
 
 function Chat(props) {
   const {
-    messages, friends, setChat, sendMsg, currentChat, authenticate,
+    messages, friends, setChat, sendMsg, currentChat,
   } = props;
   console.log("messages", messages);
   // this is the stype for the menu bar at the top
@@ -150,7 +151,7 @@ function Chat(props) {
             <List style={{ height: "100%", overflowY: "auto" }}>
               {
                 friends.map((f) => (
-                  <ListItem button key={f} onClick={() => { setChat(f); authenticate(); }}>
+                  <ListItem button key={f} onClick={() => { setChat(f); }}>
                     <ListItemIcon>
                       <Avatar alt={f} src="https://material-ui.com/static/images/avatar/1.jpg" />
                     </ListItemIcon>
@@ -283,7 +284,9 @@ function Messages() {
   // When mutating state inside [websocket] event handlers!
   const updateContacts = () => setContacts((contacts) => contacts + 1);
   const updateMessages = () => setMessages((messages) => messages + 1);
-
+  useEffect(() => {
+    authenticate();
+  }, []);
   useEffect(() => {
     getUsers().then((response) => {
       // const parent = document.getElementById("div1");
@@ -349,7 +352,7 @@ function Messages() {
       <hr />
       <UsersComponent />
       <MessagesComponent messages={texts.current} /> */}
-      <Chat messages={texts.current} friends={friends} setChat={(to) => { setCurrentChat(to); }} sendMsg={sendMsg} currentChat={currentChat} authenticate={authenticate} />
+      <Chat messages={texts.current} friends={friends} setChat={(to) => { setCurrentChat(to); }} sendMsg={sendMsg} currentChat={currentChat} />
     </div>
   );
 }
