@@ -8,7 +8,7 @@ module.exports.getUsers = async (collection) => {
   }
 };
 
-module.exports.getUserbyEmail = async (collection, theEmail) => {
+module.exports.getUserByEmail = async (collection, theEmail) => {
   try {
     const user = await collection.findOne({ email: theEmail });
     return user;
@@ -18,7 +18,7 @@ module.exports.getUserbyEmail = async (collection, theEmail) => {
 };
 
 // this checks if the user already exists in the database
-module.exports.getUserbyUsername = async (collection, Username) => {
+module.exports.getUserByUsername = async (collection, Username) => {
   try {
     const user = await collection.findOne({ username: Username });
     if (user) {
@@ -31,7 +31,7 @@ module.exports.getUserbyUsername = async (collection, Username) => {
   }
 };
 
-module.exports.getUserbyId = async (collection, ID) => {
+module.exports.getUserById = async (collection, ID) => {
   try {
     const user = await collection.findOne({ id: ID });
     return user;
@@ -46,5 +46,27 @@ module.exports.addUser = async (collection, userObject) => {
     return result;
   } catch (err) {
     throw new Error(`Error adding the user: ${err.message}`);
+  }
+};
+
+module.exports.deleteUserById = async (collection, ID) => {
+  try {
+    const user = await collection.deleteOne({ id: ID });
+    return user;
+  } catch (err) {
+    throw new Error(`Error deleting the user by id: ${err.message}`);
+  }
+};
+
+module.exports.updateUserById = async (collection, ID, updatedObject) => {
+  try {
+    const response = await collection.updateOne(
+      { _id: ID },
+      { $set: updatedObject }
+    );
+    // { returnNewDocument : true })
+    return response;
+  } catch (err) {
+    throw new Error(`Error updating the user by id: ${err.message}`);
   }
 };

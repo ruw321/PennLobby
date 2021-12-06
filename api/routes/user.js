@@ -30,7 +30,8 @@ const schema = {
 // in this file, we will assume the database connection is
 // already established and successful
 
-router.route("/").get(async (_req, res) => {
+// get all users
+router.route("/").get(async (req, res) => {
   try {
     const users = await Users.getUsers(User);
     res.status(200).send(users);
@@ -39,15 +40,7 @@ router.route("/").get(async (_req, res) => {
   }
 });
 
-// router.route("/:email").get( async (_req, res) => {
-//   try {
-//     const users = await users.getUsers(User);
-//     res.status(200).send(users);
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// });
-
+// add a new user
 router.route("/").post(async (req, res) => {
   // console.log(req.body);
   const valid = ajv.validate(schema, req.body);
@@ -57,12 +50,12 @@ router.route("/").post(async (req, res) => {
   }
   try {
     // check if the user already exists in the database
-    const exists = await Users.getUserbyEmail(User, req.body.email); 
+    const exists = await Users.getUserByEmail(User, req.body.email); 
     if (exists) {
       res.status(409).json({ error: 'user email is already in the database' });
       return;
     }
-    if (await Users.getUserbyUsername(User, req.body.username)) {
+    if (await Users.getUserByUsername(User, req.body.username)) {
       res.status(409).json({ error: 'user username is already in the database' });
       return;
     }
@@ -73,14 +66,57 @@ router.route("/").post(async (req, res) => {
   }
 });
 
-// router.route("/").get(catchAsync(users.getUsers));
+// get a user by id
+router.route("/:id").get(async (req, res) => {
+  try {
+    const user = await Users.getUserById(User, req.body._id); 
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
-// router.route("/:id").get(catchAsync(users.getUser));
+// get a user by username
+router.route("/:username").get(async (req, res) => {
+  try {
+    const user = await Users.getUserByUsername(User, req.body.username); 
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
-// router.route("/:id").get(catchAsync(users.updateUser));
-// // put
+// get a user by email
+router.route("/:email").get(async (req, res) => {
+  try {
+    const user = await Users.getUserByEmail(User, req.body.email); 
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
-// router.route("/:id").get(catchAsync(users.deleteUser));
-// delete
+// update a user by id
+router.route("/:id").put(async (req, res) => {
+  try {
+    const obj = req.body;
+    const { _id, ...rest} = obj;
+    // console.log(rest);
+    const user = await Users.updateUserById(User, req.body._id, rest);
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// delete a user by id
+router.route("/:id").delete(async (req, res) => {
+  try {
+    const user = await Users.deleteUserById(User, req.body._id);
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 module.exports = router;
