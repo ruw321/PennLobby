@@ -18,8 +18,12 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
+import Avatar from '@material-ui/core/Avatar';
+import Menu from '@mui/material/Menu';
+import { useNavigate } from 'react-router-dom';
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
+import { logout } from '../fetch';
 
 function Copyright() {
   return (
@@ -122,8 +126,39 @@ const trendingTopicsWeekly = [
   "Football",
 ];
 function Lobby() {
+  const navigate = useNavigate();
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
+  const [loggedIn, setLoggedin] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleProfile = () => {
+    handleClose();
+    navigate('/profile');
+  };
+
+  const handleLogout = async () => {
+    handleClose();
+    sessionStorage.removeItem('username');
+    setLoggedin(false);
+    await logout();
+  };
+
+  const userName = sessionStorage.getItem('username');
+
+  React.useEffect(() => {
+    if (userName) {
+      setLoggedin(true);
+    }
+  }, []);
 
   const handleChangeTopics = (event) => {
     const {
@@ -143,6 +178,7 @@ function Lobby() {
       typeof value === "string" ? value.split(",") : value,
     );
   };
+
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
@@ -213,9 +249,43 @@ function Lobby() {
             </Link>
           </nav>
           <section className={classes.rightToolbar}>
-            <Button href="./login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-              Login
-            </Button>
+            {/* <Button href="./profile">
+              <Avatar src="https://material-ui.com/static/images/avatar/4.jpg" />
+            </Button> */}
+            {loggedIn ? (
+              <div>
+                <Button
+                  id="basic-button"
+                  aria-controls="basic-menu"
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                  onClick={handleClick}
+                >
+                  <Avatar src="https://material-ui.com/static/images/avatar/1.jpg" />
+                </Button>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                  }}
+                  PaperProps={{
+                    style: {
+                      width: 150,
+                    },
+                  }}
+                >
+                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </div>
+            ) : (
+              <Button href="./login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+                Login
+              </Button>
+            )}
           </section>
         </Toolbar>
       </AppBar>

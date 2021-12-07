@@ -8,8 +8,10 @@ module.exports.getUsers = async (collection) => {
   }
 };
 
-// get user by email
-module.exports.getUserByEmail = async (collection, theEmail) => {
+// TODO: add the function: req.isAuthenticated() 
+// to make sure that only logged in users can access
+
+module.exports.getUserbyEmail = async (collection, theEmail) => {
   try {
     const user = await collection.findOne({ email: theEmail });
     return user;
