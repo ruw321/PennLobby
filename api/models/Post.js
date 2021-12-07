@@ -3,9 +3,12 @@ const Schema = mongoose.Schema;
 
 const postSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  description: { type: String, required: true },
-  image: { type: String, required: true },
-  date: { type: Date, default: Date.now },
+  content: { type: String, required: true },
+  // media attachment
+  author_id: { type: Schema.Types.ObjectId, ref: "User" },
+  comment_ids: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  created_at: { type: Date, default: Date.now(), required: true },
+  flag_for_deletion: { type: Boolean, default: false, required: true }
 });
 
 const Post = mongoose.model("Post", postSchema);

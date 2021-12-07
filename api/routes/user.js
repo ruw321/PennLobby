@@ -3,9 +3,9 @@ const router = express.Router();
 // make sure the name is different from the class instance 
 // for example, it cannot be users = require(./users)
 const Users = require("../DBOperations/users");
-const User = require('../models/User')
+const User = require('../models/User');
 // data validator 
-const Ajv = require("ajv")
+const Ajv = require("ajv");
 
 //data validator
 const ajv = new Ajv({ coerceTypes: true })
@@ -18,7 +18,7 @@ const schema = {
     lastName: { type: 'string' },
     password: { type: 'string' },
     group_ids: { type: 'array' },
-    posts_ids: { type: 'array' },
+    post_ids: { type: 'array' },
     following: { type: 'array' },
     followers: { type: 'array' },
     blocking: { type: 'array' },
@@ -30,7 +30,8 @@ const schema = {
 // in this file, we will assume the database connection is
 // already established and successful
 
-router.route("/").get(async (_req, res) => {
+// get all users
+router.route("/").get(async (req, res) => {
   try {
     const users = await Users.getUsers(User);
     res.status(200).send(users);
@@ -39,15 +40,7 @@ router.route("/").get(async (_req, res) => {
   }
 });
 
-// router.route("/:email").get( async (_req, res) => {
-//   try {
-//     const users = await users.getUsers(User);
-//     res.status(200).send(users);
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// });
-
+// add a new user
 router.route("/").post(async (req, res) => {
   // console.log(req.body);
   const valid = ajv.validate(schema, req.body);
@@ -70,6 +63,59 @@ router.route("/").post(async (req, res) => {
     res.status(201).send(result);
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+// get a user by id
+router.route("/:id").get(async (req, res) => {
+  try {
+    const user = await Users.getUserById(User, req.body._id); 
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// get a user by username
+router.route("/:username").get(async (req, res) => {
+  try {
+    const user = await Users.getUserByUsername(User, req.body.username); 
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// get a user by email
+router.route("/:email").get(async (req, res) => {
+  try {
+    const user = await Users.getUserByEmail(User, req.body.email); 
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// update a user by id
+router.route("/:id").put(async (req, res) => {
+  try {
+    const obj = req.body;
+    const { _id, ...rest} = obj;
+    // console.log(rest);
+    const user = await Users.updateUserById(User, req.body._id, rest);
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// delete a user by id
+router.route("/:id").delete(async (req, res) => {
+  try {
+    const user = await Users.deleteUserById(User, req.body._id);
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 

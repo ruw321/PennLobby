@@ -9,6 +9,10 @@ const dotenv = require("dotenv");
 const indexRouter = require("./routes/index");
 const userRouter = require("./routes/user");
 const authRouter = require("./routes/auth");
+const groupRouter = require("./routes/group");
+const postRouter = require("./routes/post");
+const commentRouter = require("./routes/comment");
+const topicRouter = require("./routes/topic");
 const ExpressError = require("./utils/ExpressError");
 const session = require('express-session');  // session middleware
 // const bodyParser = require('body-parser'); // parser middleware
@@ -67,6 +71,11 @@ app.use("/", indexRouter);
 
 app.use("/auth", authRouter)
 app.use("/api/user", userRouter);
+app.use("/api/group", groupRouter);
+app.use("/api/post", postRouter);
+app.use("/api/comment", commentRouter);
+app.use("/api/topic", topicRouter);
+// TODO: more routes
 
 // '*': match any other url if all previous urls do not match
 app.all('*', (req, res, next) => {
