@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable import/no-unresolved */
@@ -22,6 +23,10 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import { styled } from '@mui/system';
+import {
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField,
+} from '@mui/material';
 import Menu from "./Menu";
 
 function Copyright() {
@@ -46,6 +51,32 @@ export default function Album() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const Input = styled('input')({
+    display: 'none',
+  });
+
+  // change password dialog
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // deactivate account dialog
+  const [open2, setOpen2] = React.useState(false);
+
+  const handleClickOpen2 = () => {
+    setOpen2(true);
+  };
+
+  const handleClose2 = () => {
+    setOpen2(false);
   };
 
   return (
@@ -86,6 +117,9 @@ export default function Album() {
               My Name
             </Typography>
             <Typography variant="h6" align="center" color="text.secondary" paragraph>
+              Registration Date
+            </Typography>
+            <Typography variant="h6" align="center" color="text.secondary" paragraph>
               Something short and leading about the collection below—its contents,
               the creator, etc. Make it short and sweet, but not too short so folks
               don&apos;t simply skip over it entirely.
@@ -93,10 +127,65 @@ export default function Album() {
             <Stack
               sx={{ pt: 0 }}
               direction="row"
-              spacing={0}
+              spacing={2}
               justifyContent="center"
             >
-              <Button variant="contained">Upload profile picture</Button>
+              <label htmlFor="contained-button-file">
+                <Input accept="image/*" id="contained-button-file" multiple type="file" />
+                <Button variant="contained" component="span">
+                  Upload Profile Picture
+                </Button>
+              </label>
+
+              <Button variant="outlined" onClick={handleClickOpen}>
+                Change Password
+              </Button>
+              <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Change Password</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Please input the new password.
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="new password"
+                    type="email"
+                    fullWidth
+                    variant="standard"
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>Cancel</Button>
+                  <Button onClick={handleClose}>Confirm</Button>
+                </DialogActions>
+              </Dialog>
+
+              <Button variant="outlined" onClick={handleClickOpen2}>
+                Deactivate account
+              </Button>
+              <Dialog
+                open={open2}
+                onClose={handleClose2}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  Confirm to deactivate your account?
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    By confirming, you will deactivate your account and cannot reverse the action.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose2}>Cancel</Button>
+                  <Button onClick={handleClose2} autoFocus>
+                    Confirm
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Stack>
           </Container>
         </Box>

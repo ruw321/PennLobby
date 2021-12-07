@@ -21,7 +21,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import {
-  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormLabel, Radio, RadioGroup, TextField,
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormLabel, Radio, RadioGroup, TextField,
 } from "@mui/material";
 import { FormControlLabel } from "@material-ui/core";
 import TrendingTopics from "./TrendingTopics";
@@ -182,6 +182,20 @@ function MyGroup() {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
+
+  // for select topics
+  const [topicSelected, setTopicSelected] = React.useState([]);
+
+  const handleChangeSelected = (event) => {
+    const {
+      // eslint-disable-next-line no-shadow
+      target: { value },
+    } = event;
+    setTopicSelected(
+      // On autofill we get a the stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -246,11 +260,14 @@ function MyGroup() {
                       </Select>
                     </FormControl>
                     <Button variant="contained" sx={{ m: 1, height: 55, width: 262 }} onClick={handleClickOpen}>Create a New Group</Button>
+
                     <Dialog open={open} onClose={handleClose}>
+                      {/* <Grid container spacing={2}> */}
                       <DialogTitle>Please provide group information</DialogTitle>
                       <DialogContent>
+                        {/* <Divider /> */}
                         <DialogContentText>
-                          Please provide some group information before creating a new group.
+                          Please enter a group name.
                         </DialogContentText>
                         <TextField
                           autoFocus
@@ -261,8 +278,12 @@ function MyGroup() {
                           fullWidth
                           variant="standard"
                         />
+
+                        <DialogContentText sx={{ pt: 4 }}>
+                          Please select a group type.
+                        </DialogContentText>
                         <FormControl component="fieldset">
-                          <FormLabel component="legend">Group Type</FormLabel>
+                          <FormLabel component="legend" />
                           <RadioGroup
                             row
                             aria-label="Group Type"
@@ -274,6 +295,10 @@ function MyGroup() {
                             <FormControlLabel value="private" control={<Radio />} label="Private" />
                           </RadioGroup>
                         </FormControl>
+
+                        <DialogContentText sx={{ pt: 4 }}>
+                          Please add group description.
+                        </DialogContentText>
                         <TextField
                           autoFocus
                           margin="dense"
@@ -283,11 +308,39 @@ function MyGroup() {
                           fullWidth
                           variant="standard"
                         />
+
+                        <DialogContentText sx={{ pt: 4 }}>
+                          Please select group topics.
+                        </DialogContentText>
+                        <FormControl sx={{ m: 1, width: 300 }}>
+                          <InputLabel id="demo-multiple-checkbox-label">Group Topics</InputLabel>
+                          <Select
+                            labelId="demo-multiple-checkbox-label"
+                            id="demo-multiple-checkbox"
+                            multiple
+                            value={topicSelected}
+                            onChange={handleChangeSelected}
+                            input={<OutlinedInput label="Tag" />}
+                            renderValue={(selected) => selected.join(', ')}
+                            MenuProps={MenuProps}
+                          >
+                            {topics.map((topic) => (
+                              <MenuItem key={topic} value={topic}>
+                                <Checkbox checked={topicSelected.indexOf(topic) > -1} />
+                                <ListItemText primary={topic} />
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+
                       </DialogContent>
+
                       <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
                         <Button onClick={handleClose}>Confirm</Button>
                       </DialogActions>
+
+                      {/* </Grid> */}
                     </Dialog>
                   </div>
                 </Container>

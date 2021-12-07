@@ -128,11 +128,12 @@ function GroupCard(props) {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">
-              Do you want to join this group?
+              Do you want to send a request to join this group?
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                After joining the group, you will be able to view the posts and members in the group.
+                After joining the group, you will be able to view the posts and members in the group. While
+                the request is pending, you may not send requests to join other groups.
               </DialogContentText>
             </DialogContent>
             <DialogActions>

@@ -17,6 +17,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 
 export default function GroupMembers(props) {
   const groupMembers = [
@@ -45,10 +46,26 @@ export default function GroupMembers(props) {
     setOpen(false);
   };
 
+  // remove admin
+  const [open2, setOpen2] = React.useState(false);
+
+  const handleClickOpen2 = () => {
+    setOpen2(true);
+  };
+
+  const handleClose2 = () => {
+    setOpen2(false);
+  };
   return (
     <div>
       <Grid>
-        <Typography variant="h5" sx={{ padding: 2 }}>
+        <Typography
+          centered
+          variant="h6"
+          sx={{
+            padding: 2, color: 'white', bgcolor: 'primary.main', textAlign: "center",
+          }}
+        >
           Group Members
         </Typography>
       </Grid>
@@ -56,13 +73,19 @@ export default function GroupMembers(props) {
         {groupMembers.map((user) => (
           <CardHeader
             action={(
-              <IconButton onClick={handleClickOpen}>
-                <SupervisorAccountIcon />
-              </IconButton>
+              <div>
+                <IconButton onClick={handleClickOpen}>
+                  <SupervisorAccountIcon />
+                </IconButton>
+                <IconButton onClick={handleClickOpen2}>
+                  <PersonRemoveAlt1Icon />
+                </IconButton>
+              </div>
           )}
             subheader={user}
           />
         ))}
+
         <Dialog
           open={open}
           onClose={handleClose}
@@ -80,6 +103,28 @@ export default function GroupMembers(props) {
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
             <Button onClick={handleClose} autoFocus>
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={open2}
+          onClose={handleClose2}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            Confirm to remove as administator?
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure to remove this user as a group administrator?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose2}>Cancel</Button>
+            <Button onClick={handleClose2} autoFocus>
               Confirm
             </Button>
           </DialogActions>
