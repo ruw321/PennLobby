@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -8,8 +8,11 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+import { useNavigate } from 'react-router-dom';
+import { signup } from '../fetch';
 // referenced from https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
 function Copyright() {
   return (
@@ -26,15 +29,36 @@ function Copyright() {
 const theme = createTheme();
 
 function Signup() {
-  const handleSubmit = (event) => {
+  const [redirect, setRedirect] = useState(false);
+  const [errorMes, setErrorMes] = useState('');
+  const [hasError, setHasError] = useState(false);
+  const navigate = useNavigate();
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const newUser = {
+      username: data.get('username'),
+      email: data.get('email'),
+      firstName: data.get('firstName'),
+      lastName: data.get('lastName'),
+      password: data.get('password'),
+    };
+    const r = await signup(newUser);
+    const response = await r.json();
+    if (response.username) {
+      sessionStorage.setItem('username', response.username);
+      setRedirect(true);
+    } else {
+      setErrorMes(response.error);
+      setHasError(true);
+    }
   };
+
+  useEffect(() => {
+    if (redirect) {
+      navigate(`/lobby`);
+    }
+  }, [redirect]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -83,11 +107,11 @@ function Signup() {
                 <Grid item xs={12}>
                   <TextField
                     autoComplete="Username"
-                    name="userName"
+                    name="username"
                     required
                     fullWidth
                     id="userName"
-                    label="UserName"
+                    label="Username"
                     autoFocus
                   />
                 </Grid>
@@ -132,6 +156,16 @@ function Signup() {
                     id="password"
                     autoComplete="new-password"
                   />
+                </Grid>
+                <Grid item xs={12}>
+                  {hasError
+                    ? (
+                      <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        Sign up failed - <strong>{errorMes}</strong>
+                      </Alert>
+                    )
+                    : (<Typography />)}
                 </Grid>
               </Grid>
               <Button

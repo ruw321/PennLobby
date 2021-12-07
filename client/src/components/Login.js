@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+// import FormControlLabel from "@mui/material/FormControlLabel";
+// import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate } from 'react-router-dom';
+import { login } from '../fetch';
 
 // referenced from https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
 function Copyright() {
@@ -28,15 +32,31 @@ function Copyright() {
 const theme = createTheme();
 
 function Login() {
-  const handleSubmit = (event) => {
+  const [redirect, setRedirect] = useState(false);
+  const [errorMes, setErrorMes] = useState('');
+  const navigate = useNavigate();
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const username = data.get("username");
+    const password = data.get("password");
+    // TODO: add typecheck here for the user inputs
+    if (username && password) {
+      const uID = await login(username, password);
+      if (uID.ok) {
+        sessionStorage.setItem('username', username);
+        setRedirect(true);
+      } else {
+        setErrorMes("Invalid username or password");
+      }
+    }
   };
+
+  useEffect(() => {
+    if (redirect) {
+      navigate(`/lobby`);
+    }
+  }, [redirect]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -85,9 +105,9 @@ function Login() {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="username"
                 label="Username"
-                name="email"
+                name="username"
                 autoComplete="Username"
                 autoFocus
               />
@@ -101,10 +121,14 @@ function Login() {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
+              {errorMes
+                ? (
+                  <Alert severity="error">
+                    <AlertTitle>Error</AlertTitle>
+                    Authentication Failed — <strong>{errorMes}</strong>
+                  </Alert>
+                )
+                : (<Typography />)}
               <Button
                 className="login-button"
                 type="submit"
@@ -115,11 +139,11 @@ function Login() {
                 Sign In
               </Button>
               <Grid container>
-                <Grid item xs>
+                {/* <Grid item xs>
                   <Link href="/" variant="body2">
                     Forgot password?
                   </Link>
-                </Grid>
+                </Grid> */}
                 <Grid item>
                   <Link href="/signup" variant="body2">
                     Don&apos;t have an account? Sign Up

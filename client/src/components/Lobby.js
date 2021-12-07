@@ -19,9 +19,13 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
+import Avatar from '@material-ui/core/Avatar';
+// import Menu from '@mui/material/Menu';
+import { useNavigate } from 'react-router-dom';
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
 import Menu from "./Menu";
+import { logout } from '../fetch';
 
 function Copyright() {
   return (
@@ -124,8 +128,39 @@ const trendingTopicsWeekly = [
   "Football",
 ];
 function Lobby() {
+  const navigate = useNavigate();
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
+  const [loggedIn, setLoggedin] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleProfile = () => {
+    handleClose();
+    navigate('/profile');
+  };
+
+  const handleLogout = async () => {
+    handleClose();
+    sessionStorage.removeItem('username');
+    setLoggedin(false);
+    await logout();
+  };
+
+  const userName = sessionStorage.getItem('username');
+
+  React.useEffect(() => {
+    if (userName) {
+      setLoggedin(true);
+    }
+  }, []);
 
   const handleChangeTopics = (event) => {
     const {
@@ -145,6 +180,7 @@ function Lobby() {
       typeof value === "string" ? value.split(",") : value,
     );
   };
+
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
