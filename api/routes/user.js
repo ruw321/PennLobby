@@ -55,7 +55,7 @@ router.route("/").post(async (req, res) => {
       res.status(409).json({ error: 'this email is already in the database' });
       return;
     }
-    if (await Users.getUserbyUsername(User, req.body.username)) {
+    if (await Users.getUserByUsername(User, req.body.username)) {
       res.status(409).json({ error: 'this username is already in the database' });
       return;
     }
