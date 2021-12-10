@@ -1,4 +1,6 @@
-const url = 'http://localhost:8080';
+const url = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+  ? 'http://localhost:8080'
+  : '';
 async function login(u, p) {
   const user = {
     username: u,
@@ -49,4 +51,34 @@ async function logout() {
   }
 }
 
-module.exports = { login, signup, logout };
+// all user APIs
+async function getAllUsers() {
+  try {
+    const theUrl = `${url}/api/user`;
+    const result = await fetch(theUrl, { method: 'GET' });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+async function postMessage(sender, receiver, content) {
+  try {
+    const theUrl = `${url}/api/messages`;
+    // const data = `to=${receiver}&from=${sender}&message=${content}`;
+    const data = { to: receiver, from: sender, message: content };
+    const res = await fetch(theUrl, {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    return res.data.message;
+  } catch (err) {
+    return null;
+  }
+}
+module.exports = {
+  login, signup, logout, getAllUsers, postMessage,
+};

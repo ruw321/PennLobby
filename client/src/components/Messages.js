@@ -30,8 +30,8 @@ import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import SendIcon from '@mui/icons-material/Send';
-import { getUsers, sendMessage, joinChat } from './getData';
 import { setupWSConnection } from './notifications';
+import { getAllUsers, postMessage } from '../fetch';
 
 const theme = createTheme();
 
@@ -277,7 +277,7 @@ function Messages() {
   const [messages, setMessages] = useState(0); // counts messages sent and received - lift up state
   const texts = useRef([]); // mutable reference to store messages. Do not overuse!
   const [friends, setFriends] = useState([]);
-  const [myUserName] = useState(localStorage.getItem('myUserName'));
+  const [myUserName] = useState(sessionStorage.getItem('username'));
   const [currentChat, setCurrentChat] = useState('');
 
   // Put mutators in functions to avoid stale references to state
@@ -288,7 +288,7 @@ function Messages() {
     authenticate();
   }, []);
   useEffect(() => {
-    getUsers().then((response) => {
+    getAllUsers().then((response) => {
       // const parent = document.getElementById("div1");
       // const oldChild = document.getElementById("users");
       // if (oldChild) {
@@ -296,7 +296,8 @@ function Messages() {
       // }
       // const elt = document.createElement("div");
       // elt.setAttribute('id', 'users');
-      const newFriends = response;
+      const newFriends = response.map((r) => r.username);
+      console.log('newFriends', newFriends);
       // response.forEach((element) => {
       //   const p = document.createElement("p");
       //   p.innerHTML = element;
@@ -335,7 +336,7 @@ function Messages() {
     const from = myUserName;
     console.log('from, to, text', from, to, text);
     if (text.length > 0 && to.length > 0 && from.length > 0) {
-      sendMessage(from, to, text);
+      postMessage(from, to, text);
     }
   };
 

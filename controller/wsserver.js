@@ -23,7 +23,7 @@ wss.on('connection', (ws, req) => {
 
   jwt.verify(token, 'this_is_a_secret', (err, decoded) => {
     if (err) {
-      console.log(`Error: ${err}`);
+      console.log(`Error: ${err} token:${token}`);
       return;
     }
     client = decoded.name;

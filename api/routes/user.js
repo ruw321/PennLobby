@@ -67,9 +67,9 @@ router.route("/").post(async (req, res) => {
 });
 
 // get a user by id
-router.route("/:id").get(async (req, res) => {
+router.route("/id/:id").get(async (req, res) => {
   try {
-    const user = await Users.getUserById(User, req.body._id); 
+    const user = await Users.getUserById(User, req.params.id); 
     res.status(200).send(user);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -77,9 +77,9 @@ router.route("/:id").get(async (req, res) => {
 });
 
 // get a user by username
-router.route("/:username").get(async (req, res) => {
+router.route("/username/:username").get(async (req, res) => {
   try {
-    const user = await Users.getUserByUsername(User, req.body.username); 
+    const user = await Users.getUserByUsername(User, req.params.username); 
     res.status(200).send(user);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -87,8 +87,9 @@ router.route("/:username").get(async (req, res) => {
 });
 
 // get a user by email
-router.route("/:email").get(async (req, res) => {
+router.route("/email/:email").get(async (req, res) => {
   try {
+    console.log(req.query);
     const user = await Users.getUserByEmail(User, req.body.email); 
     res.status(200).send(user);
   } catch (error) {

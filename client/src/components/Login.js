@@ -14,7 +14,7 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from 'react-router-dom';
-import { joinChat } from './getData';
+// import { joinChat } from './getData';
 import { login } from '../fetch';
 
 // referenced from https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
@@ -44,13 +44,12 @@ function Login() {
     // TODO: add typecheck here for the user inputs
     if (username && password) {
       const uID = await login(username, password);
+      const user = await uID.json();
       if (uID.ok) {
         sessionStorage.setItem('username', username);
-        const token = await joinChat(username); // get the token (jwt) from the web server
-        if (token) {
-          sessionStorage.setItem('token', token); // store token in session storage
+        if (user.token) {
+          sessionStorage.setItem('token', user.token); // store token in session storage
         }
-        localStorage.setItem('myUserName', username);
         setRedirect(true);
       } else {
         setErrorMes("Invalid username or password");
