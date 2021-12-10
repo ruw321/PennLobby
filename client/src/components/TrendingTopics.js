@@ -40,6 +40,14 @@ export default function TrendingTopics(props) {
             </ListItem>
           ))}
         </TabPanel>
+        <TabPanel value="2">
+          {trendingTopicsWeekly.map((topic, index) => (
+            <ListItem key={topic}>
+              {`${(index + 1)}.  ${topic}`}
+            </ListItem>
+          ))}
+        </TabPanel>
+
       </TabContext>
     </Box>
   );

@@ -5,7 +5,8 @@
   width: 300px;
   border: 1px solid grey;
   text-align: center;
-  margin: 40px 50px;
+  /* margin: 40px 50px; */
+  margin-top: 55px;
 }
 
 .topic {

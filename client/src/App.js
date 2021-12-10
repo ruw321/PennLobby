@@ -1,3 +1,5 @@
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable import/no-named-as-default-member */
 import React from 'react';
 import './App.css';
 import {
@@ -12,6 +14,8 @@ import Group from './components/Group';
 import Post from './components/Post';
 import Profile from './components/Profile';
 import Message from './components/Message';
+import GroupDetail from './components/GroupDetail';
+import GroupMembers from './components/GroupMembers';
 
 function App() {
   return (
@@ -27,6 +31,9 @@ function App() {
           <Route path="/post" element={<Post />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/message" element={<Message />} />
+          <Route path="/groupdetail" element={<GroupDetail />} />
+          <Route path="/groupmembers" element={<GroupMembers />} />
+
           {/* put this last because since it is empty, it will always be the first
             child to match the URL */}
           <Route path="/" element={<Lobby />} />

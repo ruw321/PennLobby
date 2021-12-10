@@ -20,6 +20,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import ReplyIcon from '@material-ui/icons/Reply';
 // import CommentIcon from '@material-ui/icons/Comment';
+import FlagIcon from '@mui/icons-material/Flag';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -48,9 +51,20 @@ export default function RecipeReviewCard() {
           </Avatar>
         )}
         action={(
-          <IconButton aria-label="settings">
-            {/* <MoreVertIcon /> */}
-          </IconButton>
+          <div>
+            <IconButton aria-label="settings">
+              <DeleteIcon />
+              {/* delete post */}
+            </IconButton>
+            <IconButton aria-label="settings">
+              <VisibilityOffIcon />
+              {/* hide a post */}
+            </IconButton>
+            <IconButton aria-label="settings">
+              <FlagIcon />
+              {/* flag as inappropriate */}
+            </IconButton>
+          </div>
         )}
         title="Shrimp and Chorizo Paella"
         subheader="September 14, 2016"
@@ -88,7 +102,7 @@ export default function RecipeReviewCard() {
           )}
             action={(
               <IconButton aria-label="settings">
-                {/* <MoreVertIcon /> */}
+                <DeleteIcon />
               </IconButton>
           )}
             title="Shrimp and Chorizo Paella"
@@ -111,7 +125,7 @@ export default function RecipeReviewCard() {
           )}
             action={(
               <IconButton aria-label="settings">
-                {/* <MoreVertIcon /> */}
+                <DeleteIcon />
               </IconButton>
           )}
             title="Shrimp and Chorizo Paella"
