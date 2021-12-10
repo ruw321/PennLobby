@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
@@ -13,6 +14,7 @@ import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
+import Menu from "./Menu";
 
 function Copyright() {
   return (
@@ -102,66 +104,8 @@ function MyGroup() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar
-        position="static"
-        color="default"
-        elevation={0}
-        sx={{ borderBottom: (themes) => `1px solid ${themes.palette.divider}` }}
-      >
-        <Toolbar sx={{ flexWrap: "wrap" }}>
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            sx={{ flexGrow: 0.3 }}
-          >
-            <img className="barLogo" src="../../logo.png" alt="logo_pic" />
-          </Typography>
-          <nav>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 7 }}
-              id="home"
-            >
-              Home
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 7 }}
-              id="mygroups"
-            >
-              My Groups
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 7 }}
-              id="myposts"
-            >
-              My Posts
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 7 }}
-              id="messages"
-            >
-              Messages
-            </Link>
-          </nav>
-          <section className={classes.rightToolbar}>
-            <Button href="./login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-              Login
-            </Button>
-          </section>
-        </Toolbar>
-      </AppBar>
+
+      <Menu />
       <main>
         {/* Hero unit */}
         {/* Filter and Sort options */}

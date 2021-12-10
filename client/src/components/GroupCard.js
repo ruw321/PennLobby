@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-unused-vars */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as React from "react";
 import PropTypes from "prop-types";
@@ -10,34 +12,61 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Box from "@mui/material/Box";
-
-const buttonsNotIn = [
-  <Button key="one" className="groupBtn1" style={{ textTransform: "none" }}>
-    View Detail
-  </Button>,
-  <Button key="two" className="groupBtn2" style={{ textTransform: "none" }}>
-    Join Group
-  </Button>,
-  <Button key="three" className="groupBtn3" style={{ textTransform: "none" }}>
-    Members
-  </Button>,
-];
-const buttonsIn = [
-  <Button key="one" className="groupBtn1" style={{ textTransform: "none" }}>
-    View Detail
-  </Button>,
-  <Button key="two" className="groupBtn4" style={{ textTransform: "none" }}>
-    Quit Group
-  </Button>,
-  <Button key="three" className="groupBtn3" style={{ textTransform: "none" }}>
-    Members
-  </Button>,
-];
+import { Dialog } from "@material-ui/core";
+import {
+  DialogActions, DialogContent, DialogContentText, DialogTitle,
+} from "@mui/material";
 
 const tags = ["Football", "Sports", "tag3"];
 
 function GroupCard(props) {
   const { post, whetherIn } = props;
+
+  // confirm join group button
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // confirm quit group button
+  const [open2, setOpen2] = React.useState(false);
+
+  const handleClickOpen2 = () => {
+    setOpen2(true);
+  };
+
+  const handleClose2 = () => {
+    setOpen2(false);
+  };
+
+  const buttonsNotIn = [
+    <Button key="one" href="./groupdetail" className="groupBtn1" style={{ textTransform: "none" }}>
+      View Detail
+    </Button>,
+
+    <Button key="two" className="groupBtn2" style={{ textTransform: "none" }} onClick={handleClickOpen}>
+      Join Group
+    </Button>,
+    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} href="./groupmembers">
+      Members
+    </Button>,
+  ];
+  const buttonsIn = [
+    <Button key="one" href="./groupdetail" className="groupBtn1" style={{ textTransform: "none" }}>
+      View Detail
+    </Button>,
+    <Button key="two" className="groupBtn4" style={{ textTransform: "none" }} onClick={handleClickOpen2}>
+      Quit Group
+    </Button>,
+    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} href="./groupmembers">
+      Members
+    </Button>,
+  ];
 
   return (
     <>
@@ -91,6 +120,51 @@ function GroupCard(props) {
           >
             {whetherIn ? buttonsIn : buttonsNotIn}
           </ButtonGroup>
+          {/* confirm join group */}
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              Do you want to send a request to join this group?
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                After joining the group, you will be able to view the posts and members in the group. While
+                the request is pending, you may not send requests to join other groups.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>No</Button>
+              <Button onClick={handleClose} autoFocus>
+                Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
+          {/* confirm quit group */}
+          <Dialog
+            open={open2}
+            onClose={handleClose2}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              Do you want to quit this group?
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                After quitting the group, you will not be able to view the posts and members in the group anymore.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose2}>No</Button>
+              <Button onClick={handleClose2} autoFocus>
+                Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Box>
       </Grid>
     </>

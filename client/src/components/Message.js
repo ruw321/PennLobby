@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
@@ -23,6 +24,7 @@ import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
+import Menu from "./Menu";
 
 const theme = createTheme();
 
@@ -65,67 +67,7 @@ function Chat() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar
-        position="static"
-        color="default"
-        elevation={0}
-        sx={{ borderBottom: (themes) => `1px solid ${themes.palette.divider}` }}
-      >
-        <Toolbar sx={{ flexWrap: "wrap" }}>
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            sx={{ flexGrow: 0.3 }}
-          >
-            <img className="barLogo" src="../../logo.png" alt="logo_pic" />
-          </Typography>
-          <nav>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/"
-              sx={{ my: 1, mx: 7 }}
-              id="home"
-            >
-              Home
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 7 }}
-              id="mygroups"
-            >
-              My Groups
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 7 }}
-              id="myposts"
-            >
-              My Posts
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/message"
-              fontWeight="600"
-              sx={{ my: 1, mx: 7 }}
-              id="messages"
-            >
-              Messages
-            </Link>
-          </nav>
-          <section className={classes.rightToolbar}>
-            <Button href="./profile">
-              <Avatar src="https://material-ui.com/static/images/avatar/4.jpg" />
-            </Button>
-          </section>
-        </Toolbar>
-      </AppBar>
+      <Menu />
       <Grid container style={{ position: "fixed", bottom: "0", top: "65px" }}>
         <Grid container component={Paper} className={classes2.chatSection} style={{ height: "100%" }}>
           <Grid item xs={3} className={classes2.borderRight500}>
