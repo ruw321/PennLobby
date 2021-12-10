@@ -21,7 +21,7 @@ const bodyParser = require('body-parser');
 
 
 // Server port
-const port = 8080;
+const port = 8081;
 
 // JSON web token creation
 const serverToken = jwt.sign({

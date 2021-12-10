@@ -3,7 +3,7 @@
 const axios = require('axios');
 
 export const getUsers = async () => {
-  const res = await axios.get('http://localhost:8080/users');
+  const res = await axios.get('http://localhost:8081/users');
   return res.data.data;
 };
 
@@ -11,7 +11,7 @@ export const joinChat = async (user) => {
   try {
     if (user.length > 0) {
       const data = `username=${user}`;
-      const res = await axios.post('http://localhost:8080/login', data);
+      const res = await axios.post('http://localhost:8081/login', data);
       return res.data.token;
     }
   } catch (err) {
@@ -21,6 +21,6 @@ export const joinChat = async (user) => {
 
 export const sendMessage = async (sender, receiver, content) => {
   const data = `to=${receiver}&from=${sender}&message=${content}`;
-  const res = await axios.post('http://localhost:8080/message', data);
+  const res = await axios.post('http://localhost:8081/message', data);
   return res.data.message;
 };
