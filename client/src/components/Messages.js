@@ -33,7 +33,9 @@ import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import SendIcon from '@mui/icons-material/Send';
 import IconButton from '@mui/material/IconButton';
 import { setupWSConnection } from './notifications';
-import { getAllUsers, postMessage, getS3Url } from '../fetch';
+import {
+  getAllUsers, postMessage, getS3Url, sendS3,
+} from '../fetch';
 
 const theme = createTheme();
 const Input = styled('input')({
@@ -49,13 +51,7 @@ function Chat(props) {
   const updateImage = async (evt) => {
     const files = [...evt.target.files];
     const { url } = await getS3Url();
-    await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      body: files[0],
-    });
+    await sendS3(url, files[0]);
     const imageUrl = url.split('?')[0];
     sendMsg(`(link-image)${imageUrl}`);
   };
