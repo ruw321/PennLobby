@@ -64,7 +64,7 @@ async function getAllUsers() {
 }
 async function postMessage(sender, receiver, content) {
   try {
-    const theUrl = `${url}/api/messages`;
+    const theUrl = `${url}/api/message`;
     // const data = `to=${receiver}&from=${sender}&message=${content}`;
     const data = { to: receiver, from: sender, message: content };
     const res = await fetch(theUrl, {
@@ -79,6 +79,16 @@ async function postMessage(sender, receiver, content) {
     return null;
   }
 }
+async function getS3Url() {
+  try {
+    const theUrl = `${url}/api/s3Url`;
+    // const data = `to=${receiver}&from=${sender}&message=${content}`;
+    const result = await fetch(theUrl).then((res) => res.json());
+    return result;
+  } catch (err) {
+    return null;
+  }
+}
 module.exports = {
-  login, signup, logout, getAllUsers, postMessage,
+  login, signup, logout, getAllUsers, postMessage, getS3Url,
 };

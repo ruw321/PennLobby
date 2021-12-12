@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -15,7 +16,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 // import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -30,16 +31,35 @@ import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import SendIcon from '@mui/icons-material/Send';
+import IconButton from '@mui/material/IconButton';
 import { setupWSConnection } from './notifications';
-import { getAllUsers, postMessage } from '../fetch';
+import { getAllUsers, postMessage, getS3Url } from '../fetch';
 
 const theme = createTheme();
+const Input = styled('input')({
+  display: 'none',
+});
 
 function Chat(props) {
   const {
     messages, friends, setChat, sendMsg, currentChat,
   } = props;
-  console.log("messages", messages);
+
+  // event handler for file selection
+  const updateImage = async (evt) => {
+    const files = [...evt.target.files];
+    const { url } = await getS3Url();
+    await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      body: files[0],
+    });
+    const imageUrl = url.split('?')[0];
+    sendMsg(`(link-image)${imageUrl}`);
+  };
+  // console.log("messages", messages);
   // this is the stype for the menu bar at the top
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
@@ -75,6 +95,7 @@ function Chat(props) {
     },
   });
   const classes2 = useStyles2();
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -187,7 +208,9 @@ function Chat(props) {
                     <ListItem key={msg}>
                       <Grid container>
                         <Grid item xs={12}>
-                          <ListItemText align="right" primary={msg.split(': ')[1]} />
+                          {msg.split(': ')[1].indexOf('(link-image)http') === 0
+                            ? <img src={msg.split(': ')[1].split('(link-image)')[1]} style={{ width: "40%", float: "right" }} />
+                            : <ListItemText align="right" primary={msg.split(': ')[1]} />}
                         </Grid>
                         <Grid item xs={12}>
                           <ListItemText align="right" secondary="sent" />
@@ -201,43 +224,17 @@ function Chat(props) {
                           <ListItemIcon>
                             <Avatar alt={msg.split(')')[0].split('(')[1]} src="https://material-ui.com/static/images/avatar/1.jpg" />
                           </ListItemIcon>
-                          <ListItemText primary={msg.split(': ')[1]} secondary="received" />
+                          {msg.split(': ')[1].indexOf('(link-image)http') === 0
+                            ? (
+                              <img src={msg.split(': ')[1].split('(link-image)')[1]} style={{ width: "40%", float: "left" }} />
+                            )
+                            : <ListItemText primary={msg.split(': ')[1]} />}
                         </ListItem>
                       </Grid>
                     </ListItem>
                   ))
 
               }
-              {/* <ListItem key="1">
-                <Grid container>
-                  <Grid item xs={12}>
-                    <ListItemText align="right" primary="Hey man, What's up?" />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <ListItemText align="right" secondary="Monday 09:30" />
-                  </Grid>
-                </Grid>
-              </ListItem>
-              <ListItem key="2">
-                <Grid container>
-                  <ListItem>
-                    <ListItemIcon>
-                      <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" />
-                    </ListItemIcon>
-                    <ListItemText primary="Hey, I am Good! What about you?" secondary="Monday 09:31" />
-                  </ListItem>
-                </Grid>
-              </ListItem>
-              <ListItem key="3">
-                <Grid container>
-                  <Grid item xs={12}>
-                    <ListItemText align="right" primary="Cool. i am good, let's catch up!" />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <ListItemText align="right" secondary="Monday 10:30" />
-                  </Grid>
-                </Grid>
-              </ListItem> */}
             </List>
             <Grid
               container
@@ -246,7 +243,18 @@ function Chat(props) {
               }}
             >
               <Grid item xs={0.5}>
-                <Fab color="primary" aria-label="add" size="small"><InsertPhotoIcon /></Fab>
+                <Fab color="primary" aria-label="add" size="small">
+                  <label htmlFor="icon-button-file" style={{ lineHeight: "0px" }}>
+                    <Input
+                      accept="image/*"
+                      id="icon-button-file"
+                      type="file"
+                      onChange={(e) => updateImage(e)}
+                    />
+                    <InsertPhotoIcon />
+                  </label>
+                </Fab>
+
               </Grid>
               <Grid item xs={0.5}>
                 <Fab color="primary" aria-label="add" size="small"><UploadFileIcon /></Fab>
@@ -289,21 +297,10 @@ function Messages() {
   }, []);
   useEffect(() => {
     getAllUsers().then((response) => {
-      // const parent = document.getElementById("div1");
-      // const oldChild = document.getElementById("users");
-      // if (oldChild) {
-      //   oldChild.remove(); // delete old list of contacts
-      // }
-      // const elt = document.createElement("div");
-      // elt.setAttribute('id', 'users');
+      if (!response) {
+        return;
+      }
       const newFriends = response.map((r) => r.username);
-      console.log('newFriends', newFriends);
-      // response.forEach((element) => {
-      //   const p = document.createElement("p");
-      //   p.innerHTML = element;
-      //   elt.appendChild(p);
-      // });
-      // parent.appendChild(elt);
       setFriends(newFriends);
     });
 
@@ -319,22 +316,19 @@ function Messages() {
   }, [contacts, messages, texts]);
 
   const authenticate = async () => {
-    // const name = document.getElementById('usrname').value;
-    // if (sessionStorage.getItem('token') === null) {
-    //   const token = await joinChat(name); // get the token (jwt) from the web server
-    //   if (token) {
-    //     sessionStorage.setItem('token', token); // store token in session storage
-    //   }
-    // }
-    console.log('authenticate!');
     setupWSConnection(updateContacts, updateMessages, texts); // setup ws connection -- pass the wrapper functions as parameters
     setContacts((contacts) => contacts + 1); // update state to trigger re-rendering and useEffect
   };
-  const sendMsg = () => {
-    const text = (document.getElementById('outlined-basic-email') && document.getElementById('outlined-basic-email').value) || '';
+  const sendMsg = (link) => {
+    let text;
+    if (link) {
+      text = link;
+    } else {
+      text = (document.getElementById('outlined-basic-email') && document.getElementById('outlined-basic-email').value) || '';
+    }
     const to = currentChat;
     const from = myUserName;
-    console.log('from, to, text', from, to, text);
+    // console.log('from, to, text', from, to, text);
     if (text.length > 0 && to.length > 0 && from.length > 0) {
       postMessage(from, to, text);
     }
@@ -345,64 +339,8 @@ function Messages() {
   // contains the messages
   return (
     <div className="Messages" style={{ position: "" }}>
-      {/* <div>
-        <h2>New user</h2>
-        <label>Username: </label> <input type="text" id="usrname" />
-        { (contacts === 0) ? <button type="button" id="btn" onClick={() => authenticate()}>Register</button> : null}
-      </div>
-      <hr />
-      <UsersComponent />
-      <MessagesComponent messages={texts.current} /> */}
       <Chat messages={texts.current} friends={friends} setChat={(to) => { setCurrentChat(to); }} sendMsg={sendMsg} currentChat={currentChat} />
     </div>
   );
 }
-
-// // list of users component
-// function UsersComponent() {
-//   return (
-//     <div>
-//       <h2>Connected users</h2>
-//       <div id="div1" />
-//       <hr />
-//     </div>
-
-//   );
-// }
-
-// // messages component
-// function MessagesComponent(props) {
-//   const sendMsg = () => {
-//     const text = document.getElementById('msg').value;
-//     const to = document.getElementById('inptto').value;
-//     const from = document.getElementById('inptfrom').value;
-//     if (text.length > 0 && to.length > 0 && from.length > 0) {
-//       sendMessage(from, to, text);
-//     }
-//   };
-//   console.log('props.messages', props.messages);
-//   return (
-//     <div>
-//       <div>
-//         <h2>Previous messages</h2>
-//         <div>{props.messages.map((msg) => <p>{msg}</p>)}</div>
-//         <hr />
-//       </div>
-//       <div>
-//         <h2>New message</h2>
-//         <label>From: </label> <input type="text" id="inptfrom" />
-//       </div>
-//       <div>
-//         <label>To: </label> <input type="text" id="inptto" />
-//       </div>
-//       <div>
-//         <textarea cols="15" rows="5" id="msg" />
-//         <button type="button" id="btn" onClick={() => sendMsg()}>Send</button>
-//       </div>
-
-//     </div>
-
-//   );
-// }
-
 export default Messages;
