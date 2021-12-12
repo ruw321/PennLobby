@@ -89,6 +89,21 @@ async function getS3Url() {
     return null;
   }
 }
+async function sendS3(theUrl, file) {
+  try {
+    // const data = `to=${receiver}&from=${sender}&message=${content}`;
+    const result = await fetch(theUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      body: file,
+    });
+    return result;
+  } catch (err) {
+    return null;
+  }
+}
 module.exports = {
-  login, signup, logout, getAllUsers, postMessage, getS3Url,
+  login, signup, logout, getAllUsers, postMessage, getS3Url, sendS3,
 };
