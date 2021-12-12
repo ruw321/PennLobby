@@ -13,7 +13,8 @@ import Lobby from './components/Lobby';
 import Group from './components/Group';
 import Post from './components/Post';
 import Profile from './components/Profile';
-import Message from './components/Message';
+// import Message from './components/Message';
+import Messages from './components/Messages';
 import GroupDetail from './components/GroupDetail';
 import GroupMembers from './components/GroupMembers';
 
@@ -30,9 +31,10 @@ function App() {
           <Route path="/group" element={<Group />} />
           <Route path="/post" element={<Post />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/message" element={<Message />} />
+          <Route path="/message" element={<Messages />} />
           <Route path="/groupdetail" element={<GroupDetail />} />
           <Route path="/groupmembers" element={<GroupMembers />} />
+          <Route path="/messages" element={<Messages />} />
 
           {/* put this last because since it is empty, it will always be the first
             child to match the URL */}
