@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from "react";
+import { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -31,42 +32,40 @@ function Copyright() {
 
 const theme = createTheme();
 
-const postCards = getAllPosts();
-
-// const postCards = [
-//   {
-//     title: "Penn Football",
-//     size: "293",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-//   {
-//     title: "Penn Musical Lovers",
-//     size: "200",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-//   {
-//     title: "Penn Residential",
-//     size: "200",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-//   {
-//     title: "Daily Philadelphia",
-//     size: "200",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-// ];
+const postCardsHardcode = [
+  {
+    title: "Penn Football",
+    size: "293",
+    description:
+      "This is a wider card with supporting text below as a natural lead-in to additional content.",
+    image: "https://source.unsplash.com/random",
+    imageLabel: "Image Text",
+  },
+  {
+    title: "Penn Musical Lovers",
+    size: "200",
+    description:
+      "This is a wider card with supporting text below as a natural lead-in to additional content.",
+    image: "https://source.unsplash.com/random",
+    imageLabel: "Image Text",
+  },
+  {
+    title: "Penn Residential",
+    size: "200",
+    description:
+      "This is a wider card with supporting text below as a natural lead-in to additional content.",
+    image: "https://source.unsplash.com/random",
+    imageLabel: "Image Text",
+  },
+  {
+    title: "Daily Philadelphia",
+    size: "200",
+    description:
+      "This is a wider card with supporting text below as a natural lead-in to additional content.",
+    image: "https://source.unsplash.com/random",
+    imageLabel: "Image Text",
+  },
+];
 
 const trendingTopicsToday = [
   "Music",
@@ -94,7 +93,17 @@ const trendingTopicsWeekly = [
   "Football",
 ];
 
-function MyGroup() {
+function MyPost() {
+  const [allPosts, setAllPosts] = useState([]);
+  useEffect(() => {
+    const loadData = async () => {
+      const postCards = await getAllPosts();
+      // console.log(postCards);
+      setAllPosts(postCards);
+    };
+    loadData();
+  }, []);
+
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
@@ -128,7 +137,8 @@ function MyGroup() {
               {/* Groups */}
               <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container rowSpacing={3} columnSpacing={0}>
-                  {postCards.map((post) => (
+                  {allPosts.map((post) => (
+
                     <PostCard key={post.title} post={post} whetherIn />
                   ))}
                 </Grid>
@@ -145,17 +155,6 @@ function MyGroup() {
       </main>
       {/* Footer */}
       <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="p"
-        >
-          Something here to give the footer a purpose!
-        </Typography>
         <Copyright />
       </Box>
       {/* End footer */}
