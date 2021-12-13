@@ -19,9 +19,16 @@
 client
 ├── public                 # store static files (logos, pictures, etc.)
 ├── src
-|   ├── components         # js files (e.g. Home.js)
-|   ├── styles             # css files (e.g. Home.css)
-|   ├── tests              # test files (e.g. Home.test.js)
+|   ├── components         # js files 
+|   |   |── Lobby.js
+|   |   |── ...
+|   ├── styles             # css files 
+|   |   |── Lobby.css
+|   |   |── ...
+|   ├── tests              # test files 
+|   |   |── Lobby.test.js
+|   |   |── ...
+|   |── fetch.js           # HTTP request methods to fetch data from backend
 |   ├── App.js
 |   └── App.css
 |   ├── index.js
@@ -53,6 +60,9 @@ api
 ├── utils                  # util functions
 |   ├── catchAsync.js
 |   ├── ExpressError.js
+|   |── passport.js        # user authorization & authentication
+|   |── s3.js              # configure Amazon S3 to store images & videos
+|   |── wsserver.js        # configure web socket to enable chat
 ├── .env                   # environment variables (often we want them to remain private)
 ├── .gitignore
 ├── package.json
@@ -71,7 +81,8 @@ api
 8. After cloning the project from the GitHub repo, run `npm install` in both `client` and `api` directories; 
 9. Run `npm start` in the `client` directory, then open `localhost:3000` in browser to see frontend;
 10. Run `npm start` in the `api` directory, then open `localhost:8080` in browser to see backend;
-11. Test the APIs using `curl` commands or Postman; make sense of the data format by checking out the Mongo Atlas console.
+11. Test the APIs using `curl` commands or Postman; make sense of the data format by checking out the Mongo Atlas console;
+12. Resolve ESLint errors during development (both frontend and backend); make sure to pass TravisCI check when committing changes to repo and merging into branches.
 
 ### 5. Links
 
