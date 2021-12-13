@@ -1,6 +1,8 @@
 const url = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
   ? 'http://localhost:8080'
   : '';
+
+// log in a user
 async function login(u, p) {
   const user = {
     username: u,
@@ -23,6 +25,7 @@ async function login(u, p) {
   }
 }
 
+// sign up a user
 async function signup(user) {
   const data = {
     credentials: 'include',
@@ -42,6 +45,7 @@ async function signup(user) {
   }
 }
 
+// log out a user
 async function logout() {
   try {
     const theUrl = `${url}/api/user/`;
@@ -51,7 +55,7 @@ async function logout() {
   }
 }
 
-// all user APIs
+// get all users
 async function getAllUsers() {
   try {
     const theUrl = `${url}/api/user`;
@@ -62,6 +66,8 @@ async function getAllUsers() {
     return null;
   }
 }
+
+// create a new message
 async function postMessage(sender, receiver, content) {
   try {
     const theUrl = `${url}/api/message`;
@@ -79,6 +85,8 @@ async function postMessage(sender, receiver, content) {
     return null;
   }
 }
+
+// get image/video url from Amazon S3
 async function getS3Url() {
   try {
     const theUrl = `${url}/api/s3Url`;
@@ -89,6 +97,8 @@ async function getS3Url() {
     return null;
   }
 }
+
+// update image/video url to Amazon S3
 async function sendS3(theUrl, file) {
   try {
     // const data = `to=${receiver}&from=${sender}&message=${content}`;
@@ -104,6 +114,19 @@ async function sendS3(theUrl, file) {
     return null;
   }
 }
+
+// get all posts
+async function getAllPosts() {
+  try {
+    const theUrl = `${url}/api/post`;
+    const result = await fetch(theUrl, { method: 'GET' });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
 module.exports = {
-  login, signup, logout, getAllUsers, postMessage, getS3Url, sendS3,
+  login, signup, logout, getAllUsers, postMessage, getS3Url, sendS3, getAllPosts,
 };

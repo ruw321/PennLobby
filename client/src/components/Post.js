@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
 import Menu from "./Menu";
+import { getAllPosts } from "../fetch";
 
 function Copyright() {
   return (
@@ -30,40 +31,43 @@ function Copyright() {
 
 const theme = createTheme();
 
-const postCards = [
-  {
-    title: "Penn Football",
-    size: "293",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Penn Musical Lovers",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Penn Residential",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Daily Philadelphia",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-];
+const postCards = getAllPosts();
+
+// const postCards = [
+//   {
+//     title: "Penn Football",
+//     size: "293",
+//     description:
+//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
+//     image: "https://source.unsplash.com/random",
+//     imageLabel: "Image Text",
+//   },
+//   {
+//     title: "Penn Musical Lovers",
+//     size: "200",
+//     description:
+//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
+//     image: "https://source.unsplash.com/random",
+//     imageLabel: "Image Text",
+//   },
+//   {
+//     title: "Penn Residential",
+//     size: "200",
+//     description:
+//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
+//     image: "https://source.unsplash.com/random",
+//     imageLabel: "Image Text",
+//   },
+//   {
+//     title: "Daily Philadelphia",
+//     size: "200",
+//     description:
+//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
+//     image: "https://source.unsplash.com/random",
+//     imageLabel: "Image Text",
+//   },
+// ];
+
 const trendingTopicsToday = [
   "Music",
   "Football",
@@ -76,6 +80,7 @@ const trendingTopicsToday = [
   "Living",
   "News",
 ];
+
 const trendingTopicsWeekly = [
   "Sports",
   "Ivy Leagues",
@@ -88,6 +93,7 @@ const trendingTopicsWeekly = [
   "Music",
   "Football",
 ];
+
 function MyGroup() {
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
@@ -157,4 +163,4 @@ function MyGroup() {
   );
 }
 
-export default MyGroup;
+export default MyPost;
