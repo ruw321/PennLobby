@@ -17,7 +17,7 @@ import {
   DialogActions, DialogContent, DialogContentText, DialogTitle,
 } from "@mui/material";
 
-const tags = ["Football", "Sports", "tag3"];
+const tags = ["Football", "Sports", "Entertainment"];
 
 function GroupCard(props) {
   const { post, whetherIn } = props;
