@@ -60,9 +60,9 @@ api
 ├── utils                  # util functions
 |   ├── catchAsync.js
 |   ├── ExpressError.js
-|   |── passport.js        # user authorization & authentication
-|   |── s3.js              # configure Amazon S3 to store images & videos
-|   |── wsserver.js        # configure web socket to enable chat
+|── passport.js            # user authorization & authentication
+|── s3.js                  # configure Amazon S3 to store images & videos
+|── wsserver.js            # configure web socket to enable chat
 ├── .env                   # environment variables (often we want them to remain private)
 ├── .gitignore
 ├── package.json
