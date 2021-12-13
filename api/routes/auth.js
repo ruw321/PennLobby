@@ -23,21 +23,30 @@ connection.onmessage = (e) => {
 
 router.post('/login', function (req, res, next) {
   passport.authenticate('local', function (err, user, info) {
-    if (req.session.requestCount) {
-      req.session.requestCount += 1;
-    } else {
-      req.session.requestCount = 1;
+    if (req.session.requestCount > 4) {
+      req.session.requestCount = 0;
     }
-    console.log(req.session.requestCount);
+
     if (err) {
-      if (req.session.requestCount > 2) {
-        console.log('your account is being locked');
+      if (req.session.requestCount) {
+        req.session.requestCount += 1;
+      } else {
+        req.session.requestCount = 1;
+      }
+      if (req.session.requestCount > 4) {
+        return res.status(401).json({ error: "too many failed requests"})
       }
       return res.status(401).json(err);
     }
+
     if (!user) {
-      if (req.session.requestCount > 2) {
-        console.log('your account is being locked');
+      if (req.session.requestCount) {
+        req.session.requestCount += 1;
+      } else {
+        req.session.requestCount = 1;
+      }
+      if (req.session.requestCount > 4) {
+        return res.status(401).json({ error: "too many failed requests"})
       }
       return res.status(401).json(info);
     }

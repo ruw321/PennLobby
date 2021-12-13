@@ -24,11 +24,7 @@ module.exports.getUserbyEmail = async (collection, theEmail) => {
 module.exports.getUserByUsername = async (collection, Username) => {
   try {
     const user = await collection.findOne({ username: Username });
-    if (user) {
-      return true;
-    } else {
-      return false;
-    }
+    return user;
   } catch (err) {
     throw new Error(`Error getting the user by email: ${err.message}`);
   }
@@ -71,6 +67,23 @@ module.exports.updateUserById = async (collection, ID, updatedObject) => {
       { _id: ID },
       { $set: updatedObject }
     );
+    return response;
+  } catch (err) {
+    throw new Error(`Error updating the user by id: ${err.message}`);
+  }
+};
+
+// user change password
+module.exports.changePassword = async (collection, ID, newPass) => {
+  try {
+    // here i have to do "findone and save" to replace "updateOne"
+    // in order to trigger the function in model User where it
+    // automatically hashes the password
+    const response = await collection.findOne(
+      { _id: ID },
+    );
+    response.password = newPass;
+    response.save();
     return response;
   } catch (err) {
     throw new Error(`Error updating the user by id: ${err.message}`);

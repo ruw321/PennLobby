@@ -38,6 +38,16 @@ module.exports.deleteCommentById = async (collection, ID) => {
   }
 };
 
+// delete comment by author
+module.exports.deleteCommentByAuthor = async (collection, userID) => {
+  try {
+    const res = await collection.deleteMany({ author_id: userID });
+    return res;
+  } catch (err) {
+    throw new Error(`Error deleting the comment by author: ${err.message}`);
+  }
+};
+
 // update comment by id
 module.exports.updateCommentById = async (collection, ID, updatedObject) => {
   try {

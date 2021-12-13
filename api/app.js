@@ -65,6 +65,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 // app.use(bodyParser.urlencoded({ extended: false }));
 
+// app.use(function(_req, res, next) {
+//   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+//   next();
+// });
+
 app.use(passport.initialize());
 app.use(passport.session());
 require('./passport')(passport); // for authentication

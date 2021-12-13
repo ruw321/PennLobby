@@ -128,39 +128,8 @@ const trendingTopicsWeekly = [
   "Football",
 ];
 function Lobby() {
-  const navigate = useNavigate();
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
-  const [loggedIn, setLoggedin] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleProfile = () => {
-    handleClose();
-    navigate('/profile');
-  };
-
-  const handleLogout = async () => {
-    handleClose();
-    sessionStorage.removeItem('username');
-    setLoggedin(false);
-    await logout();
-  };
-
-  const userName = sessionStorage.getItem('username');
-
-  React.useEffect(() => {
-    if (userName) {
-      setLoggedin(true);
-    }
-  }, []);
 
   const handleChangeTopics = (event) => {
     const {
@@ -181,18 +150,6 @@ function Lobby() {
     );
   };
 
-  const useStyles = makeStyles({
-    // This group of buttons will be aligned to the right
-    rightToolbar: {
-      marginLeft: "auto",
-      marginRight: -12,
-    },
-    menuButton: {
-      marginRight: 16,
-      marginLeft: -12,
-    },
-  });
-  const classes = useStyles();
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

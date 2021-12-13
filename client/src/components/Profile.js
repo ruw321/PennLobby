@@ -4,7 +4,6 @@
 /* eslint-disable import/no-unresolved */
 import * as React from 'react';
 import { useState } from 'react';
-import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -14,7 +13,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
@@ -24,10 +22,11 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { styled } from '@mui/system';
-import {
-  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField,
-} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import Menu from "./Menu";
+import { getUserbyUsername } from '../fetch';
+import PasswordChange from './profile_components/PasswordChange';
+import AccountDeactivate from './profile_components/AccountDeactivate';
 
 function Copyright() {
   return (
@@ -57,273 +56,220 @@ export default function Album() {
     display: 'none',
   });
 
-  // change password dialog
-  const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+  // user information
+  const [user, setUser] = React.useState(null);
+  const uname = sessionStorage.getItem("username");
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  // deactivate account dialog
-  const [open2, setOpen2] = React.useState(false);
-
-  const handleClickOpen2 = () => {
-    setOpen2(true);
-  };
-
-  const handleClose2 = () => {
-    setOpen2(false);
-  };
-
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-
-      <Menu />
-      <main>
-        {/* Hero unit */}
-        <Box
-          sx={{
-            bgcolor: 'background.paper',
-            pt: 8,
-            pb: 6,
-          }}
-        >
-          <Container maxWidth="lg" justify="flex-end">
-            <Grid item xs={12} align="center" maxWidth="lg" sx={{ pt: 4, pb: 4, background: 'rgb(240, 240, 240)' }}>
-              <CardMedia
-                component="img"
-                sx={{
-                  borderRadius: '50%', height: 120, width: 120, display: { xs: 'none', sm: 'block' },
-                }}
-                image="https://picsum.photos/536/354"
-              />
-            </Grid>
-          </Container>
-
-          <Container maxWidth="lg">
-            <Typography
-              sx={{ pt: 4 }}
-              component="h5"
-              variant="h5"
-              align="center"
-              color="text.primary"
-              gutterBottom
-            >
-              My Name
-            </Typography>
-            <Typography variant="h6" align="center" color="text.secondary" paragraph>
-              Registration Date
-            </Typography>
-            <Typography variant="h6" align="center" color="text.secondary" paragraph>
-              Something short and leading about the collection below—its contents,
-              the creator, etc. Make it short and sweet, but not too short so folks
-              don&apos;t simply skip over it entirely.
-            </Typography>
-            <Stack
-              sx={{ pt: 0 }}
-              direction="row"
-              spacing={2}
-              justifyContent="center"
-            >
-              <label htmlFor="contained-button-file">
-                <Input accept="image/*" id="contained-button-file" multiple type="file" />
-                <Button variant="contained" component="span">
-                  Upload Profile Picture
-                </Button>
-              </label>
-
-              <Button variant="outlined" onClick={handleClickOpen}>
-                Change Password
-              </Button>
-              <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Change Password</DialogTitle>
-                <DialogContent>
-                  <DialogContentText>
-                    Please input the new password.
-                  </DialogContentText>
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    label="new password"
-                    type="email"
-                    fullWidth
-                    variant="standard"
-                  />
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose}>Cancel</Button>
-                  <Button onClick={handleClose}>Confirm</Button>
-                </DialogActions>
-              </Dialog>
-
-              <Button variant="outlined" onClick={handleClickOpen2}>
-                Deactivate account
-              </Button>
-              <Dialog
-                open={open2}
-                onClose={handleClose2}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle id="alert-dialog-title">
-                  Confirm to deactivate your account?
-                </DialogTitle>
-                <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
-                    By confirming, you will deactivate your account and cannot reverse the action.
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose2}>Cancel</Button>
-                  <Button onClick={handleClose2} autoFocus>
-                    Confirm
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </Stack>
-          </Container>
-        </Box>
-
-        <TabContext value={value}>
+  React.useEffect(async () => {
+    if (!uname) {
+      navigate('/login');
+    }
+    if (uname) {
+      const response = await getUserbyUsername(uname);
+      const parsed = await response.json();
+      setUser(parsed);
+    }
+  }, []);
+  if (user) {
+    const date = new Date(user.created_at);
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Menu />
+        <main>
           <Box
             sx={{
-              borderBottom: 1, borderColor: 'divider',
+              bgcolor: 'background.paper',
+              pt: 8,
+              pb: 6,
             }}
           >
-            <TabList className="tablist" onChange={handleChange} centered variant="fullWidth">
-              <Tab label="About" value="1" />
-              <Tab label="Friends" value="2" />
-              <Tab label="Groups" value="3" />
-            </TabList>
+            <Container maxwidth="lg" justify="flex-end">
+              <Grid item xs={12} align="center" maxwidth="lg" sx={{ pt: 4, pb: 4, background: 'rgb(240, 240, 240)' }}>
+                <CardMedia
+                  component="img"
+                  sx={{
+                    borderRadius: '50%', height: 120, width: 120, display: { xs: 'none', sm: 'block' },
+                  }}
+                  image="https://picsum.photos/536/354"
+                />
+              </Grid>
+            </Container>
+
+            <Container maxwidth="lg">
+              <Typography
+                sx={{ pt: 4 }}
+                component="h5"
+                variant="h5"
+                align="center"
+                color="text.primary"
+                gutterBottom
+              >
+                {user.username}
+              </Typography>
+              <Typography variant="h6" align="center" color="text.secondary" paragraph>
+                Registration Date: {date.toDateString()}
+              </Typography>
+              <Typography variant="h6" align="center" color="text.secondary" paragraph>
+                Something short and leading about the collection below—its contents,
+                the creator, etc. Make it short and sweet, but not too short so folks
+                don&apos;t simply skip over it entirely.
+              </Typography>
+              <Stack
+                sx={{ pt: 0 }}
+                direction="row"
+                spacing={2}
+                justifyContent="center"
+              >
+                <label htmlFor="contained-button-file">
+                  <Input accept="image/*" id="contained-button-file" multiple type="file" />
+                  <Button variant="contained" component="span">
+                    Upload Profile Picture
+                  </Button>
+                </label>
+                <PasswordChange />
+                <AccountDeactivate />
+              </Stack>
+            </Container>
           </Box>
 
-          <TabPanel value="1" alt="About">
-            <Container sx={{ py: 8 }} maxWidth="lg">
-              <CardContent sx={{ flexGrow: 1 }} maxWidth="lg">
-                <Typography gutterBottom variant="h5" component="h2">
-                  Intro
-                </Typography>
-                <Typography>
-                  This is a media card. You can use this section to describe the
-                  content.
-                </Typography>
-              </CardContent>
+          <TabContext value={value}>
+            <Box
+              sx={{
+                borderBottom: 1, borderColor: 'divider',
+              }}
+            >
+              <TabList className="tablist" onChange={handleChange} centered variant="fullWidth">
+                <Tab label="About" value="1" />
+                <Tab label="Friends" value="2" />
+                <Tab label="Groups" value="3" />
+              </TabList>
+            </Box>
 
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Hobbies
-                </Typography>
-                <Typography>
-                  This is a media card. You can use this section to describe the
-                  content.
-                </Typography>
-              </CardContent>
-            </Container>
-          </TabPanel>
+            <TabPanel value="1" alt="About">
+              <Container sx={{ py: 8 }} maxwidth="lg">
+                <CardContent sx={{ flexGrow: 1 }} maxwidth="lg">
+                  <Typography gutterBottom variant="h5" component="h2">
+                    Intro
+                  </Typography>
+                  <Typography>
+                    This is a media card. You can use this section to describe the
+                    content.
+                  </Typography>
+                </CardContent>
 
-          <TabPanel value="2" alt="Friends">
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    Hobbies
+                  </Typography>
+                  <Typography>
+                    This is a media card. You can use this section to describe the
+                    content.
+                  </Typography>
+                </CardContent>
+              </Container>
+            </TabPanel>
 
-            <Container sx={{ py: 8 }} maxWidth="lg">
-              {/* End hero unit */}
-              <Grid container spacing={1}>
-                {cards.map((card) => (
-                  <Grid item key={card} xs={6} sm={4} md={2}>
-                    <Card
-                      sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-                    >
-                      <CardMedia
-                        component="img"
-                        sx={{
-                          // 16:9
-                          pt: '1%',
-                          height: '100px',
-                          width: '200px',
-                        }}
-                        image="https://source.unsplash.com/random"
-                        alt="random"
-                      />
-                      <CardContent sx={{ flexGrow: 1 }}>
-                        <Typography gutterBottom variant="h6" component="h6">
-                          Name
-                        </Typography>
-                        <Typography gutterBottom variant="body" component="body">
-                          Shared group: A
-                        </Typography>
-                      </CardContent>
-                      <CardActions centered>
-                        <Button size="small">View</Button>
-                        <Button size="small">Edit</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </TabPanel>
+            <TabPanel value="2" alt="Friends">
 
-          <TabPanel value="3" alt="Groups">
+              <Container sx={{ py: 8 }} maxwidth="lg">
+                {/* End hero unit */}
+                <Grid container spacing={1}>
+                  {cards.map((card) => (
+                    <Grid item key={card} xs={6} sm={4} md={2}>
+                      <Card
+                        sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                      >
+                        <CardMedia
+                          component="img"
+                          sx={{
+                            // 16:9
+                            pt: '1%',
+                            height: '100px',
+                            width: '200px',
+                          }}
+                          image="https://source.unsplash.com/random"
+                          alt="random"
+                        />
+                        <CardContent sx={{ flexGrow: 1 }}>
+                          <Typography gutterBottom variant="h6" component="h6">
+                            Name
+                          </Typography>
+                          <Typography gutterBottom variant="body" component="body">
+                            Shared group: A
+                          </Typography>
+                        </CardContent>
+                        <CardActions centered>
+                          <Button size="small">View</Button>
+                          <Button size="small">Edit</Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Container>
+            </TabPanel>
 
-            <Container sx={{ py: 8 }} maxWidth="lg">
-              {/* End hero unit */}
-              <Grid container spacing={1}>
-                {cards.map((card) => (
-                  <Grid item key={card} xs={6} sm={4} md={4}>
-                    <Card
-                      sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-                    >
-                      <CardMedia
-                        component="img"
-                        sx={{
-                          // 16:9
-                          pt: '1%',
-                          height: '200px',
-                          width: '400px',
-                        }}
-                        image="https://source.unsplash.com/random"
-                        alt="random"
-                      />
-                      <CardContent sx={{ flexGrow: 1 }} center>
-                        <Typography gutterBottom variant="h6" component="h6">
-                          Group Name
-                        </Typography>
-                        <Typography gutterBottom variant="body" component="body">
-                          Group intro
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Button size="small">View Details</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </TabPanel>
-        </TabContext>
+            <TabPanel value="3" alt="Groups">
 
-      </main>
-      {/* Footer */}
-      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="p"
-        >
-          Something here to give the footer a purpose!
-        </Typography>
-        <Copyright />
-      </Box>
-      {/* End footer */}
-    </ThemeProvider>
-  );
+              <Container sx={{ py: 8 }} maxwidth="lg">
+                {/* End hero unit */}
+                <Grid container spacing={1}>
+                  {cards.map((card) => (
+                    <Grid item key={card} xs={6} sm={4} md={4}>
+                      <Card
+                        sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                      >
+                        <CardMedia
+                          component="img"
+                          sx={{
+                            // 16:9
+                            pt: '1%',
+                            height: '200px',
+                            width: '400px',
+                          }}
+                          image="https://source.unsplash.com/random"
+                          alt="random"
+                        />
+                        <CardContent sx={{ flexGrow: 1 }} center>
+                          <Typography gutterBottom variant="h6" component="h6">
+                            Group Name
+                          </Typography>
+                          <Typography gutterBottom variant="body" component="body">
+                            Group intro
+                          </Typography>
+                        </CardContent>
+                        <CardActions>
+                          <Button size="small">View Details</Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Container>
+            </TabPanel>
+          </TabContext>
+
+        </main>
+        {/* Footer */}
+        <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
+          {/* <Typography variant="h6" align="center" gutterBottom>
+            Footer
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
+            color="text.secondary"
+            component="p"
+          >
+            Something here to give the footer a purpose!
+          </Typography> */}
+          <Copyright />
+        </Box>
+        {/* End footer */}
+      </ThemeProvider>
+    );
+  }
+  return (<div />);
 }

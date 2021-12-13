@@ -51,6 +51,56 @@ async function logout() {
   }
 }
 
+async function getUserbyUsername(username) {
+  try {
+    const theUrl = `${url}/api/user/username/${username}`;
+    const response = await fetch(theUrl);
+    return response;
+  } catch (e) {
+    return e;
+  }
+}
+
+async function userChangePassword(id, newPass) {
+  const obj = { password: newPass };
+  const data = {
+    credentials: 'include',
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    // you have to do JSON.stringify, otherwise CORS wouldnt allow it
+    body: JSON.stringify(obj),
+  };
+  try {
+    const theUrl = `${url}/api/user/password/${id}`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (e) {
+    return e;
+  }
+}
+
+async function deactivateAccount(id) {
+  const data = {
+    credentials: 'include',
+    method: 'DELETE',
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
+    // // you have to do JSON.stringify, otherwise CORS wouldnt allow it
+    // body: JSON.stringify(obj),
+  };
+  try {
+    const theUrl = `${url}/api/user/${id}`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (e) {
+    return e;
+  }
+}
+
+=======
 // all user APIs
 async function getAllUsers() {
   try {
@@ -105,5 +155,5 @@ async function sendS3(theUrl, file) {
   }
 }
 module.exports = {
-  login, signup, logout, getAllUsers, postMessage, getS3Url, sendS3,
+  login, signup, logout, getUserbyUsername, getAllUsers, postMessage, getS3Url, sendS3, userChangePassword, deactivateAccount,
 };
