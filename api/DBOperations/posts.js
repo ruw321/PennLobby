@@ -38,6 +38,16 @@ module.exports.deletePostById = async (collection, ID) => {
   }
 };
 
+// delete post by author
+module.exports.deletePostByAuthor = async (collection, authorID) => {
+  try {
+    const res = await collection.deleteMany({ author_id: authorID });
+    return res;
+  } catch (err) {
+    throw new Error(`Error deleting the post by author: ${err.message}`);
+  }
+};
+
 // update post by id
 module.exports.updatePostById = async (collection, ID, updatedObject) => {
   try {

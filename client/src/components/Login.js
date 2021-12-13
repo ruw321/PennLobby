@@ -33,7 +33,9 @@ const theme = createTheme();
 
 function Login() {
   const [redirect, setRedirect] = useState(false);
+  const [baduser, setBadUser] = useState('');
   const [errorMes, setErrorMes] = useState('');
+  const [lockedtime, setLockedTime] = useState(null);
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -42,12 +44,33 @@ function Login() {
     const password = data.get("password");
     // TODO: add typecheck here for the user inputs
     if (username && password) {
-      const uID = await login(username, password);
-      if (uID.ok) {
-        sessionStorage.setItem('username', username);
-        setRedirect(true);
+      if (baduser !== username) {
+        const u = await login(username, password);
+        const response = await u.json();
+        if (u.ok) {
+          sessionStorage.setItem('username', username);
+          sessionStorage.setItem('id', response.id);
+          setRedirect(true);
+        } else if (response.error === "too many failed requests") {
+          setBadUser(username);
+          setErrorMes("Too many failed attempts, your account is locked for 15 mins");
+          setLockedTime(new Date());
+        } else {
+          setErrorMes("Invalid username or password");
+        }
       } else {
-        setErrorMes("Invalid username or password");
+        // detects that the username is the locked out user
+        const diffMs = (new Date() - lockedtime);
+        const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+        // if the time is up, reset everything
+        if (diffMins > 14) {
+          setBadUser(null);
+          setLockedTime(null);
+          setErrorMes(null);
+        } else {
+          // if there is still time left, show the user how much time is left
+          setErrorMes(`You account is locked out for: ${15 - diffMins} mins`);
+        }
       }
     }
   };
