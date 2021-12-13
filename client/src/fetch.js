@@ -128,5 +128,5 @@ async function getAllPosts() {
 }
 
 module.exports = {
-  login, signup, logout, getAllUsers, postMessage, getS3Url, sendS3, getAllPosts,
+  login, signup, logout, getUserbyUsername, getAllUsers, postMessage, getS3Url, sendS3, userChangePassword, deactivateAccount,
 };
