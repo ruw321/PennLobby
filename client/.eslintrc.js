@@ -23,5 +23,8 @@ module.exports = {
     "react/prop-types": "off",
     "linebreak-style": 0,
     "import/no-extraneous-dependencies": "off",
+    "no-trailing-spaces": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-wrap-multilines": "off",
   },
 };
