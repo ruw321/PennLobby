@@ -38,6 +38,16 @@ module.exports.deleteGroupById = async (collection, ID) => {
   }
 };
 
+// delete group by owner
+module.exports.deleteGroupByOwner = async (collection, onweID) => {
+  try {
+    const group = await collection.deleteMany({ owner: onweID });
+    return group;
+  } catch (err) {
+    throw new Error(`Error deleting the group by owner: ${err.message}`);
+  }
+};
+
 // update group by id
 module.exports.updateGroupById = async (collection, ID, updatedObject) => {
   try {
