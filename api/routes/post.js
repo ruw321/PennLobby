@@ -34,6 +34,7 @@ router.route("/").get(async (req, res) => {
 });
 
 // add a new post
+// TODO
 router.route("/").post(async (req, res) => {
   const valid = ajv.validate(schema, req.body);
   if (!valid) {
@@ -41,12 +42,13 @@ router.route("/").post(async (req, res) => {
     return;
   }
   try {
-    const exists = await Posts.getPostById(Post, req.body._id);
-    if (exists) {
-      res.status(409).json({ error: "post is already in the database" });
-      return;
-    }
+    // const exists = await Posts.getPostById(Post, req.body._id);
+    // if (exists) {
+    //   res.status(409).json({ error: "post is already in the database" });
+    //   return;
+    // }
     const result = await Posts.addPost(Post, req.body);
+    // user, group
     res.status(201).send(result);
   } catch (err) {
     res.status(400).json({ error: err.message });

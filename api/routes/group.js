@@ -31,10 +31,10 @@ router.route("/").get(async (req, res) => {
 });
 
 // add a new group
+// TODO
 router.route("/").post(async (req, res) => {
   const valid = ajv.validate(schema, req.body);
   if (!valid) {
-    // console.log("check1");
     res.status(400).json({ error: ajv.errors });
     return;
   }
@@ -45,9 +45,9 @@ router.route("/").post(async (req, res) => {
       return;
     }
     const to = req.body.topics;
+    // console.log(to);
     const newTopicID = [];
     for (let i = 0; i < to.length; i++) {
-      console.log(to[i]);
       const t = await top.getTopicByName(Topic, to[i]);
       newTopicID.push(t._id);
     }
@@ -97,6 +97,7 @@ router.route("/:id").put(async (req, res) => {
 });
 
 // delete a group by id
+// TODO
 router.route("/:id").delete(async (req, res) => {
   try {
     const group = await Groups.deleteGroupById(Group, req.body._id);
