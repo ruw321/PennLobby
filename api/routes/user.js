@@ -39,6 +39,7 @@ const schema = {
 // get all users
 router.route("/").get(async (req, res) => {
   try {
+    console.log(' !!get all!!user!');
     const users = await Users.getUsers(User);
     res.status(200).send(users);
   } catch (error) {
@@ -151,5 +152,27 @@ router.route("/:id").delete(async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+// join a group by id
+router.route("/join/").put(async (req, res) => {
+  try {
+    console.log(' !!put!!user!');
+    const userId = req.body._id;
+    const groupId = req.body._group_id;
+    const user = await Users.getUserById(User, userId);
+    if (user.group_ids.includes(groupId)) {
+      res.status(400).json({ error: 'already in this group' });
+      return;
+    }
+    user.group_ids.push(groupId);
+    console.log(' !!user!', user)
+    const { _id, ...rest } = user;
+    const newUsers = await Users.updateUserById(User, req.body._id, rest);
+    res.status(200).send(newUsers);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 
 module.exports = router;
