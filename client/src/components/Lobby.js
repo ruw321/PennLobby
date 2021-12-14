@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from "react";
@@ -25,7 +26,7 @@ import { useNavigate } from 'react-router-dom';
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
 import Menu from "./Menu";
-import { logout } from '../fetch';
+import { getAllGroups, logout } from '../fetch';
 
 function Copyright() {
   return (
@@ -69,40 +70,6 @@ const sortMethod = [
   "Size: Small-Large",
   "Most Active",
 ];
-const groupCards = [
-  {
-    title: "Penn Football",
-    size: "293",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Penn Musical Lovers",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Penn Residential",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Daily Philadelphia",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-];
 const trendingTopicsToday = [
   "Music",
   "Football",
@@ -127,12 +94,14 @@ const trendingTopicsWeekly = [
   "Music",
   "Football",
 ];
+
 function Lobby() {
   const navigate = useNavigate();
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
   const [loggedIn, setLoggedin] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [groupCards, setGroupCards] = React.useState([]);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -156,10 +125,24 @@ function Lobby() {
 
   const userName = sessionStorage.getItem('username');
 
-  React.useEffect(() => {
+  React.useEffect(async () => {
     if (userName) {
       setLoggedin(true);
     }
+    const groups = await getAllGroups();
+    const newGroupCards = groups.map((g) =>
+      (
+        {
+          title: g.name,
+          size: g.member_ids.length,
+          description: g.description,
+          image: "https://source.unsplash.com/random",
+          imageLabel: "Image Text",
+          topics: g.topic_ids,
+          groupId: g._id,
+        }
+      ));
+    setGroupCards(newGroupCards);
   }, []);
 
   const handleChangeTopics = (event) => {
@@ -171,6 +154,7 @@ function Lobby() {
       typeof value === "string" ? value.split(",") : value,
     );
   };
+
   const handleChangeSortBy = (event) => {
     const {
       target: { value },
@@ -263,7 +247,7 @@ function Lobby() {
               <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container rowSpacing={3} columnSpacing={0}>
                   {groupCards.map((post) => (
-                    <GroupCard key={post.title} post={post} whetherIn={false} />
+                    <GroupCard key={post.title} post={post} whetherIn={false} groupId={post._id} />
                   ))}
                 </Grid>
               </Container>

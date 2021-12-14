@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -27,6 +28,7 @@ import { FormControlLabel } from "@material-ui/core";
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
 import Menu from "./Menu";
+import { createGroup, getAllGroups, logout } from "../fetch";
 
 function Copyright() {
   return (
@@ -70,67 +72,70 @@ const sortMethod = [
   "Size: Small-Large",
   "Most Active",
 ];
-const groupCards = [
-  {
-    title: "Penn Football",
-    size: "293",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Penn Musical Lovers",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Penn Residential",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Daily Philadelphia",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-];
-const trendingTopicsToday = [
-  "Music",
-  "Football",
-  "Sports",
-  "Ivy Leagues",
-  "Arts",
-  "Musical",
-  "Residential",
-  "Rent",
-  "Living",
-  "News",
-];
-const trendingTopicsWeekly = [
-  "Sports",
-  "Ivy Leagues",
-  "Arts",
-  "Musical",
-  "Residential",
-  "Rent",
-  "Living",
-  "News",
-  "Music",
-  "Football",
-];
+
+// const allGroups =
+
+// const groupCards = [
+//   {
+//     title: "Penn Football",
+//     size: "293",
+//     description:
+//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
+//     image: "https://source.unsplash.com/random",
+//     imageLabel: "Image Text",
+//   },
+//   {
+//     title: "Penn Musical Lovers",
+//     size: "200",
+//     description:
+//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
+//     image: "https://source.unsplash.com/random",
+//     imageLabel: "Image Text",
+//   },
+//   {
+//     title: "Penn Residential",
+//     size: "200",
+//     description:
+//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
+//     image: "https://source.unsplash.com/random",
+//     imageLabel: "Image Text",
+//   },
+//   {
+//     title: "Daily Philadelphia",
+//     size: "200",
+//     description:
+//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
+//     image: "https://source.unsplash.com/random",
+//     imageLabel: "Image Text",
+//   },
+// ];
+
 function MyGroup() {
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
+  const [groupCards, setGroupCards] = React.useState([]);
+
+  const userName = sessionStorage.getItem('username');
+
+  React.useEffect(async () => {
+    // if (userName) {
+    //   setLoggedin(true);
+    // }
+    const groups = await getAllGroups();
+    const newGroupCards = groups.map((g) =>
+      (
+        {
+          title: g.name,
+          size: g.member_ids.length,
+          description: g.description,
+          image: "https://source.unsplash.com/random",
+          imageLabel: "Image Text",
+          topics: g.topic_ids,
+          groupId: g._id,
+        }
+      ));
+    setGroupCards(newGroupCards);
+  }, []);
 
   const handleChangeTopics = (event) => {
     const {
@@ -163,6 +168,45 @@ function MyGroup() {
   });
   const classes = useStyles();
 
+  // // for radio button
+
+  // const [value, setValue] = React.useState('female');
+
+  // const handleChange = (event) => {
+  //   setValue(event.target.value);
+  // };
+
+  // for groupName form
+  const [groupName, setGroupName] = React.useState('');
+  const handleChangeGroupName = (event) => {
+    setGroupName(event.target.value);
+  };
+
+  // for groupType form
+  const [groupType, setGroupType] = React.useState('');
+  const handleChangeGroupType = (event) => {
+    setGroupType(event.target.value);
+  };
+
+  // for groupDescription form
+  const [groupDescription, setGroupDescription] = React.useState('');
+  const handleChangeGroupDescription = (event) => {
+    setGroupDescription(event.target.value);
+  };
+
+  // for selectedTopic form
+  const [selectedTopic, setSelectedTopic] = React.useState([]);
+  const handleChangeSelectedTopic = (event) => {
+    const {
+      // eslint-disable-next-line no-shadow
+      target: { value },
+    } = event;
+    setSelectedTopic(
+      // On autofill we get a the stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
   // for Create a new group
 
   const [open, setOpen] = React.useState(false);
@@ -175,27 +219,26 @@ function MyGroup() {
     setOpen(false);
   };
 
-  // for radio button
+  const handleSubmit = async () => {
+    // createGroup(group);
 
-  const [value, setValue] = React.useState('female');
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
+    // console.log(groupName);
+    console.log(selectedTopic);
+    // console.log(groupType);
+    // console.log(groupDescription);
+    const group = {
+      owner: "61a9b32b2762ea6563fcaf57",
+      name: groupName,
+      description: groupDescription,
+      type: groupType,
+      topics: selectedTopic,
+    };
+    const res = await createGroup(group);
+    const print = await res.json();
+    console.log(print);
+    setOpen(false);
   };
 
-  // for select topics
-  const [topicSelected, setTopicSelected] = React.useState([]);
-
-  const handleChangeSelected = (event) => {
-    const {
-      // eslint-disable-next-line no-shadow
-      target: { value },
-    } = event;
-    setTopicSelected(
-      // On autofill we get a the stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -274,9 +317,9 @@ function MyGroup() {
                           margin="dense"
                           id="name"
                           label="Group Name"
-                          type="email"
                           fullWidth
                           variant="standard"
+                          onChange={handleChangeGroupName}
                         />
 
                         <DialogContentText sx={{ pt: 4 }}>
@@ -288,11 +331,10 @@ function MyGroup() {
                             row
                             aria-label="Group Type"
                             name="controlled-radio-buttons-group"
-                            value={value}
-                            onChange={handleChange}
+                            // onChange={handleChangeGroupType}
                           >
-                            <FormControlLabel value="public" control={<Radio />} label="Public" />
-                            <FormControlLabel value="private" control={<Radio />} label="Private" />
+                            <FormControlLabel control={<Radio value="public" onChange={handleChangeGroupType} />} label="Public" />
+                            <FormControlLabel control={<Radio value="private" onChange={handleChangeGroupType} />} label="Private" />
                           </RadioGroup>
                         </FormControl>
 
@@ -304,9 +346,10 @@ function MyGroup() {
                           margin="dense"
                           id="name"
                           label="Description"
-                          type="email"
+                          // type="email"
                           fullWidth
                           variant="standard"
+                          onChange={handleChangeGroupDescription}
                         />
 
                         <DialogContentText sx={{ pt: 4 }}>
@@ -318,15 +361,15 @@ function MyGroup() {
                             labelId="demo-multiple-checkbox-label"
                             id="demo-multiple-checkbox"
                             multiple
-                            value={topicSelected}
-                            onChange={handleChangeSelected}
+                            value={selectedTopic}
+                            onChange={handleChangeSelectedTopic}
                             input={<OutlinedInput label="Tag" />}
                             renderValue={(selected) => selected.join(', ')}
                             MenuProps={MenuProps}
                           >
                             {topics.map((topic) => (
                               <MenuItem key={topic} value={topic}>
-                                <Checkbox checked={topicSelected.indexOf(topic) > -1} />
+                                <Checkbox checked={selectedTopic.indexOf(topic) > -1} />
                                 <ListItemText primary={topic} />
                               </MenuItem>
                             ))}
@@ -337,7 +380,7 @@ function MyGroup() {
 
                       <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
-                        <Button onClick={handleClose}>Confirm</Button>
+                        <Button onClick={handleSubmit}>Confirm</Button>
                       </DialogActions>
 
                       {/* </Grid> */}
@@ -345,6 +388,7 @@ function MyGroup() {
                   </div>
                 </Container>
               </Box>
+
               {/* Groups */}
               <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container rowSpacing={3} columnSpacing={0}>
@@ -353,14 +397,12 @@ function MyGroup() {
                   ))}
                 </Grid>
               </Container>
+
             </Grid>
             <Grid item key={2} xs={6} md={3}>
               <Grid container align="center" justify="center" alignItems="center" spacing={2}>
                 {/* <Button variant="contained">Create a New Group</Button> */}
-                <TrendingTopics
-                  trendingTopicsToday={trendingTopicsToday}
-                  trendingTopicsWeekly={trendingTopicsWeekly}
-                />
+                <TrendingTopics />
               </Grid>
             </Grid>
           </Grid>

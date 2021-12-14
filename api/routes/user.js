@@ -33,6 +33,7 @@ const schema = {
 // get all users
 router.route("/").get(async (req, res) => {
   try {
+    console.log(' !!get all!!user!');
     const users = await Users.getUsers(User);
     res.status(200).send(users);
   } catch (error) {
@@ -69,7 +70,7 @@ router.route("/").post(async (req, res) => {
 // get a user by id
 router.route("/id/:id").get(async (req, res) => {
   try {
-    const user = await Users.getUserById(User, req.params.id); 
+    const user = await Users.getUserById(User, req.params.id);
     res.status(200).send(user);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -79,7 +80,7 @@ router.route("/id/:id").get(async (req, res) => {
 // get a user by username
 router.route("/username/:username").get(async (req, res) => {
   try {
-    const user = await Users.getUserByUsername(User, req.params.username); 
+    const user = await Users.getUserByUsername(User, req.params.username);
     res.status(200).send(user);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -90,7 +91,7 @@ router.route("/username/:username").get(async (req, res) => {
 router.route("/email/:email").get(async (req, res) => {
   try {
     console.log(req.query);
-    const user = await Users.getUserByEmail(User, req.body.email); 
+    const user = await Users.getUserByEmail(User, req.body.email);
     res.status(200).send(user);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -100,8 +101,9 @@ router.route("/email/:email").get(async (req, res) => {
 // update a user by id
 router.route("/:id").put(async (req, res) => {
   try {
+    console.log("....here.....")
     const obj = req.body;
-    const { _id, ...rest} = obj;
+    const { _id, ...rest } = obj;
     // console.log(rest);
     const user = await Users.updateUserById(User, req.body._id, rest);
     res.status(200).send(user);
@@ -119,5 +121,27 @@ router.route("/:id").delete(async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+// join a group by id
+router.route("/join/").put(async (req, res) => {
+  try {
+    console.log(' !!put!!user!');
+    const userId = req.body._id;
+    const groupId = req.body._group_id;
+    const user = await Users.getUserById(User, userId);
+    if (user.group_ids.includes(groupId)) {
+      res.status(400).json({ error: 'already in this group' });
+      return;
+    }
+    user.group_ids.push(groupId);
+    console.log(' !!user!', user)
+    const { _id, ...rest } = user;
+    const newUsers = await Users.updateUserById(User, req.body._id, rest);
+    res.status(200).send(newUsers);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 
 module.exports = router;

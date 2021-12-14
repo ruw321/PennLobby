@@ -16,11 +16,14 @@ import { Dialog } from "@material-ui/core";
 import {
   DialogActions, DialogContent, DialogContentText, DialogTitle,
 } from "@mui/material";
+import { joinGroup } from '../fetch';
 
 const tags = ["Football", "Sports", "tag3"];
 
 function GroupCard(props) {
-  const { post, whetherIn } = props;
+  const {
+    post, whetherIn, groupId,
+  } = props;
 
   // confirm join group button
   const [open, setOpen] = React.useState(false);
@@ -30,6 +33,12 @@ function GroupCard(props) {
   };
 
   const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleJoinGroup = () => {
+    // Need to get user from session storage
+    // joinGroup("sadufalisdu", groupId);
     setOpen(false);
   };
 
@@ -138,7 +147,7 @@ function GroupCard(props) {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>No</Button>
-              <Button onClick={handleClose} autoFocus>
+              <Button onClick={handleJoinGroup} autoFocus>
                 Yes
               </Button>
             </DialogActions>
