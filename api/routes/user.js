@@ -18,20 +18,21 @@ const ajv = new Ajv({ coerceTypes: true })
 const schema = {
   type: "object",
   properties: {
-    username: { type: 'string' },
-    email: { type: 'string' },
-    firstName: { type: 'string' },
-    lastName: { type: 'string' },
-    password: { type: 'string' },
-    group_ids: { type: 'array' },
-    post_ids: { type: 'array' },
-    following: { type: 'array' },
-    followers: { type: 'array' },
-    blocking: { type: 'array' },
-    blocked_by: { type: 'array' },
+    username: { type: "string" },
+    email: { type: "string" },
+    firstName: { type: "string" },
+    lastName: { type: "string" },
+    password: { type: "string" },
+    comment_ids: { type: "array" },
+    group_ids: { type: "array" },
+    post_ids: { type: "array" },
+    following: { type: "array" },
+    followers: { type: "array" },
+    blocking: { type: "array" },
+    blocked_by: { type: "array" },
   },
-  required: ['username', 'email', 'firstName', 'lastName', 'password'],
-}
+  required: ["username", "email", "firstName", "lastName", "password"],
+};
 
 // in this file, we will assume the database connection is
 // already established and successful
