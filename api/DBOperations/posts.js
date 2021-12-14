@@ -29,7 +29,6 @@ module.exports.addPost = async (collection, postObject) => {
 };
 
 // delete post by id (only the post owner himself or admin can delete)
-// id: UDF, CRUD: delete from related DBs
 module.exports.deletePostById = async (collection, ID) => {
   try {
     const post = await collection.deleteOne({ id: ID });
