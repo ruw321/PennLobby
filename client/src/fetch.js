@@ -182,6 +182,7 @@ async function addPost(newPost) {
   const post = {
     title: newPost.title,
     content: newPost.content,
+    author_id: newPost.id,
   };
   const data = {
     credentials: "include",
