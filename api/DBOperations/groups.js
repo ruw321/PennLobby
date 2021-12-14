@@ -18,6 +18,16 @@ module.exports.getGroupById = async (collection, ID) => {
   }
 };
 
+// get group by name
+module.exports.getGroupByName = async (collection, groupName) => {
+  try {
+    const group = await collection.findOne({ name: groupName });
+    return group;
+  } catch (err) {
+    throw new Error(`Error getting the group by name: ${err.message}`);
+  }
+};
+
 // add a new group
 module.exports.addGroup = async (collection, groupObject) => {
   try {

@@ -18,6 +18,16 @@ module.exports.getTopicById = async (collection, ID) => {
   }
 };
 
+// get topic by name
+module.exports.getTopicByName = async (collection, inputName) => {
+  try {
+    const topic = await collection.findOne({ name: inputName });
+    return topic;
+  } catch (err) {
+    throw new Error(`Error getting the topic by name: ${err.message}`);
+  }
+};
+
 // add a new topic
 module.exports.addTopic = async (collection, topicObject) => {
   try {
@@ -44,6 +54,19 @@ module.exports.updateTopicById = async (collection, ID, updatedObject) => {
     const response = await collection.updateOne(
       { _id: ID },
       { $set: updatedObject }
+    );
+    return response;
+  } catch (err) {
+    throw new Error(`Error updating the topic by id: ${err.message}`);
+  }
+};
+
+// add a group id to a topic
+module.exports.addGroupIDToTopic = async (collection, groupID, topicID) => {
+  try {
+    const response = await collection.updateOne(
+      { _id: topicID },
+      { $push: { group_ids: groupID } },
     );
     return response;
   } catch (err) {

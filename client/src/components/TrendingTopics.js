@@ -12,7 +12,32 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 
 export default function TrendingTopics(props) {
-  const { trendingTopicsToday, trendingTopicsWeekly } = props;
+  const trendingTopicsToday = [
+    "Music",
+    "Football",
+    "Sports",
+    "Ivy Leagues",
+    "Arts",
+    "Musical",
+    "Residential",
+    "Rent",
+    "Living",
+    "News",
+  ];
+  const trendingTopicsWeekly = [
+    "Sports",
+    "Ivy Leagues",
+    "Arts",
+    "Musical",
+    "Residential",
+    "Rent",
+    "Living",
+    "News",
+    "Music",
+    "Football",
+  ];
+
+  // const { trendingTopicsToday, trendingTopicsWeekly } = props;
 
   const [value, setValue] = React.useState('1');
 

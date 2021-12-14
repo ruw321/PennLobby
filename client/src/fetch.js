@@ -1,6 +1,7 @@
-const url = !process.env.NODE_ENV || process.env.NODE_ENV === "development" ? "http://localhost:8080" : "";
-
-// log in a user
+/* eslint-disable space-before-blocks */
+const url = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+  ? 'http://localhost:8080'
+  : '';
 async function login(u, p) {
   const user = {
     username: u,
@@ -169,6 +170,16 @@ async function sendS3(theUrl, file) {
   }
 }
 
+async function getAllGroups() {
+  try {
+    const theUrl = `${url}/api/group`;
+    const result = await fetch(theUrl, { method: 'GET' });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
 // get all posts
 async function getAllPosts() {
   try {
@@ -178,6 +189,40 @@ async function getAllPosts() {
     return res;
   } catch (err) {
     return null;
+  }
+}
+async function createGroup(group){
+  const data = {
+    credentials: 'include',
+    mode: 'cors',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(group),
+  };
+  try {
+    const theUrl = `${url}/api/group/`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (e) {
+    return e;
+  }
+}
+async function joinGroup(userId, GroupId){
+  const data = {
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ _id: userId, _group_id: GroupId }),
+  };
+  try {
+    const theUrl = `${url}/api/join/`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (e) {
+    return e;
   }
 }
 
@@ -242,6 +287,9 @@ module.exports = {
   postMessage,
   getS3Url,
   sendS3,
+  createGroup,
+  getAllGroups,
+  joinGroup,
   userChangePassword,
   deactivateAccount,
   getAllPosts,
