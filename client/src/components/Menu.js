@@ -3,28 +3,28 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import ListItemText from "@mui/material/ListItemText";
-import Select from "@mui/material/Select";
-import Checkbox from "@mui/material/Checkbox";
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { IconButton } from "@mui/material";
-import TrendingTopics from "./TrendingTopics";
-import GroupCard from "./GroupCard";
+import Avatar from '@material-ui/core/Avatar';
+import MenuItem from "@mui/material/MenuItem";
+import { useNavigate } from 'react-router-dom';
+import UserAvatar from './UserAvatar';
 
 function Menu() {
+  const [loggedIn, setLoggedin] = React.useState(false);
+
+  const userName = sessionStorage.getItem('username');
+
+  React.useEffect(() => {
+    if (userName) {
+      setLoggedin(true);
+    }
+  }, []);
+
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
@@ -93,13 +93,17 @@ function Menu() {
           </Link>
         </nav>
         <section className={classes.rightToolbar} margin="auto">
-          <IconButton aria-label="delete" href="./message">
-            <NotificationsNoneIcon />
-          </IconButton>
-          <Button href="./login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-            Login
-          </Button>
+          {loggedIn ? (
+            <UserAvatar setLoggedin={setLoggedin} />
+          ) : (
+            <Button href="./login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+              Login
+            </Button>
+          )}
 
+          {/* <Button href="./login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+            Login
+          </Button> */}
         </section>
       </Toolbar>
     </AppBar>

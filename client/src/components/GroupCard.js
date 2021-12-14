@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { joinGroup } from '../fetch';
 
-const tags = ["Football", "Sports", "tag3"];
+const tags = ["Football", "Sports", "Entertainment"];
 
 function GroupCard(props) {
   const {

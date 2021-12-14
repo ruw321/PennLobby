@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
@@ -28,10 +29,10 @@ import TextField from '@material-ui/core/TextField';
 import Fab from '@material-ui/core/Fab';
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
+// import UploadFileIcon from '@mui/icons-material/UploadFile';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import SendIcon from '@mui/icons-material/Send';
-import IconButton from '@mui/material/IconButton';
+// import IconButton from '@mui/material/IconButton';
 import { setupWSConnection } from './notifications';
 import {
   getAllUsers, postMessage, getS3Url, sendS3,
@@ -42,18 +43,84 @@ const Input = styled('input')({
   display: 'none',
 });
 
+function FromMessage(props) {
+  const { msg } = props;
+  if (msg.split(': ')[1].indexOf('(link-image)http') === 0) {
+    return (
+      <img src={msg.split(': ')[1].split('(link-image)')[1]} style={{ width: "40%", float: "right" }} />
+    );
+  }
+  if (msg.split(': ')[1].indexOf('(link-video)http') === 0) {
+    return (
+      <video controls style={{ width: "40%", float: "right" }}>
+        <source
+          src={msg.split(': ')[1].split('(link-video)')[1]}
+          type="video/mp4"
+        />
+        Sorry, your browser does not support embedded videos.
+      </video>
+    );
+  }
+  if (msg.split(': ')[1].indexOf('(link-audio)http') === 0) {
+    return (
+      <audio
+        controls
+        style={{ width: "40%", float: "right" }}
+        src={msg.split(': ')[1].split('(link-audio)')[1]}
+      >
+        Your browser does not support the audio element.
+      </audio>
+    );
+  }
+  return (
+    <ListItemText align="right" primary={msg.split(': ')[1]} />
+  );
+}
+function ToMessage(props) {
+  const { msg } = props;
+  if (msg.split(': ')[1].indexOf('(link-image)http') === 0) {
+    return (
+      <img src={msg.split(': ')[1].split('(link-image)')[1]} style={{ width: "40%", float: "left" }} />
+    );
+  }
+  if (msg.split(': ')[1].indexOf('(link-video)http') === 0) {
+    return (
+      <video controls style={{ width: "40%", float: "left" }}>
+        <source
+          src={msg.split(': ')[1].split('(link-video)')[1]}
+          type="video/mp4"
+        />
+        Sorry, your browser does not support embedded videos.
+      </video>
+    );
+  }
+  if (msg.split(': ')[1].indexOf('(link-audio)http') === 0) {
+    return (
+      <audio
+        controls
+        style={{ width: "40%", float: "left" }}
+        src={msg.split(': ')[1].split('(link-audio)')[1]}
+      >
+        Your browser does not support the audio element.
+      </audio>
+    );
+  }
+  return (
+    <ListItemText primary={msg.split(': ')[1]} />
+  );
+}
 function Chat(props) {
   const {
     messages, friends, setChat, sendMsg, currentChat,
   } = props;
 
   // event handler for file selection
-  const updateImage = async (evt) => {
+  const updateFileInput = async (evt, type) => {
     const files = [...evt.target.files];
     const { url } = await getS3Url();
     await sendS3(url, files[0]);
     const imageUrl = url.split('?')[0];
-    sendMsg(`(link-image)${imageUrl}`);
+    sendMsg(`(link-${type})${imageUrl}`);
   };
   // console.log("messages", messages);
   // this is the stype for the menu bar at the top
@@ -91,7 +158,6 @@ function Chat(props) {
     },
   });
   const classes2 = useStyles2();
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -199,14 +265,12 @@ function Chat(props) {
                     return true;
                   }
                   return false;
-                }).map((msg) => msg.includes('sent')
+                }).map((msg) => msg.indexOf('sent') === 0
                   ? (
                     <ListItem key={msg}>
                       <Grid container>
                         <Grid item xs={12}>
-                          {msg.split(': ')[1].indexOf('(link-image)http') === 0
-                            ? <img src={msg.split(': ')[1].split('(link-image)')[1]} style={{ width: "40%", float: "right" }} />
-                            : <ListItemText align="right" primary={msg.split(': ')[1]} />}
+                          <FromMessage msg={msg} />
                         </Grid>
                         <Grid item xs={12}>
                           <ListItemText align="right" secondary="sent" />
@@ -220,11 +284,7 @@ function Chat(props) {
                           <ListItemIcon>
                             <Avatar alt={msg.split(')')[0].split('(')[1]} src="https://material-ui.com/static/images/avatar/1.jpg" />
                           </ListItemIcon>
-                          {msg.split(': ')[1].indexOf('(link-image)http') === 0
-                            ? (
-                              <img src={msg.split(': ')[1].split('(link-image)')[1]} style={{ width: "40%", float: "left" }} />
-                            )
-                            : <ListItemText primary={msg.split(': ')[1]} />}
+                          <ToMessage msg={msg} />
                         </ListItem>
                       </Grid>
                     </ListItem>
@@ -240,29 +300,45 @@ function Chat(props) {
             >
               <Grid item xs={0.5}>
                 <Fab color="primary" aria-label="add" size="small">
-                  <label htmlFor="icon-button-file" style={{ lineHeight: "0px" }}>
+                  <label htmlFor="icon-button-image" style={{ lineHeight: "0px" }}>
                     <Input
                       accept="image/*"
-                      id="icon-button-file"
+                      id="icon-button-image"
                       type="file"
-                      onChange={(e) => updateImage(e)}
+                      onChange={(e) => updateFileInput(e, 'image')}
                     />
                     <InsertPhotoIcon />
                   </label>
                 </Fab>
-
               </Grid>
               <Grid item xs={0.5}>
-                <Fab color="primary" aria-label="add" size="small"><UploadFileIcon /></Fab>
+                <Fab color="primary" aria-label="add" size="small">
+                  <label htmlFor="icon-button-video" style={{ lineHeight: "0px" }}>
+                    <Input
+                      accept="video/mp4"
+                      id="icon-button-video"
+                      type="file"
+                      onChange={(e) => updateFileInput(e, 'video')}
+                    />
+                    <VideoCameraBackIcon />
+                  </label>
+                </Fab>
               </Grid>
               <Grid item xs={0.5}>
-                <Fab color="primary" aria-label="add" size="small"><VideoCameraBackIcon /></Fab>
+                <Fab color="primary" aria-label="add" size="small">
+                  <label htmlFor="icon-button-audio" style={{ lineHeight: "0px" }}>
+                    <Input
+                      accept="audio/*"
+                      id="icon-button-audio"
+                      type="file"
+                      onChange={(e) => updateFileInput(e, 'audio')}
+                    />
+                    <KeyboardVoiceIcon />
+                  </label>
+                </Fab>
               </Grid>
-              <Grid item xs={6.5}>
+              <Grid item xs={7}>
                 <TextField id="outlined-basic-email" label="Type Something" fullWidth />
-              </Grid>
-              <Grid item xs={0.5} align="right">
-                <Fab color="primary" aria-label="add" size="small"><KeyboardVoiceIcon /></Fab>
               </Grid>
               <Grid item xs={0.5} align="right">
                 <Fab color="primary" aria-label="add" size="small"><SendIcon onClick={() => sendMsg()} /></Fab>
@@ -296,7 +372,7 @@ function Messages() {
       if (!response) {
         return;
       }
-      const newFriends = response.map((r) => r.username);
+      const newFriends = response.map((r) => r.username).filter((r) => r !== sessionStorage.getItem('username'));
       setFriends(newFriends);
     });
 

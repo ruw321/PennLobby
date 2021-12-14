@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from "react";
+import { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -15,13 +16,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
 import Menu from "./Menu";
+import { getAllPosts } from "../fetch";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        PennLobby
       </Link>{" "}
       {new Date().getFullYear()}.
     </Typography>
@@ -30,7 +32,7 @@ function Copyright() {
 
 const theme = createTheme();
 
-const postCards = [
+const postCardsHardcode = [
   {
     title: "Penn Football",
     size: "293",
@@ -64,6 +66,7 @@ const postCards = [
     imageLabel: "Image Text",
   },
 ];
+
 const trendingTopicsToday = [
   "Music",
   "Football",
@@ -76,6 +79,7 @@ const trendingTopicsToday = [
   "Living",
   "News",
 ];
+
 const trendingTopicsWeekly = [
   "Sports",
   "Ivy Leagues",
@@ -88,7 +92,18 @@ const trendingTopicsWeekly = [
   "Music",
   "Football",
 ];
-function MyGroup() {
+
+function MyPost() {
+  const [allPosts, setAllPosts] = useState([]);
+  useEffect(() => {
+    const loadData = async () => {
+      const postCards = await getAllPosts();
+      // console.log(postCards);
+      setAllPosts(postCards);
+    };
+    loadData();
+  }, []);
+
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
@@ -122,7 +137,8 @@ function MyGroup() {
               {/* Groups */}
               <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container rowSpacing={3} columnSpacing={0}>
-                  {postCards.map((post) => (
+                  {allPosts.map((post) => (
+
                     <PostCard key={post.title} post={post} whetherIn />
                   ))}
                 </Grid>
@@ -139,17 +155,6 @@ function MyGroup() {
       </main>
       {/* Footer */}
       <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="p"
-        >
-          Something here to give the footer a purpose!
-        </Typography>
         <Copyright />
       </Box>
       {/* End footer */}
@@ -157,4 +162,4 @@ function MyGroup() {
   );
 }
 
-export default MyGroup;
+export default MyPost;

@@ -33,7 +33,7 @@ function Copyright() {
     <Typography variant="body2" color="text.secondary" align="center">
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        PennLobby
       </Link>{" "}
       {new Date().getFullYear()}.
     </Typography>
@@ -96,7 +96,6 @@ const trendingTopicsWeekly = [
 ];
 
 function Lobby() {
-  const navigate = useNavigate();
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
   const [loggedIn, setLoggedin] = React.useState(false);
@@ -113,7 +112,8 @@ function Lobby() {
 
   const handleProfile = () => {
     handleClose();
-    navigate('/profile');
+    // change to new router function
+    // navigate('/profile');
   };
 
   const handleLogout = async () => {
@@ -165,18 +165,6 @@ function Lobby() {
     );
   };
 
-  const useStyles = makeStyles({
-    // This group of buttons will be aligned to the right
-    rightToolbar: {
-      marginLeft: "auto",
-      marginRight: -12,
-    },
-    menuButton: {
-      marginRight: 16,
-      marginLeft: -12,
-    },
-  });
-  const classes = useStyles();
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

@@ -28,13 +28,24 @@ module.exports.addPost = async (collection, postObject) => {
   }
 };
 
-// delete post by id
+// delete post by id (only the post owner himself or admin can delete)
+// id: UDF, CRUD: delete from related DBs
 module.exports.deletePostById = async (collection, ID) => {
   try {
     const post = await collection.deleteOne({ id: ID });
     return post;
   } catch (err) {
     throw new Error(`Error deleting the post by id: ${err.message}`);
+  }
+};
+
+// delete post by author
+module.exports.deletePostByAuthor = async (collection, authorID) => {
+  try {
+    const res = await collection.deleteMany({ author_id: authorID });
+    return res;
+  } catch (err) {
+    throw new Error(`Error deleting the post by author: ${err.message}`);
   }
 };
 
