@@ -88,6 +88,10 @@ async function userChangePassword(id, newPass) {
 
 // user deactivates account
 async function deactivateAccount(id) {
+  // const obj = {
+  //   userID: ,
+  //   postID: ,
+  // }
   const data = {
     credentials: "include",
     method: "DELETE",
