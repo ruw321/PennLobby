@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
@@ -17,6 +18,10 @@ import ReplyIcon from '@material-ui/icons/Reply';
 import FlagIcon from '@mui/icons-material/Flag';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import {
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, 
+} from '@mui/material';
+import { deletePost } from "../fetch";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -30,11 +35,49 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function PostCard(props) {
-  // console.log(props);
+  const { hide, updateHide } = props;
+
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+
+  // delete a post
+  const [openDeletePost, setOpenDeletePost] = React.useState(false);
+
+  const handleClickOpenDeletePost = () => {
+    setOpenDeletePost(true);
+  };
+
+  const handleCloseDeletePost = () => {
+    setOpenDeletePost(false);
+  };
+
+  const handleConfirmDeletePost = async () => {
+    const userID = sessionStorage.getItem("id");
+    const res = await deletePost(userID, props.post._id, props.post.group_id);
+    const print = await res.json();
+    console.log(print);
+    setOpenDeletePost(false);
+  };
+
+  // hide a post
+  const [openHidePost, setOpenHidePost] = React.useState(false);
+
+  const handleClickOpenHidePost = () => {
+    setOpenHidePost(true);
+  };
+
+  const handleCloseHidePost = () => {
+    setOpenHidePost(false);
+  };
+
+  const handleConfirmHidePost = () => {
+    hide.push(props.post._id);
+    console.log(props.post._id);
+    updateHide(hide);
+    setOpenHidePost(false);
   };
 
   return (
@@ -47,14 +90,59 @@ export default function PostCard(props) {
         }
         action={
           <div>
-            <IconButton aria-label="settings">
+            {/* delete a post */}
+            <IconButton aria-label="settings" onClick={handleClickOpenDeletePost}>
               <DeleteIcon />
-              {/* delete post */}
             </IconButton>
-            <IconButton aria-label="settings">
+            <Dialog
+              open={openDeletePost}
+              onClose={handleCloseDeletePost}
+              // aria-labelledby="alert-dialog-title"
+              // aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                Do you want to delete this post?
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  You have to be the author or the group administrator to delete this post.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDeletePost}>Cancel</Button>
+                <Button onClick={handleConfirmDeletePost} autoFocus>
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+            {/* hide a post */}
+            <IconButton aria-label="settings" onClick={handleClickOpenHidePost}>
               <VisibilityOffIcon />
-              {/* hide a post */}
             </IconButton>
+
+            <Dialog
+              open={openHidePost}
+              onClose={handleClickOpenHidePost}
+              // aria-labelledby="alert-dialog-title"
+              // aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                Do you want to hide this post?
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  You will no longer see this post and its comment in this group.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseHidePost}>Cancel</Button>
+                <Button onClick={handleConfirmHidePost} autoFocus>
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+
             <IconButton aria-label="settings">
               <FlagIcon />
               {/* flag as inappropriate */}
