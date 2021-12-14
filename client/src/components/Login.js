@@ -51,6 +51,9 @@ function Login() {
         if (u.ok) {
           sessionStorage.setItem('username', username);
           sessionStorage.setItem('id', response.id);
+          if (response.token) {
+            sessionStorage.setItem('token', response.token); // store token in session storage
+          }
           setRedirect(true);
         } else if (response.error === "too many failed requests") {
           setBadUser(username);
