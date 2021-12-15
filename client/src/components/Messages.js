@@ -351,46 +351,42 @@ function Chat(props) {
   );
 }
 
-function Messages() {
-  const [contacts, setContacts] = useState(0); // number of connected users
-  // eslint-disable-next-line no-unused-vars
-  const [messages, setMessages] = useState(0); // counts messages sent and received - lift up state
-  const texts = useRef([]); // mutable reference to store messages. Do not overuse!
-  const [friends, setFriends] = useState([]);
+function Messages(props) {
+  // const [contacts, setContacts] = useState(0); // number of connected users
+  // const [messages, setMessages] = useState(0); // counts messages sent and received - lift up state
+  // const texts = useRef([]); // mutable reference to store messages. Do not overuse!
+  // const [friends, setFriends] = useState([]);
+  const {
+    contacts, messages, texts, friends,
+  } = props;
   const [myUserName] = useState(sessionStorage.getItem('username'));
   const [currentChat, setCurrentChat] = useState('');
 
   // Put mutators in functions to avoid stale references to state
   // When mutating state inside [websocket] event handlers!
-  const updateContacts = () => setContacts((contacts) => contacts + 1);
-  const updateMessages = () => setMessages((messages) => messages + 1);
-  useEffect(() => {
-    authenticate();
-  }, []);
-  useEffect(() => {
-    getAllUsers().then((response) => {
-      if (!response) {
-        return;
-      }
-      const newFriends = response.map((r) => r.username).filter((r) => r !== sessionStorage.getItem('username'));
-      setFriends(newFriends);
-    });
+  // const updateContacts = () => setContacts((contacts) => contacts + 1);
+  // const updateMessages = () => setMessages((messages) => messages + 1);
+  // useEffect(() => {
+  //   authenticate();
+  // }, []);
+  // useEffect(() => {
+  //   getAllUsers().then((response) => {
+  //     if (!response) { return; }
+  //     const newFriends = response.map((r) => r.username).filter((r) => r !== sessionStorage.getItem('username'));
+  //     setFriends(newFriends);
+  //   });
+  //   const cleanup = () => { sessionStorage.getItem('token'); };
+  //   // we need to cleanup when leaving the tab
+  //   window.addEventListener('beforeunload', cleanup);
+  //   return () => {
+  //     window.removeEventListener('beforeunload', cleanup);
+  //   };
+  // }, [contacts, messages, texts]);
 
-    const cleanup = () => {
-      sessionStorage.removeItem('token'); // clean the session storage
-    };
-    // we need to cleanup when leaving the tab
-    window.addEventListener('beforeunload', cleanup);
-
-    return () => {
-      window.removeEventListener('beforeunload', cleanup);
-    };
-  }, [contacts, messages, texts]);
-
-  const authenticate = async () => {
-    setupWSConnection(updateContacts, updateMessages, texts); // setup ws connection -- pass the wrapper functions as parameters
-    setContacts((contacts) => contacts + 1); // update state to trigger re-rendering and useEffect
-  };
+  // const authenticate = async () => {
+  //   setupWSConnection(updateContacts, updateMessages, texts); // setup ws connection -- pass the wrapper functions as parameters
+  //   setContacts((contacts) => contacts + 1); // update state to trigger re-rendering and useEffect
+  // };
   const sendMsg = (link) => {
     let text;
     if (link) {

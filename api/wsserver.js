@@ -48,9 +48,11 @@ wss.on('connection', (ws, req) => {
           const newMessage = {type: 'new message', from: msg.data.from, text: msg.data.message};
           connectedUsers.get(msg.data.to).send(JSON.stringify(newMessage));
           // send update to sender
-          console.log(`send receipt`);
-          const update = {type: 'delivered', to: msg.data.to, text: msg.data.message};
-          connectedUsers.get(msg.data.from).send(JSON.stringify(update));
+          if(msg.data.to!==msg.data.from){
+            console.log(`send receipt`);
+            const update = {type: 'delivered', to: msg.data.to, text: msg.data.message};
+            connectedUsers.get(msg.data.from).send(JSON.stringify(update));
+          }
         }
       }
       if(msg.type === 'new user'){ // ask all connected clients to update 
