@@ -122,6 +122,26 @@ async function getAllUsers() {
   }
 }
 
+// update user
+async function updateUserById(id, obj) {
+  try {
+    const data = {
+      credentials: "include",
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // you have to do JSON.stringify, otherwise CORS wouldnt allow it
+      body: JSON.stringify({ _id: id, ...obj }),
+    };
+    const theUrl = `${url}/api/user/${id}`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (e) {
+    return e;
+  }
+}
+
 // create a new message
 async function postMessage(sender, receiver, content) {
   try {
@@ -284,6 +304,7 @@ module.exports = {
   logout,
   getUserbyUsername,
   getAllUsers,
+  updateUserById,
   postMessage,
   getS3Url,
   sendS3,

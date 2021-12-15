@@ -18,7 +18,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
 import Menu from "./Menu";
-import { getAllPosts } from "../fetch";
+import { getAllPosts, postMessage } from "../fetch";
 
 function Copyright() {
   return (
@@ -95,8 +95,19 @@ const trendingTopicsWeekly = [
   "Football",
 ];
 
-function MyPost() {
+function MyPost(props) {
   const [allPosts, setAllPosts] = useState([]);
+  const [refresh, setRefresh] = React.useState(props.refresh);
+  React.useEffect(() => {
+    setRefresh(props.refresh);
+    const loadData = async () => {
+      const postCards = await getAllPosts();
+      // console.log(postCards);
+      setAllPosts(postCards);
+    };
+    loadData();
+  }, [props.refresh]);
+  // postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
 
   useEffect(() => {
     const loadData = async () => {
