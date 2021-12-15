@@ -1,7 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const Posts = require("../DBOperations/posts");
+const Users = require("../DBOperations/users");
+const Comments = require("../DBOperations/comments");
+const Groups = require("../DBOperations/groups");
 const Post = require("../models/Post");
+const User = require("../models/User");
+const Comment = require("../models/Comment");
+const Group = require("../models/Group");
 const Ajv = require("ajv");
 
 const ajv = new Ajv({ coerceTypes: true });
@@ -11,9 +17,10 @@ const schema = {
     title: { type: "string" },
     content: { type: "string" },
     author_id: { type: "string" },
+    group_id: { type: "string" },
     comment_ids: { type: "array" },
   },
-  required: ["title", "content", "author_id"],
+  required: ["title", "content", "author_id", "group_id"],
 };
 
 // get all posts
@@ -27,6 +34,7 @@ router.route("/").get(async (req, res) => {
 });
 
 // add a new post
+// TODO
 router.route("/").post(async (req, res) => {
   const valid = ajv.validate(schema, req.body);
   if (!valid) {
@@ -34,19 +42,20 @@ router.route("/").post(async (req, res) => {
     return;
   }
   try {
-    const exists = await Posts.getPostById(Post, req.body._id);
-    if (exists) {
-      res.status(409).json({ error: "post is already in the database" });
-      return;
-    }
+    // const exists = await Posts.getPostById(Post, req.body._id);
+    // if (exists) {
+    //   res.status(409).json({ error: "post is already in the database" });
+    //   return;
+    // }
     const result = await Posts.addPost(Post, req.body);
+    // user, group
     res.status(201).send(result);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
 
-// get a post by id
+// get a post by post id
 router.route("/:id").get(async (req, res) => {
   try {
     const post = await Posts.getPostById(Post, req.body._id); 
@@ -56,7 +65,7 @@ router.route("/:id").get(async (req, res) => {
   }
 });
 
-// update a post by id
+// update a post by post id
 router.route("/:id").put(async (req, res) => {
   try {
     const obj = req.body;
@@ -68,10 +77,26 @@ router.route("/:id").put(async (req, res) => {
   }
 });
 
-// delete a post by id
-router.route("/:id").delete(async (req, res) => {
+// delete a post by post id
+router.route("/:postId").delete(async (req, res) => {
   try {
-    const post = await Posts.deletePostById(Post, req.body._id);
+    const post = await Posts.getPostById(Post, req.body._id); 
+    const group = await Groups.getGroupById(User, req.body.groupId);
+    const user = await Users.getUserById(User, req.body.userId);
+    if (req.body.userId == post.author_id || user.admin) {
+      await Posts.deletePostById(Post, req.params.postId);
+      const groupPostIds = group.post_ids.filter((id) => id != req.params.postId);
+      const userPostIds = user.post_ids.filter((id) => id != req.params.postId);
+      await Groups.updateGroupById(req.body.groupId, { post_ids: groupPostIds });
+      await Users.updateUserById(req.body.userId, { post_ids : userPostIds });
+      const commentIds = post.comment_ids;
+      for (let i = 0; i < commentIds.length; i++) {
+        await Comments.deleteCommentById(Comment, commentIds[i]);
+      }
+    } else {
+      res.status(400).json({ error: "You are not authorized to delete this post!" });
+      return;
+    }
     res.status(200).send(post);
   } catch (error) {
     res.status(400).json({ error: error.message });
