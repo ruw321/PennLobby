@@ -152,7 +152,8 @@ function MyPost() {
               {/* Groups */}
               <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container rowSpacing={3} columnSpacing={0}>
-                  {allPosts.filter((p) => !hide.includes(p._id)).map((post) => (
+                  {/* {allPosts.filter((p) => !hide.includes(p._id)).map((post) => ( */}
+                  {allPosts.map((post) => (
 
                     <PostCard key={post._id} post={post} hide={hide} updateHide={updateHide} whetherIn />
                   ))}

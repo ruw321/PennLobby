@@ -17,7 +17,9 @@ import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ListItem from '@mui/material/ListItem';
 import {
-  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Input, TextField,
+  Card,
+  CardHeader,
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Input, List, ListItemText, TextField,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import TrendingTopics from "./TrendingTopics";
@@ -262,6 +264,24 @@ function GroupDetail() {
               alignItems="center"
               justify="center"
             >
+              {/* Group Analysis */}
+              <Card elevetion={1} sx={{ mt: 2, mb: 2 }}>
+                <Typography
+                  centered
+                  variant="h6"
+                  sx={{
+                    padding: 2, color: 'white', bgcolor: 'primary.main', textAlign: "center",
+                  }}
+                >
+                  Group Analytics
+                </Typography>
+                <CardHeader subheader="Number of members:" />
+                <CardHeader subheader="Number of posts:" />
+                <CardHeader subheader="Number of posts deleted:" />
+                <CardHeader subheader="Number of post flagged:" />
+                <CardHeader subheader="Number of post hidden:" />
+              </Card>
+
               <GroupMembers />
               {/* {groupMembers.map((topic, index) => (
                 <ListItem key={topic}>
