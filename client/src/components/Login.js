@@ -32,7 +32,8 @@ function Copyright() {
 
 const theme = createTheme();
 
-function Login() {
+function Login(props) {
+  const { updateUserName } = props;
   const [redirect, setRedirect] = useState(false);
   const [baduser, setBadUser] = useState('');
   const [errorMes, setErrorMes] = useState('');
@@ -50,6 +51,7 @@ function Login() {
         const response = await u.json();
         if (u.ok) {
           sessionStorage.setItem('username', username);
+          updateUserName(username);
           sessionStorage.setItem('id', response.id);
           if (response.token) {
             sessionStorage.setItem('token', response.token); // store token in session storage
