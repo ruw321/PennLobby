@@ -12,14 +12,15 @@ const userSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   password: { type: String, required: true },
   // profile pic
-  group_ids: [{ type: Schema.Types.ObjectId, ref: 'Group' }],
-  post_ids: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
-  following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  blocking: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  blocked_by: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  group_ids: [{ type: Schema.Types.ObjectId, ref: "Group" }],
+  post_ids: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  comment_ids: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  following: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  blocking: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  blocked_by: [{ type: Schema.Types.ObjectId, ref: "User" }],
   admin: { type: Boolean, default: false, required: true },
-  created_at: { type: Date, default: Date.now(), required: true }
+  created_at: { type: Date, default: Date.now(), required: true },
 });
 
 // this function is referenced from: 
