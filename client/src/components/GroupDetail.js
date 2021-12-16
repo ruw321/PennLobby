@@ -50,30 +50,6 @@ const postCards = [
     image: "https://source.unsplash.com/random",
     imageLabel: "Image Text",
   },
-  {
-    title: "Penn Musical Lovers",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Penn Residential",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Daily Philadelphia",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
 ];
 
 const groupMembers = [
@@ -85,7 +61,9 @@ const groupMembers = [
   "user6",
 ];
 
-function GroupDetail() {
+function GroupDetail(props) {
+  const { currGroup } = props;
+  console.log(currGroup);
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
@@ -151,7 +129,7 @@ function GroupDetail() {
           }}
           >
             <Typography variant="h4">
-              Group Name
+              {currGroup}
               <Typography variant="h6">
                 Group description Group description Group description Group description
               </Typography>
@@ -240,14 +218,6 @@ function GroupDetail() {
 
           <Grid container spacing={2}>
             <Grid item key={1} xs={6} md={9}>
-              {/* <Box
-                sx={{
-                  bgcolor: "background.paper",
-                  pt: 0,
-                  pb: 2,
-                }}
-              /> */}
-              {/* Groups */}
               <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container rowSpacing={3} columnSpacing={0}>
                   {postCards.map((post) => (

@@ -23,9 +23,10 @@ const tags = ["Football", "Sports", "Entertainment"];
 
 function GroupCard(props) {
   const {
-    post, whetherIn, groupId,
+    post, whetherIn, groupId, updateCurrGroup,
   } = props;
 
+  console.log(`Groupcard: ${JSON.stringify(post)}`);
   // confirm join group button
   const [open, setOpen] = React.useState(false);
 
@@ -72,7 +73,7 @@ function GroupCard(props) {
     </Button>,
   ];
   const buttonsIn = [
-    <Button key="one" href="./groupdetail" className="groupBtn1" style={{ textTransform: "none" }}>
+    <Button key="one" href="./groupdetail" className="groupBtn1" style={{ textTransform: "none" }} onClick={() => updateCurrGroup(post.groupId)}>
       View Detail
     </Button>,
     <Button key="two" className="groupBtn4" style={{ textTransform: "none" }} onClick={handleClickOpen2}>

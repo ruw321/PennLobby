@@ -26,7 +26,8 @@ import { useNavigate } from 'react-router-dom';
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
 import Menu from "./Menu";
-import { getAllGroups, logout } from '../fetch';
+import { getAllPublicGroups, logout } from '../fetch';
+import "./GroupDetail.css";
 
 function Copyright() {
   return (
@@ -129,7 +130,8 @@ function Lobby() {
     if (userName) {
       setLoggedin(true);
     }
-    const groups = await getAllGroups();
+    const groups = await getAllPublicGroups();
+    console.log(groups);
     const newGroupCards = groups.map((g) =>
       (
         {

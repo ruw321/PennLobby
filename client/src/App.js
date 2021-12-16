@@ -27,9 +27,15 @@ function App() {
   const [friends, setFriends] = useState([]);
   const [userName, setUserName] = useState('');
   const [refresh, setRefresh] = useState(false);
+  const [currGroup, setCurrGroup] = useState('');
   const updateUserName = (u) => setUserName(u);
   const updateContacts = () => setContacts((contacts) => contacts + 1);
   const updateMessages = () => setMessages((messages) => messages + 1);
+  const updateCurrGroup = (g) => {
+    setCurrGroup(g);
+    console.log("app.js");
+    console.log(g);
+  };
   
   useEffect(() => {
     authenticate();
@@ -64,11 +70,11 @@ function App() {
           <Route path="/login" element={<Login updateUserName={updateUserName} />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/lobby" element={<Lobby />} />
-          <Route path="/group" element={<Group />} />
+          <Route path="/group" element={<Group updateCurrGroup={updateCurrGroup} />} />
           <Route path="/post" element={<Post refresh={refresh} />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/message" element={<Messages contacts={contacts} messages={messages} texts={texts} friends={friends} />} />
-          <Route path="/groupdetail" element={<GroupDetail />} />
+          <Route path="/groupdetail" element={<GroupDetail currGroup={currGroup} />} />
           <Route path="/groupmembers" element={<GroupMembers />} />
           {/* <Route path="/messages" element={<Messages />} /> */}
 
