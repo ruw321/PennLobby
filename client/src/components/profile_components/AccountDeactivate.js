@@ -3,14 +3,14 @@ import {
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
 } from '@mui/material';
 import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { deactivateAccount } from '../../fetch';
 
-export default function AccountDeactivate() {
+export default function AccountDeactivate({ updateStatus }) {
   // deactivate account dialog
   const [open2, setOpen2] = React.useState(false);
   const [userID, setUserID] = React.useState(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // get the user id
   const uID = sessionStorage.getItem("id");
   const handleClickOpen2 = () => {
@@ -33,7 +33,8 @@ export default function AccountDeactivate() {
       if (response.ok) {
         sessionStorage.removeItem('id');
         sessionStorage.removeItem('username');
-        navigate('/login');
+        // navigate('/login');
+        updateStatus('login');
       } else {
         console.log("something went wrong");
       }

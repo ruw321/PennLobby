@@ -24,7 +24,6 @@ import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
-import Menu from "./Menu";
 
 const theme = createTheme();
 
@@ -67,7 +66,6 @@ function Chat() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Menu />
       <Grid container style={{ position: "fixed", bottom: "0", top: "65px" }}>
         <Grid container component={Paper} className={classes2.chatSection} style={{ height: "100%" }}>
           <Grid item xs={3} className={classes2.borderRight500}>

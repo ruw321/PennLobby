@@ -30,6 +30,17 @@ router.route("/").get(async (req, res) => {
   }
 });
 
+// get all public groups
+router.route("/public").get(async (_req, res) => {
+  console.log("here");
+  try {
+    const p_groups = await Groups.getPublicGroups(Group);
+    res.status(200).send(p_groups);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 // add a new group
 // TODO
 router.route("/").post(async (req, res) => {

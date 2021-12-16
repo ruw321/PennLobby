@@ -70,7 +70,7 @@ router.route("/").post(async (req, res) => {
     }
     const result = await Users.addUser(User, req.body);
     res.status(201).send(result);
-  } catch (err) {
+  } catch (err) {    
     res.status(400).json({ error: err.message });
   }
 });

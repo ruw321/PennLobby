@@ -23,9 +23,10 @@ const tags = ["Football", "Sports", "Entertainment"];
 
 function GroupCard(props) {
   const {
-    post, whetherIn, groupId,
+    post, whetherIn, groupId, updateCurrGroup, updateStatus,
   } = props;
 
+  console.log(`Groupcard: ${JSON.stringify(post)}`);
   // confirm join group button
   const [open, setOpen] = React.useState(false);
 
@@ -60,25 +61,25 @@ function GroupCard(props) {
   };
 
   const buttonsNotIn = [
-    <Button key="one" href="./groupdetail" className="groupBtn1" style={{ textTransform: "none" }}>
+    <Button key="one" onClick={() => updateStatus('groupdetail')} className="groupBtn1" style={{ textTransform: "none" }}>
       View Detail
     </Button>,
 
     <Button key="two" className="groupBtn2" style={{ textTransform: "none" }} onClick={handleClickOpen}>
       Join Group
     </Button>,
-    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} href="./groupmembers">
+    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} onClick={() => { updateStatus('groupmembers'); }}>
       Members
     </Button>,
   ];
   const buttonsIn = [
-    <Button key="one" href="./groupdetail" className="groupBtn1" style={{ textTransform: "none" }}>
+    <Button key="one" className="groupBtn1" style={{ textTransform: "none" }} onClick={() => { updateCurrGroup(post.groupId); updateStatus('groupdetail'); }}>
       View Detail
     </Button>,
     <Button key="two" className="groupBtn4" style={{ textTransform: "none" }} onClick={handleClickOpen2}>
       Quit Group
     </Button>,
-    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} href="./groupmembers">
+    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} onClick={() => { updateStatus('groupmembers'); }}>
       Members
     </Button>,
   ];
