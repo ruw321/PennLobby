@@ -234,11 +234,11 @@ function Chat(props) {
             <List style={{ height: "100%", overflowY: "auto" }}>
               {
                 friends.map((f) => (
-                  <ListItem button key={f} onClick={() => { setChat(f); }}>
+                  <ListItem button key={f.username} onClick={() => { setChat(f.username); }}>
                     <ListItemIcon>
-                      <Avatar alt={f} src="https://material-ui.com/static/images/avatar/1.jpg" />
+                      <Avatar alt={f.username} src={f.avatar_url.length > 0 ? f.avatar_url : "https://material-ui.com/static/images/avatar/1.jpg"} />
                     </ListItemIcon>
-                    <ListItemText primary={f} secondary="click to chat" />
+                    <ListItemText primary={f.username} secondary="click to chat" />
                   </ListItem>
                 ))
               }
@@ -252,7 +252,7 @@ function Chat(props) {
             && (
             <ListItem button key={currentChat}>
               <ListItemIcon>
-                <Avatar alt={currentChat} src="https://material-ui.com/static/images/avatar/1.jpg" />
+                <Avatar alt={currentChat} src={friends.find((f) => f.username === currentChat).avatar_url.length > 0 ? friends.find((f) => f.username === currentChat).avatar_url : "https://material-ui.com/static/images/avatar/1.jpg"} />
               </ListItemIcon>
               <ListItemText primary={currentChat} secondary="Online Now" />
             </ListItem>
@@ -282,7 +282,7 @@ function Chat(props) {
                       <Grid container>
                         <ListItem>
                           <ListItemIcon>
-                            <Avatar alt={msg.split(')')[0].split('(')[1]} src="https://material-ui.com/static/images/avatar/1.jpg" />
+                            <Avatar alt={currentChat} src={friends.find((f) => f.username === currentChat).avatar_url.length > 0 ? friends.find((f) => f.username === currentChat).avatar_url : "https://material-ui.com/static/images/avatar/1.jpg"} />
                           </ListItemIcon>
                           <ToMessage msg={msg} />
                         </ListItem>
