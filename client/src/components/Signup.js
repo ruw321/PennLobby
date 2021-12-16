@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -11,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { signup } from '../fetch';
 // referenced from https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
 function Copyright() {
@@ -28,11 +29,11 @@ function Copyright() {
 
 const theme = createTheme();
 
-function Signup() {
+function Signup({ updateStatus }) {
   const [redirect, setRedirect] = useState(false);
   const [errorMes, setErrorMes] = useState('');
   const [hasError, setHasError] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -59,7 +60,8 @@ function Signup() {
 
   useEffect(() => {
     if (redirect) {
-      navigate(`/lobby`);
+      // navigate(`/lobby`);
+      updateStatus('lobby');
     }
   }, [redirect]);
 
@@ -182,7 +184,7 @@ function Signup() {
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link href="/login" variant="body2" className="signup-link">
+                  <Link variant="body2" className="signup-link" onClick={() => updateStatus('login')}>
                     Already have an account? Sign in
                   </Link>
                 </Grid>

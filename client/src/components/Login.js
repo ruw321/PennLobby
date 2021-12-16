@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -13,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 // import { joinChat } from './getData';
 import { login } from '../fetch';
 
@@ -33,12 +34,12 @@ function Copyright() {
 const theme = createTheme();
 
 function Login(props) {
-  const { updateUserName } = props;
+  const { updateUserName, updateStatus } = props;
   const [redirect, setRedirect] = useState(false);
   const [baduser, setBadUser] = useState('');
   const [errorMes, setErrorMes] = useState('');
   const [lockedtime, setLockedTime] = useState(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -83,7 +84,8 @@ function Login(props) {
 
   useEffect(() => {
     if (redirect) {
-      navigate(`/lobby`);
+      // navigate(`/lobby`);
+      updateStatus('lobby');
     }
   }, [redirect]);
 
@@ -174,7 +176,10 @@ function Login(props) {
                   </Link>
                 </Grid> */}
                 <Grid item>
-                  <Link href="/signup" variant="body2">
+                  <Link 
+                    variant="body2" 
+                    onClick={() => updateStatus('signup')}
+                  >
                     Don&apos;t have an account? Sign Up
                   </Link>
                 </Grid>

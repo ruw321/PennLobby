@@ -25,7 +25,6 @@ import Avatar from '@material-ui/core/Avatar';
 import { useNavigate } from 'react-router-dom';
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
-import Menu from "./Menu";
 import { getAllPublicGroups, logout } from '../fetch';
 import "./GroupDetail.css";
 
@@ -170,7 +169,6 @@ function Lobby() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Menu />
       <main>
         {/* Hero unit */}
         {/* Filter and Sort options */}

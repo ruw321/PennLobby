@@ -24,7 +24,6 @@ import {
 import { styled } from "@mui/system";
 import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
-import Menu from "./Menu";
 import GroupMembers from "./GroupMembers";
 
 function Copyright() {
@@ -63,7 +62,6 @@ const groupMembers = [
 
 function GroupDetail(props) {
   const { currGroup } = props;
-  console.log(currGroup);
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
@@ -117,7 +115,6 @@ function GroupDetail(props) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Menu />
       <main>
         {/* Hero unit */}
         {/* Filter and Sort options */}
@@ -129,7 +126,7 @@ function GroupDetail(props) {
           }}
           >
             <Typography variant="h4">
-              {currGroup}
+              {`${currGroup}tttt`}
               <Typography variant="h6">
                 Group description Group description Group description Group description
               </Typography>

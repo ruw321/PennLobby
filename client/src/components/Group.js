@@ -28,7 +28,6 @@ import { FormControlLabel } from "@material-ui/core";
 import { useNavigate } from 'react-router-dom';
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
-import Menu from "./Menu";
 import { createGroup, getAllPublicGroups, logout } from "../fetch";
 
 function Copyright() {
@@ -75,17 +74,18 @@ const sortMethod = [
 ];
 
 function MyGroup(props) {
-  const { updateCurrGroup } = props;
+  const { updateCurrGroup, updateStatus } = props;
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
   const [groupCards, setGroupCards] = React.useState([]);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const userName = sessionStorage.getItem('username');
 
   React.useEffect(async () => {
     if (!userName) {
       console.log("here");
-      navigate('/login');
+      // navigate('/login');
+      updateStatus('login');
     }
     const groups = await getAllPublicGroups();
     const newGroupCards = groups.map((g) =>
@@ -209,7 +209,6 @@ function MyGroup(props) {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Menu />
         <main>
           {/* Hero unit */}
           {/* Filter and Sort options */}
@@ -360,7 +359,7 @@ function MyGroup(props) {
                 <Container sx={{ pt: 2 }} maxWidth="lg">
                   <Grid container rowSpacing={3} columnSpacing={0}>
                     {groupCards.map((post) => (
-                      <GroupCard key={post.title} post={post} whetherIn updateCurrGroup={updateCurrGroup} />
+                      <GroupCard key={post.title} post={post} whetherIn updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />
                     ))}
                   </Grid>
                 </Container>
