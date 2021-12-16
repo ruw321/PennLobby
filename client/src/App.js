@@ -37,7 +37,7 @@ function App() {
   useEffect(() => {
     getAllUsers().then((response) => {
       if (!response) { return; }
-      setFriends(response.map((r) => r.username).filter((r) => r !== sessionStorage.getItem('username')));
+      setFriends(response.filter((r) => r.username !== sessionStorage.getItem('username')));
       // .filter((r) => r !== sessionStorage.getItem('username'))
     });
     setRefresh(!refresh);
