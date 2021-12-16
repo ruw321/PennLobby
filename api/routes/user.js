@@ -30,6 +30,7 @@ const schema = {
     followers: { type: "array" },
     blocking: { type: "array" },
     blocked_by: { type: "array" },
+    avatar_url: { type: "string" },
   },
   required: ["username", "email", "firstName", "lastName", "password"],
 };

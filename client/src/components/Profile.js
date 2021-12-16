@@ -24,7 +24,9 @@ import TabPanel from '@mui/lab/TabPanel';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import Menu from "./Menu";
-import { getUserbyUsername } from '../fetch';
+import {
+  getUserbyUsername, getS3Url, sendS3, updateUserById, 
+} from '../fetch';
 import PasswordChange from './profile_components/PasswordChange';
 import AccountDeactivate from './profile_components/AccountDeactivate';
 
@@ -71,6 +73,16 @@ export default function Album() {
       setUser(parsed);
     }
   }, []);
+  const updateProfilePic = async (evt) => {
+    const files = [...evt.target.files];
+    const { url } = await getS3Url();
+    await sendS3(url, files[0]);
+    const imageUrl = url.split('?')[0];
+    await updateUserById(sessionStorage.getItem('id'), { avatar_url: imageUrl });
+    const response = await getUserbyUsername(uname);
+    const parsed = await response.json();
+    setUser(parsed);
+  };
   if (user) {
     const date = new Date(user.created_at);
     return (
@@ -92,7 +104,7 @@ export default function Album() {
                   sx={{
                     borderRadius: '50%', height: 120, width: 120, display: { xs: 'none', sm: 'block' },
                   }}
-                  image="https://picsum.photos/536/354"
+                  image={user.avatar_url}
                 />
               </Grid>
             </Container>
@@ -123,7 +135,7 @@ export default function Album() {
                 justifyContent="center"
               >
                 <label htmlFor="contained-button-file">
-                  <Input accept="image/*" id="contained-button-file" multiple type="file" />
+                  <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={(e) => updateProfilePic(e)} />
                   <Button variant="contained" component="span">
                     Upload Profile Picture
                   </Button>
