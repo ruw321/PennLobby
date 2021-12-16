@@ -81,8 +81,8 @@ router.route("/").post(async (req, res) => {
     }
     // add this group's id to owner.group_ids
     const user = await Users.getUserById(User, req.body.owner);
-    const group = await Groups.getGroupByName(Group, newGroup.name);
-    const userGroupIds = user.group_ids.push(group._id);
+    // const group = await Groups.getGroupByName(Group, newGroup.name);
+    const userGroupIds = user.group_ids.push(result._id);
     await Users.updateUserById(req.body.owner, {
       group_ids: userGroupIds,
     });

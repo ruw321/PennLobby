@@ -11,12 +11,12 @@ module.exports.getGroups = async (collection) => {
 // get all public groups
 module.exports.getPublicGroups = async (collection) => {
   try {
-    const p_groups = await collection.find({ type: 'public' });
+    const p_groups = await collection.find({ type: "public" });
     return p_groups;
   } catch (err) {
     throw new Error(`Error getting all public groups: ${err.message}`);
   }
-}
+};
 
 // get group by id
 module.exports.getGroupById = async (collection, ID) => {

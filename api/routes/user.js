@@ -1,20 +1,20 @@
 const express = require("express");
 const router = express.Router();
-// make sure the name is different from the class instance 
+// make sure the name is different from the class instance
 // for example, it cannot be users = require(./users)
 const Users = require("../DBOperations/users");
-const User = require('../models/User');
+const User = require("../models/User");
 const Comment = require("../models/Comment");
-const Comments = require('../DBOperations/comments');
+const Comments = require("../DBOperations/comments");
 const Posts = require("../DBOperations/posts");
 const Post = require("../models/Post");
 const Groups = require("../DBOperations/groups");
 const Group = require("../models/Group");
-// data validator 
+// data validator
 const Ajv = require("ajv");
 
 //data validator
-const ajv = new Ajv({ coerceTypes: true })
+const ajv = new Ajv({ coerceTypes: true });
 const schema = {
   type: "object",
   properties: {
@@ -41,7 +41,7 @@ const schema = {
 // get all users
 router.route("/").get(async (req, res) => {
   try {
-    console.log(' !!get all!!user!');
+    console.log(" !!get all!!user!");
     const users = await Users.getUsers(User);
     res.status(200).send(users);
   } catch (error) {
@@ -61,16 +61,18 @@ router.route("/").post(async (req, res) => {
     // check if the user already exists in the database
     const exists = await Users.getUserbyEmail(User, req.body.email);
     if (exists) {
-      res.status(409).json({ error: 'this email is already in the database' });
+      res.status(409).json({ error: "this email is already in the database" });
       return;
     }
     if (await Users.getUserByUsername(User, req.body.username)) {
-      res.status(409).json({ error: 'this username is already in the database' });
+      res
+        .status(409)
+        .json({ error: "this username is already in the database" });
       return;
     }
     const result = await Users.addUser(User, req.body);
     res.status(201).send(result);
-  } catch (err) {    
+  } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
@@ -95,7 +97,7 @@ router.route("/username/:username").get(async (req, res) => {
       res.status(400).json({ error: error.message });
     }
   } else {
-    res.status(401).json({ error: 'You are not authorized.' });
+    res.status(401).json({ error: "You are not authorized." });
   }
 });
 
@@ -114,14 +116,14 @@ router.route("/password/:id").put(async (req, res) => {
   if (req.isAuthenticated) {
     try {
       const pass = req.body.password;
-      const id = req.params.id
+      const id = req.params.id;
       const user = await Users.changePassword(User, id, pass);
       res.status(200).send(user);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
   } else {
-    res.status(401).json({ error: 'You are not authorized.' });
+    res.status(401).json({ error: "You are not authorized." });
   }
 });
 
@@ -137,7 +139,7 @@ router.route("/:id").put(async (req, res) => {
       res.status(400).json({ error: error.message });
     }
   } else {
-    res.status(401).json({ error: 'You are not authorized.' });
+    res.status(401).json({ error: "You are not authorized." });
   }
 });
 
@@ -158,16 +160,16 @@ router.route("/:id").delete(async (req, res) => {
 // join a group by id
 router.route("/join/").put(async (req, res) => {
   try {
-    console.log(' !!put!!user!');
+    console.log(" !!put!!user!");
     const userId = req.body._id;
     const groupId = req.body._group_id;
     const user = await Users.getUserById(User, userId);
     if (user.group_ids.includes(groupId)) {
-      res.status(400).json({ error: 'already in this group' });
+      res.status(400).json({ error: "already in this group" });
       return;
     }
     user.group_ids.push(groupId);
-    console.log(' !!user!', user)
+    console.log(" !!user!", user);
     const { _id, ...rest } = user;
     const newUsers = await Users.updateUserById(User, req.body._id, rest);
     res.status(200).send(newUsers);
@@ -175,6 +177,5 @@ router.route("/join/").put(async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
 
 module.exports = router;
