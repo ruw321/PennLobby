@@ -88,10 +88,6 @@ async function userChangePassword(id, newPass) {
 
 // user deactivates account
 async function deactivateAccount(id) {
-  // const obj = {
-  //   userID: ,
-  //   postID: ,
-  // }
   const data = {
     credentials: "include",
     method: "DELETE",
@@ -119,6 +115,26 @@ async function getAllUsers() {
     return res;
   } catch (err) {
     return null;
+  }
+}
+
+// update user
+async function updateUserById(id, obj) {
+  try {
+    const data = {
+      credentials: "include",
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // you have to do JSON.stringify, otherwise CORS wouldnt allow it
+      body: JSON.stringify({ _id: id, ...obj }),
+    };
+    const theUrl = `${url}/api/user/${id}`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (e) {
+    return e;
   }
 }
 
@@ -253,6 +269,28 @@ async function addPost(newPost) {
 // TODO: user marks a post for deletion
 
 // TODO: admin deletes a post
+async function deletePost(userID, postID, groupID) {
+  try {
+    const obj = {
+      userId: userID,
+      groupId: groupID,
+    };
+    const data = {
+      credentials: 'include',
+      mode: 'cors',
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(obj),
+    };
+    const theUrl = `${url}/api/post/${postID}`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return err;
+  }
+}
 
 // TODO: create a new comment
 async function addComment(newComment) {
@@ -284,6 +322,7 @@ module.exports = {
   logout,
   getUserbyUsername,
   getAllUsers,
+  updateUserById,
   postMessage,
   getS3Url,
   sendS3,
@@ -295,4 +334,5 @@ module.exports = {
   getAllPosts,
   addPost,
   addComment,
+  deletePost,
 };

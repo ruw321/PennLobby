@@ -7,11 +7,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { IconButton } from "@mui/material";
 import Avatar from '@material-ui/core/Avatar';
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from 'react-router-dom';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import UserAvatar from './UserAvatar';
 
 function Menu() {
@@ -45,15 +45,25 @@ function Menu() {
       sx={{ borderBottom: (themes) => `1px solid ${themes.palette.divider}` }}
     >
       <Toolbar sx={{ flexWrap: "wrap" }}>
-        <Typography
-          variant="h6"
-          color="inherit"
-          noWrap
-          sx={{ flexGrow: 0.3 }}
-        >
-          <img className="barLogo" src="../../logo.png" alt="logo_pic" />
-        </Typography>
+
         <nav>
+          {/* <Typography
+            variant="h6"
+            color="inherit"
+            noWrap
+            sx={{ flexGrow: 0.3 }}
+          >
+            
+          </Typography> */}
+          <Link
+            variant="button"
+            color="text.primary"
+            href="/lobby"
+            sx={{ my: 1, mx: 7 }}
+            id="home"
+          >
+            <img className="barLogo" src="../../logo.png" alt="logo_pic" />
+          </Link>
           <Link
             variant="button"
             color="text.primary"
@@ -91,8 +101,12 @@ function Menu() {
           >
             Messages
           </Link>
+
         </nav>
         <section className={classes.rightToolbar} margin="auto">
+          <IconButton aria-label="settings">
+            <NotificationsNoneIcon />
+          </IconButton>
           {loggedIn ? (
             <UserAvatar setLoggedin={setLoggedin} />
           ) : (
@@ -100,10 +114,6 @@ function Menu() {
               Login
             </Button>
           )}
-
-          {/* <Button href="./login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-            Login
-          </Button> */}
         </section>
       </Toolbar>
     </AppBar>

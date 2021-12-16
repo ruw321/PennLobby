@@ -22,7 +22,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import {
-  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormLabel, Radio, RadioGroup, TextField,
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormLabel, List, ListItem, Radio, RadioGroup, TextField,
 } from "@mui/material";
 import { FormControlLabel } from "@material-ui/core";
 import TrendingTopics from "./TrendingTopics";
@@ -399,10 +399,19 @@ function MyGroup() {
               </Container>
 
             </Grid>
+
             <Grid item key={2} xs={6} md={3}>
               <Grid container align="center" justify="center" alignItems="center" spacing={2}>
-                {/* <Button variant="contained">Create a New Group</Button> */}
+                {/* Trending Topics */}
                 <TrendingTopics />
+                {/* Group Analysis */}
+                <Grid item xs={12} md={6}>
+                  <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+                    Text only
+                  </Typography>
+
+                </Grid>
+
               </Grid>
             </Grid>
           </Grid>

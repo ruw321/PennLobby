@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from "react";
@@ -16,7 +18,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
 import Menu from "./Menu";
-import { getAllPosts } from "../fetch";
+import { getAllPosts, postMessage } from "../fetch";
 
 function Copyright() {
   return (
@@ -32,40 +34,40 @@ function Copyright() {
 
 const theme = createTheme();
 
-const postCardsHardcode = [
-  {
-    title: "Penn Football",
-    size: "293",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Penn Musical Lovers",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Penn Residential",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-  {
-    title: "Daily Philadelphia",
-    size: "200",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    image: "https://source.unsplash.com/random",
-    imageLabel: "Image Text",
-  },
-];
+// const postCardsHardcode = [
+//   {
+//     title: "Penn Football",
+//     size: "293",
+//     description:
+//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
+//     image: "https://source.unsplash.com/random",
+//     imageLabel: "Image Text",
+//   },
+//   {
+//     title: "Penn Musical Lovers",
+//     size: "200",
+//     description:
+//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
+//     image: "https://source.unsplash.com/random",
+//     imageLabel: "Image Text",
+//   },
+//   {
+//     title: "Penn Residential",
+//     size: "200",
+//     description:
+//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
+//     image: "https://source.unsplash.com/random",
+//     imageLabel: "Image Text",
+//   },
+//   {
+//     title: "Daily Philadelphia",
+//     size: "200",
+//     description:
+//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
+//     image: "https://source.unsplash.com/random",
+//     imageLabel: "Image Text",
+//   },
+// ];
 
 const trendingTopicsToday = [
   "Music",
@@ -93,11 +95,24 @@ const trendingTopicsWeekly = [
   "Football",
 ];
 
-function MyPost() {
+function MyPost(props) {
   const [allPosts, setAllPosts] = useState([]);
+  const [refresh, setRefresh] = React.useState(props.refresh);
+  React.useEffect(() => {
+    setRefresh(props.refresh);
+    const loadData = async () => {
+      const postCards = await getAllPosts();
+      // console.log(postCards);
+      setAllPosts(postCards);
+    };
+    loadData();
+  }, [props.refresh]);
+  // postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
+
   useEffect(() => {
     const loadData = async () => {
       const postCards = await getAllPosts();
+      // console.log(postCards);
       // console.log(postCards);
       setAllPosts(postCards);
     };
@@ -115,6 +130,17 @@ function MyPost() {
       marginLeft: -12,
     },
   });
+
+  // hide a post
+
+  const [hide, setHide] = React.useState([]);
+
+  const updateHide = (post) => {
+    console.log(post);
+    setAllPosts(allPosts.filter((p) => !post.includes(p._id)));
+    setHide(post);
+  };
+
   const classes = useStyles();
   return (
     <ThemeProvider theme={theme}>
@@ -137,18 +163,16 @@ function MyPost() {
               {/* Groups */}
               <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container rowSpacing={3} columnSpacing={0}>
+                  {/* {allPosts.filter((p) => !hide.includes(p._id)).map((post) => ( */}
                   {allPosts.map((post) => (
 
-                    <PostCard key={post.title} post={post} whetherIn />
+                    <PostCard key={post._id} post={post} hide={hide} updateHide={updateHide} whetherIn />
                   ))}
                 </Grid>
               </Container>
             </Grid>
             <Grid item key={2} xs={6} md={3}>
-              <TrendingTopics
-                trendingTopicsToday={trendingTopicsToday}
-                trendingTopicsWeekly={trendingTopicsWeekly}
-              />
+              <TrendingTopics />
             </Grid>
           </Grid>
         </Container>
