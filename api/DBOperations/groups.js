@@ -11,7 +11,7 @@ module.exports.getGroups = async (collection) => {
 // get group by id
 module.exports.getGroupById = async (collection, ID) => {
   try {
-    const group = await collection.findOne({ id: ID });
+    const group = await collection.findOne({ _id: ID });
     return group;
   } catch (err) {
     throw new Error(`Error getting the group by id: ${err.message}`);

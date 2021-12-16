@@ -17,7 +17,7 @@ import { Dialog } from "@material-ui/core";
 import {
   DialogActions, DialogContent, DialogContentText, DialogTitle,
 } from "@mui/material";
-import { joinGroup } from '../fetch';
+import { joinGroup, quitGroup } from '../fetch';
 
 const tags = ["Football", "Sports", "Entertainment"];
 
@@ -56,6 +56,16 @@ function GroupCard(props) {
   };
 
   const handleClose2 = () => {
+    setOpen2(false);
+  };
+
+  const handleQuitGroup = async () => {
+    const userID = sessionStorage.getItem("id");
+    console.log(userID);
+    console.log(post.groupId);
+    const res = await quitGroup(userID, post.groupId);
+    const print = await res.json();
+    console.log(print);
     setOpen2(false);
   };
 
@@ -158,6 +168,7 @@ function GroupCard(props) {
               </Button>
             </DialogActions>
           </Dialog>
+  
           {/* confirm quit group */}
           <Dialog
             open={open2}
@@ -175,7 +186,7 @@ function GroupCard(props) {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose2}>No</Button>
-              <Button onClick={handleClose2} autoFocus>
+              <Button onClick={handleQuitGroup} autoFocus>
                 Yes
               </Button>
             </DialogActions>

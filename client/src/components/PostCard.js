@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
@@ -21,8 +22,9 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, 
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
-import { deletePost } from "../fetch";
+import { deletePost, addComment, getAllComments } from "../fetch";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -36,8 +38,33 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function PostCard(props) {
-  const { hide, updateHide } = props;
+  const { hide, updateHide, post } = props;
 
+  const userID = sessionStorage.getItem('id');
+  const postID = post._id;
+
+  // get all comments
+  const [allComments, setAllComments] = React.useState([]);
+
+  React.useEffect(async () => {
+    // const allCommentsDB = await getAllComments(postID);
+    const comments = [{
+      postID: "61b82519446d6c20ca33f30a",
+      authorID: "61b8222e311a421f9026e54d",
+      content: "This is my first comment",
+    }];
+    // const comments = allCommentsDB.map((g) =>
+    //   (
+    //     {
+    //       postID: "61b82519446d6c20ca33f30a",
+    //       authorID: "61b8222e311a421f9026e54d",
+    //       content: "This is my first comment",
+    //     }
+    //   ));
+    setAllComments(comments);
+  }, []);
+
+  // comment toggle down
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -131,6 +158,18 @@ export default function PostCard(props) {
     // const print = await res.json();
     // console.log(print);
     setOpenDeleteComment(false);
+  };
+
+  // send a reply(comments) to a post
+  const [reply, setReply] = React.useState('');
+  const handleChangeReply = (event) => {
+    setReply(event.target.value);
+  };
+
+  const handleSendReply = async () => {
+    const res = await addComment(reply, userID, postID);
+    const print = await res.json();
+    console.log(print);
   };
 
   return (
@@ -256,12 +295,7 @@ export default function PostCard(props) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        {/* <IconButton aria-label="comments" sx={{ fontSize: "10px" }}>
-          <CommentIcon /> 25
-        </IconButton> */}
-        {/* <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton> */}
+
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -274,6 +308,60 @@ export default function PostCard(props) {
   
       {/* Below is comment section */}
       <Collapse in={expanded} timeout="auto" unmountOnExit>
+
+        {/* TODO: add real comments */}
+        {allComments.map((comment) => (
+          <div className="comments">
+            <CardHeader
+              avatar={
+                <Avatar sx={{ bgcolor: "#ffaa00" }} aria-label="recipe">
+                  R
+                </Avatar>
+            }
+              action={
+                <div>
+                  {/* Delete a comment */}
+                  <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
+                    <DeleteIcon />
+                  </IconButton>
+
+                  <Dialog
+                    open={openDeleteComment}
+                    onClose={handleCloseDeleteComment}
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      Do you want to delete this reply?
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        You have to be the author or the group administrator to delete this post.
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseDeleteComment}>Cancel</Button>
+                      <Button onClick={handleConfirmDeleteComment} autoFocus>
+                        Confirm
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+
+                  {/* Edit a comment */}
+                  <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
+                    <EditIcon />
+                  </IconButton>
+                </div>
+            }
+              title="Shrimp and Chorizo Paella"
+              subheader="September 14, 2016"
+            />
+          
+            <CardContent>
+              <Typography variant="body2" color="text.secondary">
+                {comment.content}
+              </Typography>
+            </CardContent>
+          </div>
+        ))}
         {/* TODO: add real comments */}
         <div className="comments">
           <CardHeader
@@ -284,6 +372,7 @@ export default function PostCard(props) {
             }
             action={
               <div>
+                {/* Delete a comment */}
                 <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
                   <DeleteIcon />
                 </IconButton>
@@ -308,6 +397,10 @@ export default function PostCard(props) {
                   </DialogActions>
                 </Dialog>
 
+                {/* Edit a comment */}
+                <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
+                  <EditIcon />
+                </IconButton>
               </div>
             }
             title="Shrimp and Chorizo Paella"
@@ -320,6 +413,8 @@ export default function PostCard(props) {
             </Typography>
           </CardContent>
         </div>
+
+        {/* repetition */}
         <div className="comments">
           <CardHeader
             avatar={
@@ -343,6 +438,7 @@ export default function PostCard(props) {
             </Typography>
           </CardContent>
         </div>
+
         <div className="reply">
           <TextField
             id="outlined-multiline-static"
@@ -350,9 +446,10 @@ export default function PostCard(props) {
             multiline
             fullWidth
             rows={4}
+            onChange={handleChangeReply}
           />
           <div className="replyButton">
-            <Button variant="contained" startIcon={<ReplyIcon />}>
+            <Button variant="contained" startIcon={<ReplyIcon />} onClick={handleSendReply}>
               Reply
             </Button>
           </div>

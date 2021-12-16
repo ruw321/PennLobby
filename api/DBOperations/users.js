@@ -33,10 +33,10 @@ module.exports.getUserByUsername = async (collection, Username) => {
 // get user by id
 module.exports.getUserById = async (collection, ID) => {
   try {
-    const user = await collection.findOne({ id: ID });
+    const user = await collection.findOne({ _id: ID });
     return user;
   } catch (err) {
-    throw new Error(`Error getting the user by email: ${err.message}`);
+    throw new Error(`Error getting the user by ID: ${err.message}`);
   }
 };
 
