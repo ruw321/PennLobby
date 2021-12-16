@@ -160,68 +160,7 @@ function Chat(props) {
   const classes2 = useStyles2();
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <AppBar
-        position="static"
-        color="default"
-        elevation={0}
-        sx={{ borderBottom: (themes) => `1px solid ${themes.palette.divider}` }}
-      >
-        <Toolbar sx={{ flexWrap: "wrap" }}>
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            sx={{ flexGrow: 0.3 }}
-          >
-            <img className="barLogo" src="../../logo.png" alt="logo_pic" />
-          </Typography>
-          <nav>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/"
-              sx={{ my: 1, mx: 7 }}
-              id="home"
-            >
-              Home
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 7 }}
-              id="mygroups"
-            >
-              My Groups
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 7 }}
-              id="myposts"
-            >
-              My Posts
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/message"
-              fontWeight="600"
-              sx={{ my: 1, mx: 7 }}
-              id="messages"
-            >
-              Messages
-            </Link>
-          </nav>
-          <section className={classes.rightToolbar}>
-            <Button href="./profile">
-              <Avatar src="https://material-ui.com/static/images/avatar/4.jpg" />
-            </Button>
-          </section>
-        </Toolbar>
-      </AppBar>
+      {/* <CssBaseline /> */}
       <Grid container style={{ position: "", bottom: "0", top: "65px" }}>
         <Grid container component={Paper} className={classes2.chatSection} style={{ height: "100%" }}>
           <Grid item xs={3} className={classes2.borderRight500}>

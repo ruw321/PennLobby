@@ -14,7 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import UserAvatar from './UserAvatar';
 
-function Menu() {
+function Menu(props) {
+  const { updateStatus } = props;
   const [loggedIn, setLoggedin] = React.useState(false);
 
   const userName = sessionStorage.getItem('username');
@@ -58,46 +59,46 @@ function Menu() {
           <Link
             variant="button"
             color="text.primary"
-            href="/lobby"
             sx={{ my: 1, mx: 7 }}
             id="home"
+            onClick={() => updateStatus('lobby')}
           >
             <img className="barLogo" src="../../logo.png" alt="logo_pic" />
           </Link>
           <Link
             variant="button"
             color="text.primary"
-            href="/lobby"
             sx={{ my: 1, mx: 7 }}
             // fontWeight="600"
             id="home"
+            onClick={() => updateStatus('lobby')}
           >
             Home
           </Link>
           <Link
             variant="button"
             color="text.primary"
-            href="/group"
             sx={{ my: 1, mx: 7 }}
             id="mygroups"
+            onClick={() => updateStatus('group')}
           >
             My Groups
           </Link>
           <Link
             variant="button"
             color="text.primary"
-            href="/post"
             sx={{ my: 1, mx: 7 }}
             id="myposts"
+            onClick={() => updateStatus('post')}
           >
             My Posts
           </Link>
           <Link
             variant="button"
             color="text.primary"
-            href="/message"
             sx={{ my: 1, mx: 7 }}
             id="messages"
+            onClick={() => updateStatus('message')}
           >
             Messages
           </Link>
@@ -108,9 +109,9 @@ function Menu() {
             <NotificationsNoneIcon />
           </IconButton> */}
           {loggedIn ? (
-            <UserAvatar setLoggedin={setLoggedin} />
+            <UserAvatar setLoggedin={setLoggedin} updateStatus={updateStatus} />
           ) : (
-            <Button href="./login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+            <Button variant="outlined" sx={{ my: 1, mx: 1.5 }} onClick={() => updateStatus('login')}>
               Login
             </Button>
           )}
