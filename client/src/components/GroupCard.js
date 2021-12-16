@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -36,9 +37,14 @@ function GroupCard(props) {
     setOpen(false);
   };
 
-  const handleJoinGroup = () => {
+  const handleJoinGroup = async () => {
     // Need to get user from session storage
-    // joinGroup("sadufalisdu", groupId);
+    const userID = sessionStorage.getItem("id");
+    console.log(userID);
+    console.log(post.groupId);
+    const res = await joinGroup(userID, post.groupId);
+    const print = await res.json();
+    console.log(print);
     setOpen(false);
   };
 
