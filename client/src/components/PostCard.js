@@ -21,6 +21,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, 
 } from '@mui/material';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
 import { deletePost } from "../fetch";
 
 const ExpandMore = styled((props) => {
@@ -55,8 +56,9 @@ export default function PostCard(props) {
   };
 
   const handleConfirmDeletePost = async () => {
-    const userID = sessionStorage.getItem("id");
-    const res = await deletePost(userID, props.post._id, props.post.group_id);
+    const temp = "61b8222e311a421f9026e54d";
+    // const userID = sessionStorage.getItem("id");
+    const res = await deletePost(temp, props.post._id, props.post.group_id);
     const print = await res.json();
     console.log(print);
     setOpenDeletePost(false);
@@ -80,8 +82,62 @@ export default function PostCard(props) {
     setOpenHidePost(false);
   };
 
+  // flag a post as inappropriate
+  const [openFlagPost, setOpenFlagPost] = React.useState(false);
+
+  const handleClickOpenFlagPost = () => {
+    setOpenFlagPost(true);
+  };
+
+  const handleCloseFlagPost = () => {
+    setOpenFlagPost(false);
+  };
+
+  const handleConfirmFlagPost = () => {
+
+  };
+
+  // post analytics
+  const [openAnalytics, setOpenAnalytics] = React.useState(false);
+
+  const handleClickOpenAnalytics = () => {
+    setOpenAnalytics(true);
+  };
+
+  const handleCloseAnalytics = () => {
+    setOpenAnalytics(false);
+  };
+
+  // const handleConfirmAnalytics = () => {
+  //   setOpenAnalytics(false);
+  // };
+
+  // delete a comment
+  const [openDeleteComment, setOpenDeleteComment] = React.useState(false);
+
+  const handleClickOpenDeleteComment = () => {
+    console.log("check1");
+    setOpenDeleteComment(true);
+  };
+
+  const handleCloseDeleteComment = () => {
+    setOpenDeleteComment(false);
+  };
+
+  const handleConfirmDeleteComment = async () => {
+    // const temp = "61b8222e311a421f9026e54d";
+    // // const userID = sessionStorage.getItem("id");
+    // const res = await deletePost(temp, props.post._id, props.post.group_id);
+    // const print = await res.json();
+    // console.log(print);
+    setOpenDeleteComment(false);
+  };
+
   return (
-    <Card sx={{ maxWidth: 850, marginY: 2 }}>
+    <Card sx={{
+      marginY: 2, width: '100%',
+    }}
+    >
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -124,8 +180,6 @@ export default function PostCard(props) {
             <Dialog
               open={openHidePost}
               onClose={handleClickOpenHidePost}
-              // aria-labelledby="alert-dialog-title"
-              // aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
                 Do you want to hide this post?
@@ -143,10 +197,54 @@ export default function PostCard(props) {
               </DialogActions>
             </Dialog>
 
-            <IconButton aria-label="settings">
+            {/* flag as inappropriate */}
+            <IconButton aria-label="settings" onClick={handleClickOpenFlagPost}>
               <FlagIcon />
-              {/* flag as inappropriate */}
             </IconButton>
+
+            <Dialog
+              open={openFlagPost}
+              onClose={handleClickOpenFlagPost}
+            >
+              <DialogTitle id="alert-dialog-title">
+                Do you want to flag this post as inappropriate?
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  You flag will be reported to the group administrator.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseFlagPost}>Cancel</Button>
+                <Button onClick={handleConfirmFlagPost} autoFocus>
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+            {/* post analytics */}
+            <IconButton aria-label="settings" onClick={handleClickOpenAnalytics}>
+              <EqualizerIcon />
+            </IconButton>
+
+            <Dialog
+              open={openAnalytics}
+              onClose={handleClickOpenAnalytics}
+            >
+              <DialogTitle id="alert-dialog-title">
+                Post Analytics
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  The number of replies for this post:
+                  The post was created:
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseAnalytics}>Close</Button>
+              </DialogActions>
+            </Dialog>
+
           </div>
         }
         title={props.post.title}
@@ -173,6 +271,8 @@ export default function PostCard(props) {
           <ExpandMoreIcon />
         </ExpandMore>
       </CardActions>
+  
+      {/* Below is comment section */}
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         {/* TODO: add real comments */}
         <div className="comments">
@@ -183,18 +283,40 @@ export default function PostCard(props) {
               </Avatar>
             }
             action={
-              <IconButton aria-label="settings">
-                <DeleteIcon />
-              </IconButton>
+              <div>
+                <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
+                  <DeleteIcon />
+                </IconButton>
+
+                <Dialog
+                  open={openDeleteComment}
+                  onClose={handleCloseDeleteComment}
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    Do you want to delete this reply?
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      You have to be the author or the group administrator to delete this post.
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseDeleteComment}>Cancel</Button>
+                    <Button onClick={handleConfirmDeleteComment} autoFocus>
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+
+              </div>
             }
             title="Shrimp and Chorizo Paella"
             subheader="September 14, 2016"
           />
+          
           <CardContent>
             <Typography variant="body2" color="text.secondary">
-              This impressive paella is a perfect party dish and a fun meal to
-              cook sdfsdfsdfsdfs together with your guests. Add 1 cup of frozen
-              peas along with the mussels, if you like.
+              Comment Comment Comment Comment Comment Comment Comment Comment
             </Typography>
           </CardContent>
         </div>
