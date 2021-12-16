@@ -225,17 +225,41 @@ async function createGroup(group){
     return e;
   }
 }
+
+// join a group by id
 async function joinGroup(userId, GroupId){
   const data = {
-    method: 'put',
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ _id: userId, _group_id: GroupId }),
   };
   try {
+    console.log("check fetch join group 0");
     const theUrl = `${url}/api/join/`;
     const response = await fetch(theUrl, data);
+    console.log("check fetch join group 1");
+    return response;
+  } catch (e) {
+    return e;
+  }
+}
+
+// quit a group by id
+async function quitGroup(userId, GroupId){
+  const data = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ _id: userId, _group_id: GroupId }),
+  };
+  try {
+    console.log("check fetch quit group 0");
+    const theUrl = `${url}/api/quit/`;
+    const response = await fetch(theUrl, data);
+    console.log("check fetch quit group 1");
     return response;
   } catch (e) {
     return e;
@@ -293,13 +317,37 @@ async function deletePost(userID, postID, groupID) {
 }
 
 // TODO: create a new comment
-async function addComment(newComment) {
+async function addComment(newComment, userID, postID) {
   const comment = {
-    content: newComment.content,
+    content: newComment,
+    author_id: userID,
+    post_id: postID,
   };
   const data = {
     credentials: "include",
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(comment),
+  };
+  try {
+    const theUrl = `${url}/api/comment/`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Yang: to get all comments from a PostID
+async function getAllComment(postID) {
+  const comment = {
+    post_id: postID,
+  };
+  const data = {
+    credentials: "include",
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
@@ -332,7 +380,9 @@ module.exports = {
   deactivateAccount,
   getAllPosts,
   addPost,
+  getAllComment,
   addComment,
   deletePost,
+  quitGroup,
   getAllPublicGroups,
 };

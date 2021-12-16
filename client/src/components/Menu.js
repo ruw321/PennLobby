@@ -105,9 +105,9 @@ function Menu(props) {
 
         </nav>
         <section className={classes.rightToolbar} margin="auto">
-          <IconButton aria-label="settings">
+          {/* <IconButton aria-label="settings">
             <NotificationsNoneIcon />
-          </IconButton>
+          </IconButton> */}
           {loggedIn ? (
             <UserAvatar setLoggedin={setLoggedin} updateStatus={updateStatus} />
           ) : (
