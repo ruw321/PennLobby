@@ -85,10 +85,13 @@ router.route("/:postId").delete(async (req, res) => {
     const user = await Users.getUserById(User, req.body.userId);
     if (req.body.userId == post.author_id || user.admin) {
       await Posts.deletePostById(Post, req.params.postId);
+
       const groupPostIds = group.post_ids.filter((id) => id != req.params.postId);
-      const userPostIds = user.post_ids.filter((id) => id != req.params.postId);
       await Groups.updateGroupById(req.body.groupId, { post_ids: groupPostIds });
+
+      const userPostIds = user.post_ids.filter((id) => id != req.params.postId);
       await Users.updateUserById(req.body.userId, { post_ids : userPostIds });
+      
       const commentIds = post.comment_ids;
       for (let i = 0; i < commentIds.length; i++) {
         await Comments.deleteCommentById(Comment, commentIds[i]);
