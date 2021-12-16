@@ -17,7 +17,6 @@ import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
-import Menu from "./Menu";
 import { getAllPosts, postMessage } from "../fetch";
 
 function Copyright() {
@@ -145,8 +144,6 @@ function MyPost(props) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-
-      <Menu />
       <main>
         {/* Hero unit */}
         {/* Filter and Sort options */}

@@ -25,10 +25,10 @@ import {
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormLabel, List, ListItem, Radio, RadioGroup, TextField,
 } from "@mui/material";
 import { FormControlLabel } from "@material-ui/core";
+import { useNavigate } from 'react-router-dom';
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
-import Menu from "./Menu";
-import { createGroup, getAllGroups, logout } from "../fetch";
+import { createGroup, getAllPublicGroups, logout } from "../fetch";
 
 function Copyright() {
   return (
@@ -73,55 +73,21 @@ const sortMethod = [
   "Most Active",
 ];
 
-// const allGroups =
-
-// const groupCards = [
-//   {
-//     title: "Penn Football",
-//     size: "293",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-//   {
-//     title: "Penn Musical Lovers",
-//     size: "200",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-//   {
-//     title: "Penn Residential",
-//     size: "200",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-//   {
-//     title: "Daily Philadelphia",
-//     size: "200",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-// ];
-
-function MyGroup() {
+function MyGroup(props) {
+  const { updateCurrGroup, updateStatus } = props;
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
   const [groupCards, setGroupCards] = React.useState([]);
-
+  // const navigate = useNavigate();
   const userName = sessionStorage.getItem('username');
 
   React.useEffect(async () => {
-    // if (userName) {
-    //   setLoggedin(true);
-    // }
-    const groups = await getAllGroups();
+    if (!userName) {
+      console.log("here");
+      // navigate('/login');
+      updateStatus('login');
+    }
+    const groups = await getAllPublicGroups();
     const newGroupCards = groups.map((g) =>
       (
         {
@@ -239,202 +205,204 @@ function MyGroup() {
     setOpen(false);
   };
 
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Menu />
-      <main>
-        {/* Hero unit */}
-        {/* Filter and Sort options */}
-        <Container maxWidth="lg" justify="flex-end">
-          <Grid container spacing={2}>
-            <Grid item key={1} xs={6} md={9}>
-              <Box
-                sx={{
-                  bgcolor: "background.paper",
-                  pt: 4,
-                  pb: 2,
-                }}
-              >
-                <Container maxWidth="md" justify="flex-end">
-                  <div>
-                    <FormControl sx={{ m: 1, width: 250 }}>
-                      <InputLabel id="demo-multiple-checkbox-label">
-                        Filter Topics
-                      </InputLabel>
-                      <Select
-                        labelId="demo-multiple-checkbox-label"
-                        id="demo-multiple-checkbox"
-                        multiple
-                        value={selectTopics}
-                        onChange={handleChangeTopics}
-                        input={<OutlinedInput label="Filter Topics" />}
-                        renderValue={(selected) => selected.join(", ")}
-                        MenuProps={MenuProps}
-                      >
-                        {topics.map((name) => (
-                          <MenuItem key={name} value={name}>
-                            <Checkbox
-                              checked={selectTopics.indexOf(name) > -1}
-                            />
-                            <ListItemText primary={name} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                    <FormControl sx={{ m: 1, width: 250 }}>
-                      <InputLabel id="demo-multiple-checkbox-label">
-                        Sort by
-                      </InputLabel>
-                      <Select
-                        labelId="demo-multiple-checkbox-label"
-                        id="demo-multiple-checkbox"
-                        value={selectSortBy}
-                        onChange={handleChangeSortBy}
-                        input={<OutlinedInput label="Topics" />}
-                        renderValue={(selected) => selected.join(", ")}
-                        MenuProps={MenuProps}
-                      >
-                        {sortMethod.map((name) => (
-                          <MenuItem key={name} value={name}>
-                            <ListItemText primary={name} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                    <Button variant="contained" sx={{ m: 1, height: 55, width: 262 }} onClick={handleClickOpen}>Create a New Group</Button>
+  if (userName) {
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <main>
+          {/* Hero unit */}
+          {/* Filter and Sort options */}
+          <Container maxWidth="lg" justify="flex-end">
+            <Grid container spacing={2}>
+              <Grid item key={1} xs={6} md={9}>
+                <Box
+                  sx={{
+                    bgcolor: "background.paper",
+                    pt: 4,
+                    pb: 2,
+                  }}
+                >
+                  <Container maxWidth="md" justify="flex-end">
+                    <div>
+                      <FormControl sx={{ m: 1, width: 250 }}>
+                        <InputLabel id="demo-multiple-checkbox-label">
+                          Filter Topics
+                        </InputLabel>
+                        <Select
+                          labelId="demo-multiple-checkbox-label"
+                          id="demo-multiple-checkbox"
+                          multiple
+                          value={selectTopics}
+                          onChange={handleChangeTopics}
+                          input={<OutlinedInput label="Filter Topics" />}
+                          renderValue={(selected) => selected.join(", ")}
+                          MenuProps={MenuProps}
+                        >
+                          {topics.map((name) => (
+                            <MenuItem key={name} value={name}>
+                              <Checkbox
+                                checked={selectTopics.indexOf(name) > -1}
+                              />
+                              <ListItemText primary={name} />
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <FormControl sx={{ m: 1, width: 250 }}>
+                        <InputLabel id="demo-multiple-checkbox-label">
+                          Sort by
+                        </InputLabel>
+                        <Select
+                          labelId="demo-multiple-checkbox-label"
+                          id="demo-multiple-checkbox"
+                          value={selectSortBy}
+                          onChange={handleChangeSortBy}
+                          input={<OutlinedInput label="Topics" />}
+                          renderValue={(selected) => selected.join(", ")}
+                          MenuProps={MenuProps}
+                        >
+                          {sortMethod.map((name) => (
+                            <MenuItem key={name} value={name}>
+                              <ListItemText primary={name} />
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <Button variant="contained" sx={{ m: 1, height: 55, width: 262 }} onClick={handleClickOpen}>Create a New Group</Button>
 
-                    <Dialog open={open} onClose={handleClose}>
-                      {/* <Grid container spacing={2}> */}
-                      <DialogTitle>Please provide group information</DialogTitle>
-                      <DialogContent>
-                        {/* <Divider /> */}
-                        <DialogContentText>
-                          Please enter a group name.
-                        </DialogContentText>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="name"
-                          label="Group Name"
-                          fullWidth
-                          variant="standard"
-                          onChange={handleChangeGroupName}
-                        />
+                      <Dialog open={open} onClose={handleClose}>
+                        {/* <Grid container spacing={2}> */}
+                        <DialogTitle>Please provide group information</DialogTitle>
+                        <DialogContent>
+                          {/* <Divider /> */}
+                          <DialogContentText>
+                            Please enter a group name.
+                          </DialogContentText>
+                          <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Group Name"
+                            fullWidth
+                            variant="standard"
+                            onChange={handleChangeGroupName}
+                          />
 
-                        <DialogContentText sx={{ pt: 4 }}>
-                          Please select a group type.
-                        </DialogContentText>
-                        <FormControl component="fieldset">
-                          <FormLabel component="legend" />
-                          <RadioGroup
-                            row
-                            aria-label="Group Type"
-                            name="controlled-radio-buttons-group"
+                          <DialogContentText sx={{ pt: 4 }}>
+                            Please select a group type.
+                          </DialogContentText>
+                          <FormControl component="fieldset">
+                            <FormLabel component="legend" />
+                            <RadioGroup
+                              row
+                              aria-label="Group Type"
+                              name="controlled-radio-buttons-group"
                             // onChange={handleChangeGroupType}
-                          >
-                            <FormControlLabel control={<Radio value="public" onChange={handleChangeGroupType} />} label="Public" />
-                            <FormControlLabel control={<Radio value="private" onChange={handleChangeGroupType} />} label="Private" />
-                          </RadioGroup>
-                        </FormControl>
+                            >
+                              <FormControlLabel control={<Radio value="public" onChange={handleChangeGroupType} />} label="Public" />
+                              <FormControlLabel control={<Radio value="private" onChange={handleChangeGroupType} />} label="Private" />
+                            </RadioGroup>
+                          </FormControl>
 
-                        <DialogContentText sx={{ pt: 4 }}>
-                          Please add group description.
-                        </DialogContentText>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="name"
-                          label="Description"
-                          // type="email"
-                          fullWidth
-                          variant="standard"
-                          onChange={handleChangeGroupDescription}
-                        />
+                          <DialogContentText sx={{ pt: 4 }}>
+                            Please add group description.
+                          </DialogContentText>
+                          <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Description"
+                            // type="email"
+                            fullWidth
+                            variant="standard"
+                            onChange={handleChangeGroupDescription}
+                          />
 
-                        <DialogContentText sx={{ pt: 4 }}>
-                          Please select group topics.
-                        </DialogContentText>
-                        <FormControl sx={{ m: 1, width: 300 }}>
-                          <InputLabel id="demo-multiple-checkbox-label">Group Topics</InputLabel>
-                          <Select
-                            labelId="demo-multiple-checkbox-label"
-                            id="demo-multiple-checkbox"
-                            multiple
-                            value={selectedTopic}
-                            onChange={handleChangeSelectedTopic}
-                            input={<OutlinedInput label="Tag" />}
-                            renderValue={(selected) => selected.join(', ')}
-                            MenuProps={MenuProps}
-                          >
-                            {topics.map((topic) => (
-                              <MenuItem key={topic} value={topic}>
-                                <Checkbox checked={selectedTopic.indexOf(topic) > -1} />
-                                <ListItemText primary={topic} />
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
+                          <DialogContentText sx={{ pt: 4 }}>
+                            Please select group topics.
+                          </DialogContentText>
+                          <FormControl sx={{ m: 1, width: 300 }}>
+                            <InputLabel id="demo-multiple-checkbox-label">Group Topics</InputLabel>
+                            <Select
+                              labelId="demo-multiple-checkbox-label"
+                              id="demo-multiple-checkbox"
+                              multiple
+                              value={selectedTopic}
+                              onChange={handleChangeSelectedTopic}
+                              input={<OutlinedInput label="Tag" />}
+                              renderValue={(selected) => selected.join(', ')}
+                              MenuProps={MenuProps}
+                            >
+                              {topics.map((topic) => (
+                                <MenuItem key={topic} value={topic}>
+                                  <Checkbox checked={selectedTopic.indexOf(topic) > -1} />
+                                  <ListItemText primary={topic} />
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
 
-                      </DialogContent>
+                        </DialogContent>
 
-                      <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
-                        <Button onClick={handleSubmit}>Confirm</Button>
-                      </DialogActions>
+                        <DialogActions>
+                          <Button onClick={handleClose}>Cancel</Button>
+                          <Button onClick={handleSubmit}>Confirm</Button>
+                        </DialogActions>
 
-                      {/* </Grid> */}
-                    </Dialog>
-                  </div>
+                        {/* </Grid> */}
+                      </Dialog>
+                    </div>
+                  </Container>
+                </Box>
+
+                {/* Groups */}
+                <Container sx={{ pt: 2 }} maxWidth="lg">
+                  <Grid container rowSpacing={3} columnSpacing={0}>
+                    {groupCards.map((post) => (
+                      <GroupCard key={post.title} post={post} whetherIn updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />
+                    ))}
+                  </Grid>
                 </Container>
-              </Box>
-
-              {/* Groups */}
-              <Container sx={{ pt: 2 }} maxWidth="lg">
-                <Grid container rowSpacing={3} columnSpacing={0}>
-                  {groupCards.map((post) => (
-                    <GroupCard key={post.title} post={post} whetherIn />
-                  ))}
-                </Grid>
-              </Container>
-
-            </Grid>
-
-            <Grid item key={2} xs={6} md={3}>
-              <Grid container align="center" justify="center" alignItems="center" spacing={2}>
-                {/* Trending Topics */}
-                <TrendingTopics />
-                {/* Group Analysis */}
-                <Grid item xs={12} md={6}>
-                  <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-                    Text only
-                  </Typography>
-
-                </Grid>
 
               </Grid>
+
+              <Grid item key={2} xs={6} md={3}>
+                <Grid container align="center" justify="center" alignItems="center" spacing={2}>
+                  {/* Trending Topics */}
+                  <TrendingTopics />
+                  {/* Group Analysis */}
+                  <Grid item xs={12} md={6}>
+                    <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+                      Text only
+                    </Typography>
+
+                  </Grid>
+
+                </Grid>
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
-      </main>
-      {/* Footer */}
-      <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="p"
-        >
-          Something here to give the footer a purpose!
-        </Typography>
-        <Copyright />
-      </Box>
-      {/* End footer */}
-    </ThemeProvider>
-  );
+          </Container>
+        </main>
+        {/* Footer */}
+        <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
+          <Typography variant="h6" align="center" gutterBottom>
+            Footer
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
+            color="text.secondary"
+            component="p"
+          >
+            Something here to give the footer a purpose!
+          </Typography>
+          <Copyright />
+        </Box>
+        {/* End footer */}
+      </ThemeProvider>
+    );
+  } 
+  return (<div />);
 }
 
 export default MyGroup;

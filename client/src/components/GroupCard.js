@@ -17,15 +17,16 @@ import { Dialog } from "@material-ui/core";
 import {
   DialogActions, DialogContent, DialogContentText, DialogTitle,
 } from "@mui/material";
-import { joinGroup } from '../fetch';
+import { joinGroup, quitGroup } from '../fetch';
 
 const tags = ["Football", "Sports", "Entertainment"];
 
 function GroupCard(props) {
   const {
-    post, whetherIn, groupId,
+    post, whetherIn, groupId, updateCurrGroup, updateStatus,
   } = props;
 
+  console.log(`Groupcard: ${JSON.stringify(post)}`);
   // confirm join group button
   const [open, setOpen] = React.useState(false);
 
@@ -59,26 +60,36 @@ function GroupCard(props) {
     setOpen2(false);
   };
 
+  const handleQuitGroup = async () => {
+    const userID = sessionStorage.getItem("id");
+    console.log(userID);
+    console.log(post.groupId);
+    const res = await quitGroup(userID, post.groupId);
+    const print = await res.json();
+    console.log(print);
+    setOpen2(false);
+  };
+
   const buttonsNotIn = [
-    <Button key="one" href="./groupdetail" className="groupBtn1" style={{ textTransform: "none" }}>
+    <Button key="one" onClick={() => updateStatus('groupdetail')} className="groupBtn1" style={{ textTransform: "none" }}>
       View Detail
     </Button>,
 
     <Button key="two" className="groupBtn2" style={{ textTransform: "none" }} onClick={handleClickOpen}>
       Join Group
     </Button>,
-    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} href="./groupmembers">
+    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} onClick={() => { updateStatus('groupmembers'); }}>
       Members
     </Button>,
   ];
   const buttonsIn = [
-    <Button key="one" href="./groupdetail" className="groupBtn1" style={{ textTransform: "none" }}>
+    <Button key="one" className="groupBtn1" style={{ textTransform: "none" }} onClick={() => { updateCurrGroup(post.groupId); updateStatus('groupdetail'); }}>
       View Detail
     </Button>,
     <Button key="two" className="groupBtn4" style={{ textTransform: "none" }} onClick={handleClickOpen2}>
       Quit Group
     </Button>,
-    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} href="./groupmembers">
+    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} onClick={() => { updateStatus('groupmembers'); }}>
       Members
     </Button>,
   ];
@@ -158,6 +169,7 @@ function GroupCard(props) {
               </Button>
             </DialogActions>
           </Dialog>
+  
           {/* confirm quit group */}
           <Dialog
             open={open2}
@@ -175,7 +187,7 @@ function GroupCard(props) {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose2}>No</Button>
-              <Button onClick={handleClose2} autoFocus>
+              <Button onClick={handleQuitGroup} autoFocus>
                 Yes
               </Button>
             </DialogActions>

@@ -23,7 +23,6 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
-import Menu from "./Menu";
 import {
   getUserbyUsername, getS3Url, sendS3, updateUserById, 
 } from '../fetch';
@@ -47,7 +46,7 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const theme = createTheme();
 
-export default function Album() {
+export default function Album({ updateStatus }) {
   const [value, setValue] = useState('1');
 
   const handleChange = (event, newValue) => {
@@ -65,7 +64,8 @@ export default function Album() {
 
   React.useEffect(async () => {
     if (!uname) {
-      navigate('/login');
+      // navigate('/login');
+      updateStatus('login');
     }
     if (uname) {
       const response = await getUserbyUsername(uname);
@@ -88,7 +88,6 @@ export default function Album() {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Menu />
         <main>
           <Box
             sx={{
@@ -141,7 +140,7 @@ export default function Album() {
                   </Button>
                 </label>
                 <PasswordChange />
-                <AccountDeactivate />
+                <AccountDeactivate updateStatus={updateStatus} />
               </Stack>
             </Container>
           </Box>

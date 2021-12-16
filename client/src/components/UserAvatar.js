@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import {
   IconButton, Avatar, Menu, MenuItem,
 } from '@mui/material';
@@ -7,9 +7,9 @@ import Button from "@mui/material/Button";
 import NotificationsNoneIcon from '@mui/icons-material/Notifications';
 import { logout } from '../fetch';
 
-export default function UserAvatar({ setLoggedin }) {
+export default function UserAvatar({ setLoggedin, updateStatus }) {
   // const classes = useStyles();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // const username = sessionStorage.getItem('username');
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -23,7 +23,7 @@ export default function UserAvatar({ setLoggedin }) {
 
   const handleProfile = () => {
     handleClose();
-    navigate('/profile');
+    updateStatus('profile');
   };
 
   const handleLogout = async () => {
@@ -31,12 +31,12 @@ export default function UserAvatar({ setLoggedin }) {
     sessionStorage.removeItem('username');
     await logout();
     setLoggedin(false);
-    navigate('/');
+    updateStatus('lobby');
   };
 
   return (
     <div>
-      <IconButton aria-label="delete" href="./message">
+      <IconButton aria-label="delete" onClick={() => updateStatus('lobby')}>
         <NotificationsNoneIcon />
       </IconButton>
       <Button
