@@ -24,7 +24,9 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
-import { deletePost, addComment, getAllComments } from "../fetch";
+import {
+  deletePost, addComment, getAllComments, flagPostForDeletion, deleteComment, editComment,
+} from "../fetch";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -42,6 +44,8 @@ export default function PostCard(props) {
 
   const userID = sessionStorage.getItem('id');
   const postID = post._id;
+  const groupID = post.group_id;
+  const authorID = post.author_id;
 
   // get all comments
   const [allComments, setAllComments] = React.useState([]);
@@ -84,9 +88,7 @@ export default function PostCard(props) {
   };
 
   const handleConfirmDeletePost = async () => {
-    const temp = "61b8222e311a421f9026e54d";
-    // const userID = sessionStorage.getItem("id");
-    const res = await deletePost(temp, props.post._id, props.post.group_id);
+    const res = await deletePost(userID, props.post._id, props.post.group_id);
     const print = await res.json();
     console.log(print);
     setOpenDeletePost(false);
@@ -110,7 +112,7 @@ export default function PostCard(props) {
     setOpenHidePost(false);
   };
 
-  // flag a post as inappropriate
+  // flag a post for deletion
   const [openFlagPost, setOpenFlagPost] = React.useState(false);
 
   const handleClickOpenFlagPost = () => {
@@ -121,8 +123,10 @@ export default function PostCard(props) {
     setOpenFlagPost(false);
   };
 
-  const handleConfirmFlagPost = () => {
-
+  const handleConfirmFlagPost = async () => {
+    const res = await flagPostForDeletion(userID, postID);
+    const print = await res.json();
+    console.log(print);
   };
 
   // post analytics
@@ -144,7 +148,6 @@ export default function PostCard(props) {
   const [openDeleteComment, setOpenDeleteComment] = React.useState(false);
 
   const handleClickOpenDeleteComment = () => {
-    console.log("check1");
     setOpenDeleteComment(true);
   };
 
@@ -153,22 +156,43 @@ export default function PostCard(props) {
   };
 
   const handleConfirmDeleteComment = async () => {
-    // const temp = "61b8222e311a421f9026e54d";
-    // // const userID = sessionStorage.getItem("id");
-    // const res = await deletePost(temp, props.post._id, props.post.group_id);
-    // const print = await res.json();
-    // console.log(print);
+    const res = await deleteComment(userID, props.post._id, props.post.group_id);
+    const print = await res.json();
+    console.log(print);
     setOpenDeleteComment(false);
   };
 
-  // send a reply(comments) to a post
-  const [reply, setReply] = React.useState('');
-  const handleChangeReply = (event) => {
-    setReply(event.target.value);
+  // edit a comment
+  const [openEditComment, setOpenEditComment] = React.useState(false);
+  const [editedComment, setEditedComment] = React.useState(false);
+
+  const handleClickOpenEditComment = () => {
+    setOpenEditComment(true);
   };
 
-  const handleSendReply = async () => {
-    const res = await addComment(reply, userID, postID);
+  const handleCloseEditComment = () => {
+    setOpenEditComment(false);
+  };
+
+  const handleChangeEditedComment = (event) => {
+    setEditedComment(event.target.value);
+  };
+
+  const handleConfirmEditComment = async (commentID) => {
+    const res = await editComment(editedComment, commentID, userID);
+    const print = await res.json();
+    console.log(print);
+    setOpenEditComment(false);
+  };
+
+  // send a comment to a post
+  const [newComment, setNewComment] = React.useState('');
+  const handleChangeNewComment = (event) => {
+    setNewComment(event.target.value);
+  };
+
+  const handleSendNewComment = async () => {
+    const res = await addComment(newComment, userID, postID);
     const print = await res.json();
     console.log(print);
   };
@@ -312,7 +336,7 @@ export default function PostCard(props) {
 
         {/* TODO: add real comments */}
         {allComments.map((comment) => (
-          <div className="comments">
+          <div key={comment} className="comments">
             <CardHeader
               avatar={
                 <Avatar sx={{ bgcolor: "#ffaa00" }} aria-label="recipe">
@@ -347,9 +371,31 @@ export default function PostCard(props) {
                   </Dialog>
 
                   {/* Edit a comment */}
-                  <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
+                  <IconButton aria-label="settings" onClick={handleClickOpenEditComment}>
                     <EditIcon />
                   </IconButton>
+                  <Dialog
+                    open={openEditComment}
+                    onClose={handleCloseEditComment}
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      Please enter your new comment.
+                    </DialogTitle>
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="Reply"
+                      multiline
+                      fullWidth
+                      rows={4}
+                      onChange={handleChangeEditedComment}
+                    />
+                    <DialogActions>
+                      <Button onClick={handleCloseEditComment}>Cancel</Button>
+                      <Button onClick={() => { handleConfirmEditComment(comment._id); }} autoFocus>
+                        Confirm
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </div>
             }
               title="Shrimp and Chorizo Paella"
@@ -363,6 +409,7 @@ export default function PostCard(props) {
             </CardContent>
           </div>
         ))}
+
         {/* TODO: add real comments */}
         <div className="comments">
           <CardHeader
@@ -402,6 +449,7 @@ export default function PostCard(props) {
                 <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
                   <EditIcon />
                 </IconButton>
+
               </div>
             }
             title="Shrimp and Chorizo Paella"
@@ -447,11 +495,11 @@ export default function PostCard(props) {
             multiline
             fullWidth
             rows={4}
-            onChange={handleChangeReply}
+            onChange={handleChangeNewComment}
           />
           <div className="replyButton">
-            <Button variant="contained" startIcon={<ReplyIcon />} onClick={handleSendReply}>
-              Reply
+            <Button variant="contained" startIcon={<ReplyIcon />} onClick={handleSendNewComment}>
+              Send
             </Button>
           </div>
         </div>

@@ -29,7 +29,7 @@ import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
 import GroupMembers from "./GroupMembers";
 import {
-  addPost, getAllPostsByGroupID, sendS3, getS3Url, 
+  addPost, getAllPostsByGroupID, sendS3, getS3Url, quitGroup, 
 } from "../fetch";
 
 function Copyright() {
@@ -58,7 +58,9 @@ const postCards = [
 ];
 
 function GroupDetail(props) {
+  // currGroup is the group ID!!
   const { currGroup } = props;
+
   // To DO!!
   // const [postCards, setPostCards] = React.useState([]);
   // React.useEffect(async () => {
@@ -129,9 +131,8 @@ function GroupDetail(props) {
     const input = {
       title: titleText,
       content: postText,
-      id: userID,
-      // group_ID is now hard coded
-      group_id: "61b82772179cfe2cd4d9a005tttt",
+      author_id: userID,
+      group_id: currGroup,
     };
     console.log(input);
     const res = await addPost(input);
@@ -140,7 +141,7 @@ function GroupDetail(props) {
     setOpen(false);
   };
 
-  // for inviate someone dialog
+  // for invite someone dialog
   const [open2, setOpen2] = React.useState(false);
 
   const handleClickOpen2 = () => {
@@ -151,15 +152,23 @@ function GroupDetail(props) {
     setOpen2(false);
   };
 
-  // for levae grou dialog
-  const [open3, setOpen3] = React.useState(false);
+  // for leave a group dialog
+  const [openLeaveGroup, setOpenLeaveGroup] = React.useState(false);
 
-  const handleClickOpen3 = () => {
-    setOpen3(true);
+  const handleClickOpenLeaveGroup = () => {
+    setOpenLeaveGroup(true);
   };
 
-  const handleClose3 = () => {
-    setOpen3(false);
+  const handleCloseLeaveGroup = () => {
+    setOpenLeaveGroup(false);
+  };
+
+  const handleConfirmLeaveGroup = async () => {
+    const userID = sessionStorage.getItem("id");
+    const res = await quitGroup(userID, currGroup);
+    const print = await res.json();
+    console.log(print);
+    setOpenLeaveGroup(false);
   };
 
   // for upload button
@@ -180,15 +189,16 @@ function GroupDetail(props) {
           }}
           >
             <Typography variant="h4">
-              {`${currGroup}tttt`}
+              {`GroupID = ${currGroup}`}
               <Typography variant="h6">
                 Group description Group description Group description Group description
               </Typography>
             </Typography>
             <Button variant="contained" sx={{ m: 1, height: 50, width: 262 }} onClick={handleClickOpen2}>Invite Someone</Button>
-            <Button variant="contained" sx={{ m: 1, height: 50, width: 262 }} onClick={handleClickOpen3}>Leave Group</Button>
+            <Button variant="contained" sx={{ m: 1, height: 50, width: 262 }} onClick={handleClickOpenLeaveGroup}>Leave Group</Button>
             <Button variant="contained" sx={{ m: 1, height: 50, width: 262 }} onClick={handleClickOpen}>New Post</Button>
 
+            {/* Create a New Post Dialog */}
             <Dialog open={open} onClose={handleClose}>
               <DialogTitle>Create a new post</DialogTitle>
               <DialogContent>
@@ -283,6 +293,7 @@ function GroupDetail(props) {
               </DialogActions>
             </Dialog>
 
+            {/* Invite Someone to Group Dialog */}
             <Dialog open={open2} onClose={handleClose2}>
               <DialogTitle>Invite Someone to Join the Group</DialogTitle>
               <DialogContent>
@@ -306,9 +317,10 @@ function GroupDetail(props) {
               </DialogActions>
             </Dialog>
 
+            {/* Leave Group Dialog */}
             <Dialog
-              open={open3}
-              onClose={handleClose3}
+              open={openLeaveGroup}
+              onClose={handleCloseLeaveGroup}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
@@ -322,8 +334,8 @@ function GroupDetail(props) {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose3}>Cancel</Button>
-                <Button onClick={handleClose3} autoFocus>
+                <Button onClick={handleCloseLeaveGroup}>Cancel</Button>
+                <Button onClick={handleConfirmLeaveGroup} autoFocus>
                   Confirm
                 </Button>
               </DialogActions>
@@ -366,7 +378,7 @@ function GroupDetail(props) {
                 <CardHeader subheader="Number of post hidden:" />
               </Card>
 
-              <GroupMembers />
+              <GroupMembers groupID={currGroup} />
               {/* {groupMembers.map((topic, index) => (
                 <ListItem key={topic}>
                   {`${(index + 1)}.  ${topic}`}
