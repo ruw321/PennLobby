@@ -47,6 +47,7 @@ export default function PostCard(props) {
   const [allComments, setAllComments] = React.useState([]);
 
   React.useEffect(async () => {
+    // To Do
     // const allCommentsDB = await getAllComments(postID);
     const comments = [{
       postID: "61b82519446d6c20ca33f30a",

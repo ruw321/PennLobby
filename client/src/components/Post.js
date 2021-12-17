@@ -112,7 +112,6 @@ function MyPost(props) {
     const loadData = async () => {
       const postCards = await getAllPosts();
       // console.log(postCards);
-      // console.log(postCards);
       setAllPosts(postCards);
     };
     loadData();

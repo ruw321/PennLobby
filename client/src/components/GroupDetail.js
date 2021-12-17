@@ -19,12 +19,18 @@ import ListItem from '@mui/material/ListItem';
 import {
   Card,
   CardHeader,
-  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Input, List, ListItemText, TextField,
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fab, Input, List, ListItemText, TextField,
 } from "@mui/material";
+import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import { styled } from "@mui/system";
 import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
 import GroupMembers from "./GroupMembers";
+import {
+  addPost, getAllPostsByGroupID, sendS3, getS3Url, 
+} from "../fetch";
 
 function Copyright() {
   return (
@@ -51,17 +57,37 @@ const postCards = [
   },
 ];
 
-const groupMembers = [
-  "user1",
-  "user2",
-  "user3",
-  "user4",
-  "user5",
-  "user6",
-];
-
 function GroupDetail(props) {
   const { currGroup } = props;
+  // To DO!!
+  // const [postCards, setPostCards] = React.useState([]);
+  // React.useEffect(async () => {
+  //   // if (!userName) {
+  //   //   updateStatus('login');
+  //   // }
+  //   const posts = await getAllPostsByGroupID(currGroup);
+  //   const postCards = posts.map((g) =>
+  //     (
+  //       {
+  //         title: g.title,
+  //         commentsIDs: g.comment_ids,
+  //         content: g.content,
+  //         groupID: g.group_id,
+  //         authorID: g.author_id,
+  //       }
+  //     ));
+  //   setPostCards(postCards);
+  // }, []);
+
+  // event handler for file selection
+  const updateFileInput = async (evt, type) => {
+    const files = [...evt.target.files];
+    const { url } = await getS3Url();
+    await sendS3(url, files[0]);
+    const imageUrl = url.split('?')[0];
+    // sendMsg(`(link-${type})${imageUrl}`);
+  };
+
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
@@ -77,12 +103,40 @@ function GroupDetail(props) {
 
   // for new post dialog
   const [open, setOpen] = React.useState(false);
+  const [titleText, setTitleText] = React.useState('');
+  const [postText, setPostText] = React.useState('');
+  const userID = sessionStorage.getItem('id');
+  // To Do: how to get groupID?
+  // const groupID = sessionStorage.getItem('id');
+
+  const handleChangeTitleText = (event) => {
+    setTitleText(event.target.value);
+  };
+
+  const handleChangePostText = (event) => {
+    setPostText(event.target.value);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSubmitNewPost = async () => {
+    const input = {
+      title: titleText,
+      content: postText,
+      id: userID,
+      // group_ID is now hard coded
+      group_id: "61b82772179cfe2cd4d9a005tttt",
+    };
+    console.log(input);
+    const res = await addPost(input);
+    const print = await res.json();
+    console.log(print);
     setOpen(false);
   };
 
@@ -139,6 +193,21 @@ function GroupDetail(props) {
               <DialogTitle>Create a new post</DialogTitle>
               <DialogContent>
                 <DialogContentText>
+                  Title
+                </DialogContentText>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  multiline
+                  label="title (max 30 words)"
+                  type="email"
+                  fullWidth
+                  variant="standard"
+                  sx={{ pb: 3 }}
+                  onChange={handleChangeTitleText}
+                />
+                <DialogContentText>
                   Please type the new post content here. Your group is waiting for your input!
                 </DialogContentText>
                 <TextField
@@ -151,18 +220,66 @@ function GroupDetail(props) {
                   type="email"
                   fullWidth
                   variant="standard"
-                  sx={{ pb: 8 }}
+                  sx={{ pb: 3 }}
+                  onChange={handleChangePostText}
                 />
-                <label htmlFor="contained-button-file">
-                  <Input accept="image/*" id="contained-button-file" multiple type="file" />
-                  <Button variant="contained" component="span">
-                    Upload Media
-                  </Button>
-                </label>
+
+                {/* 3 Media Upload Buttons */}
+                <DialogContentText>
+                  Please upload picture, video, or audio media.
+                </DialogContentText>
+                <Grid
+                  container
+                  style={{
+                    bottom: '0', padding: '10px', backgroundColor: 'white',
+                  }}
+                  justifyContent="space-evenly"
+                >
+                  <Grid item xs={0.5}>
+                    <Fab color="primary" aria-label="add" size="small">
+                      <label htmlFor="icon-button-image" style={{ lineHeight: "0px" }}>
+                        <Input
+                          accept="image/*"
+                          id="icon-button-image"
+                          type="file"
+                          onChange={(e) => updateFileInput(e, 'image')}
+                        />
+                        <InsertPhotoIcon />
+                      </label>
+                    </Fab>
+                  </Grid>
+                  <Grid item xs={0.5}>
+                    <Fab color="primary" aria-label="add" size="small">
+                      <label htmlFor="icon-button-video" style={{ lineHeight: "0px" }}>
+                        <Input
+                          accept="video/mp4"
+                          id="icon-button-video"
+                          type="file"
+                          onChange={(e) => updateFileInput(e, 'video')}
+                        />
+                        <VideoCameraBackIcon />
+                      </label>
+                    </Fab>
+                  </Grid>
+                  <Grid item xs={0.5}>
+                    <Fab color="primary" aria-label="add" size="small">
+                      <label htmlFor="icon-button-audio" style={{ lineHeight: "0px" }}>
+                        <Input
+                          accept="audio/*"
+                          id="icon-button-audio"
+                          type="file"
+                          onChange={(e) => updateFileInput(e, 'audio')}
+                        />
+                        <KeyboardVoiceIcon />
+                      </label>
+                    </Fab>
+                  </Grid>
+                </Grid>
               </DialogContent>
+
               <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleClose}>Send</Button>
+                <Button onClick={handleSubmitNewPost}>Send</Button>
               </DialogActions>
             </Dialog>
 

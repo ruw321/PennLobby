@@ -340,7 +340,7 @@ async function addComment(newComment, userID, postID) {
   }
 }
 
-// Yang: to get all comments from a PostID
+// Yang: to get all comments from a PostID -> change into getCommentByID
 async function getAllComment(postID) {
   const comment = {
     post_id: postID,
@@ -364,6 +364,76 @@ async function getAllComment(postID) {
 
 // TODO: delete a comment
 
+// Yang: getAllPostsByGroupID
+async function getAllPostsByGroupID(groupID) {
+  const input = {
+    group_id: groupID,
+  };
+  const data = {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  };
+  try {
+    // URL to be confirmed
+    const theUrl = `${url}/api//`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Yang: getAllPostsByUserID
+async function getAllPostsByUserID(userID) {
+  const input = {
+    user_id: userID,
+  };
+  const data = {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  };
+  try {
+    // URL to be confirmed
+    const theUrl = `${url}/api//`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Yang: getCommentByID (the ID of comment itself)
+// getAllComment
+async function getCommentByID(commentID) {
+  const input = {
+    comment_id: commentID,
+  };
+  const data = {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  };
+  try {
+    // URL to be confirmed
+    const theUrl = `${url}/api/comment/`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return null;
+  }
+}
+
 module.exports = {
   login,
   signup,
@@ -385,4 +455,7 @@ module.exports = {
   deletePost,
   quitGroup,
   getAllPublicGroups,
+  getAllPostsByGroupID,
+  getAllPostsByUserID,
+  getCommentByID,
 };
