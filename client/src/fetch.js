@@ -341,6 +341,7 @@ async function deletePost(userID, postID, groupID) {
 }
 
 // Yang: create a new comment
+// Ruichen: test passed
 async function addComment(newComment, userID, postID) {
   const comment = {
     content: newComment,

@@ -20,9 +20,10 @@ const schema = {
 };
 
 // get all comments
-router.route("/").get(async (req, res) => {
+// TODO: fetch need to pass in post_id in url
+router.route("/:postId").get(async (req, res) => {
   try {
-    const post = await Posts.getPostById(Post, req.body.post_id);
+    const post = await Posts.getPostById(Post, req.params.postId);
     const comments = post.comment_ids;
     res.status(200).send(comments);
   } catch (error) {
@@ -47,9 +48,7 @@ router.route("/").post(async (req, res) => {
     });
     const post = await Posts.getPostById(Post, result.post_id);
     const postCommentIds = post.comment_ids;
-    // console.log(postCommentIds);
     postCommentIds.push(result._id);
-    // console.log(postCommentIds);
     await Posts.updatePostById(Post, result.post_id, { comment_ids: postCommentIds });
     res.status(201).send(result);
   } catch (err) {
@@ -60,7 +59,7 @@ router.route("/").post(async (req, res) => {
 // get a comment by id
 router.route("/:id").get(async (req, res) => {
   try {
-    const comment = await Comments.getCommentById(Comment, req.body.comment_id);
+    const comment = await Comments.getCommentById(Comment, req.params.id);
     res.status(200).send(comment);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -72,63 +71,57 @@ router.route("/:id").put(async (req, res) => {
   try {
     const obj = req.body;
     // const { _id, ...rest } = obj;
-    const comment = await Comments.getCommentById(Comment, obj.comment_id);
+    const comment = await Comments.getCommentById(Comment, req.params.id);
+    console.log(comment);
     if (obj.user_id == comment.author_id) {
       const updatedObject = { content: obj.content };
-      const updatedComment = await Comments.updateCommentById(
+      console.log(updatedObject);
+      const response = await Comments.updateCommentById(
         Comment,
-        obj.comment_id,
+        req.params.id,
         updatedObject
       );
+      res.status(200).send(response);
     } else {
       res
         .status(400)
         .json({ error: "You are not authorized to edit this comment!" });
       return;
     }
-    res.status(200).send(updatedComment);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
-// const obj = {
-//   userId: userID,
-//   groupId: groupID,
-// };
-
 // delete a comment by comment id
-router.route("/:commentId").delete(async (req, res) => {
+router.route("/:id").delete(async (req, res) => {
   try {
-    const comment = await Comments.getCommentById(
-      Comment,
-      req.params.commentId
-    );
-    console.log(req.body);
-    console.log(req.params);
-    if (req.body.userId == comment.author_id) {
+    const comment = await Comments.getCommentById(Comment, req.params.id);
+    console.log(req.params.id);
+    console.log(comment);
+    const curUser = await Users.getUserById(User, req.body.userId);
+    if (req.body.userId == comment.author_id || curUser.admin) {
+      await Comments.deleteCommentById(Comment, req.params.id);
       const user = await Users.getUserById(User, comment.author_id);
       const userCommentIds = user.comment_ids.filter(
-        (id) => id != req.params.commentId
+        (id) => id != req.params.id
       );
       await Users.updateUserById(User, comment.author_id, {
         comment_ids: userCommentIds,
       });
       const post = await Posts.getPostById(Post, comment.post_id);
       const postCommentIds = post.comment_ids.filter(
-        (id) => id != req.params.commentId
+        (id) => id != req.params.id
       );
       await Posts.updatePostById(Post, comment.post_id, {
         comment_ids: postCommentIds,
       });
-      await Comments.deleteCommentById(Comment, req.params.commentId);
     } else {
       res
         .status(400)
         .json({ error: "You are not authorized to delete this comment!" });
       return;
     }
-
     res.status(200).send(comment);
   } catch (error) {
     res.status(400).json({ error: error.message });

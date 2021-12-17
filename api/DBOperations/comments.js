@@ -11,7 +11,7 @@ module.exports.getComments = async (collection) => {
 // get comment by id
 module.exports.getCommentById = async (collection, ID) => {
   try {
-    const comment = await collection.findOne({ id: ID });
+    const comment = await collection.findOne({ _id: ID });
     return comment;
   } catch (err) {
     throw new Error(`Error getting the comment by id: ${err.message}`);
@@ -31,7 +31,7 @@ module.exports.addComment = async (collection, commentObject) => {
 // delete comment by id
 module.exports.deleteCommentById = async (collection, ID) => {
   try {
-    const comment = await collection.deleteOne({ id: ID });
+    const comment = await collection.deleteOne({ _id: ID });
     return comment;
   } catch (err) {
     throw new Error(`Error deleting the comment by id: ${err.message}`);
