@@ -366,23 +366,24 @@ async function addComment(newComment, userID, postID) {
   }
 }
 
-// Yang: to get all comments from a PostID -> change into getCommentByID
+// Yang: to get all comments from a PostID
 async function getAllComment(postID) {
-  const comment = {
-    post_id: postID,
-  };
-  const data = {
-    credentials: "include",
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(comment),
-  };
+  // const comment = {
+  //   post_id: postID,
+  // };
+  // const data = {
+  //   credentials: "include",
+  //   method: "GET",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(comment),
+  // };
   try {
-    const theUrl = `${url}/api/comment/`;
-    const response = await fetch(theUrl, data);
-    return response;
+    const theUrl = `${url}/api/comment/all/${postID}`;
+    const result = await fetch(theUrl, { method: "GET" });
+    const res = await result.json();
+    return res;
   } catch (err) {
     return null;
   }

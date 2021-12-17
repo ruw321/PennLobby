@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable react/jsx-props-no-spreading */
@@ -25,7 +27,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import {
-  deletePost, addComment, getAllComments, flagPostForDeletion, deleteComment, editComment,
+  deletePost, addComment, getAllComments, flagPostForDeletion, deleteComment, editComment, getCommentByID,
 } from "../fetch";
 
 const ExpandMore = styled((props) => {
@@ -51,13 +53,19 @@ export default function PostCard(props) {
   const [allComments, setAllComments] = React.useState([]);
 
   React.useEffect(async () => {
-    // To Do
-    // const allCommentsDB = await getAllComments(postID);
-    const comments = [{
-      postID: "61b82519446d6c20ca33f30a",
-      authorID: "61b8222e311a421f9026e54d",
-      content: "This is my first comment",
-    }];
+    const commentIDs = post.comment_ids;
+    console.log(commentIDs);
+    const commentsToShow = [];
+    for (const eachID of commentIDs) {
+      const comment = getCommentByID(eachID);
+      commentsToShow.push(comment);
+    }
+    console.log(commentsToShow);
+    // const comments = [{
+    //   postID: "61b82519446d6c20ca33f30a",
+    //   authorID: "61b8222e311a421f9026e54d",
+    //   content: "This is my first comment",
+    // }];
     // const comments = allCommentsDB.map((g) =>
     //   (
     //     {
@@ -66,7 +74,7 @@ export default function PostCard(props) {
     //       content: "This is my first comment",
     //     }
     //   ));
-    setAllComments(comments);
+    setAllComments(commentsToShow);
   }, []);
 
   // comment toggle down
@@ -398,8 +406,8 @@ export default function PostCard(props) {
                   </Dialog>
                 </div>
             }
-              title="Shrimp and Chorizo Paella"
-              subheader="September 14, 2016"
+              title={comment.author_id}
+              subheader={comment.created_at}
             />
           
             <CardContent>
@@ -409,84 +417,6 @@ export default function PostCard(props) {
             </CardContent>
           </div>
         ))}
-
-        {/* TODO: add real comments */}
-        <div className="comments">
-          <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: "#ffaa00" }} aria-label="recipe">
-                R
-              </Avatar>
-            }
-            action={
-              <div>
-                {/* Delete a comment */}
-                <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
-                  <DeleteIcon />
-                </IconButton>
-
-                <Dialog
-                  open={openDeleteComment}
-                  onClose={handleCloseDeleteComment}
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    Do you want to delete this reply?
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      You have to be the author or the group administrator to delete this post.
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseDeleteComment}>Cancel</Button>
-                    <Button onClick={handleConfirmDeleteComment} autoFocus>
-                      Confirm
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-
-                {/* Edit a comment */}
-                <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
-                  <EditIcon />
-                </IconButton>
-
-              </div>
-            }
-            title="Shrimp and Chorizo Paella"
-            subheader="September 14, 2016"
-          />
-          
-          <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              Comment Comment Comment Comment Comment Comment Comment Comment
-            </Typography>
-          </CardContent>
-        </div>
-
-        {/* repetition */}
-        <div className="comments">
-          <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: "#00aa7f" }} aria-label="recipe">
-                R
-              </Avatar>
-            }
-            action={
-              <IconButton aria-label="settings">
-                <DeleteIcon />
-              </IconButton>
-            }
-            title="Shrimp and Chorizo Paella"
-            subheader="September 14, 2016"
-          />
-          <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              This impressive paella is a perfect party dish and a fun meal to
-              cook together with your guests. Add 1 cup of frozen peas along
-              with the mussels, if you like.
-            </Typography>
-          </CardContent>
-        </div>
 
         <div className="reply">
           <TextField

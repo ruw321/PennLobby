@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable max-len */
@@ -29,7 +30,7 @@ import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
 import GroupMembers from "./GroupMembers";
 import {
-  addPost, getAllPostsByGroupID, sendS3, getS3Url, quitGroup, 
+  addPost, getAllPostsByGroupID, sendS3, getS3Url, quitGroup, getAllPosts, 
 } from "../fetch";
 
 function Copyright() {
@@ -60,6 +61,21 @@ const postCards = [
 function GroupDetail(props) {
   // currGroup is the group ID!!
   const { currGroup } = props;
+
+  const [postCards, setPostCards] = React.useState([]);
+
+  React.useEffect(async () => {
+    const postCards = await getAllPosts();
+    const groupPosts = [];
+    for (const post of postCards) {
+      // console.log(post);
+      if (post.group_id === currGroup) {
+        groupPosts.push(post);
+      }
+    }
+    console.log(groupPosts);
+    setPostCards(groupPosts);
+  }, []);
 
   // To DO!!
   // const [postCards, setPostCards] = React.useState([]);
