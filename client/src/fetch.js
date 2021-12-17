@@ -1,7 +1,7 @@
 /* eslint-disable space-before-blocks */
 const url = !process.env.NODE_ENV || process.env.NODE_ENV === "development"
   ? "http://localhost:8080"
-  : "";
+  : "https://penn-lobby-backend.herokuapp.com";
 async function login(u, p) {
   const user = {
     username: u,
@@ -272,7 +272,8 @@ async function addPost(newPost) {
   const post = {
     title: newPost.title,
     content: newPost.content,
-    author_id: newPost.id,
+    author_id: newPost.author_id,
+    group_id: newPost.group_id,
   };
   const data = {
     credentials: "include",
@@ -291,10 +292,29 @@ async function addPost(newPost) {
   }
 }
 
-// TODO: user marks a post for deletion
-// async function markPostForDeletion(userID, postID) {
-  
-// }
+// Yang: flag a post for deletion
+async function flagPostForDeletion(userID, postID) {
+  try {
+    const obj = {
+      user_id: userID,
+    };
+    const data = {
+      credentials: "include",
+      mode: "cors",
+      // method to be confirmed with Ruichen
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    };
+    const theUrl = `${url}/api/post/${postID}`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return err;
+  }
+}
 
 // TODO: admin deletes a post
 async function deletePost(userID, postID, groupID) {
@@ -320,13 +340,14 @@ async function deletePost(userID, postID, groupID) {
   }
 }
 
-// TODO: create a new comment
+// Yang: create a new comment
 async function addComment(newComment, userID, postID) {
   const comment = {
     content: newComment,
     author_id: userID,
     post_id: postID,
   };
+  console.log(comment);
   const data = {
     credentials: "include",
     method: "POST",
@@ -344,7 +365,7 @@ async function addComment(newComment, userID, postID) {
   }
 }
 
-// Yang: to get all comments from a PostID
+// Yang: to get all comments from a PostID -> change into getCommentByID
 async function getAllComment(postID) {
   const comment = {
     post_id: postID,
@@ -366,7 +387,179 @@ async function getAllComment(postID) {
   }
 }
 
-// TODO: delete a comment
+// Yang: delete a comment
+async function deleteComment(userID, postID, groupID) {
+  try {
+    const obj = {
+      userId: userID,
+      groupId: groupID,
+    };
+    const data = {
+      credentials: "include",
+      mode: "cors",
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    };
+    const theUrl = `${url}/api/post/${postID}`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return err;
+  }
+}
+
+// Yang: getAllPostsByGroupID
+async function getAllPostsByGroupID(groupID) {
+  const input = {
+    group_id: groupID,
+  };
+  const data = {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  };
+  try {
+    // URL to be confirmed
+    const theUrl = `${url}/api//`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Yang: getAllPostsByUserID
+async function getAllPostsByUserID(userID) {
+  const input = {
+    user_id: userID,
+  };
+  const data = {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  };
+  try {
+    // URL to be confirmed
+    const theUrl = `${url}/api//`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Yang: getCommentByID (the ID of comment itself)
+async function getCommentByID(commentID) {
+  const input = {
+    comment_id: commentID,
+  };
+  const data = {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  };
+  try {
+    // URL to be confirmed
+    const theUrl = `${url}/api/comment/`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Yang: edit a comment
+// update the old comment object with newComment as its content
+async function editComment(newComment, commentID, userID) {
+  try {
+    const obj = {
+      content: newComment,
+      comment_id: commentID,
+      user_id: userID,
+    };
+    const data = {
+      credentials: "include",
+      mode: "cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    };
+    // To be confirmed with Ruichen
+    const theUrl = `${url}/api/post/${commentID}`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return err;
+  }
+}
+
+// Yang: promote a user (by userToPromoteID, groupID)
+// the "userID" here is the ID of the admin (if not admin, prompt error)
+async function promoteUser(userToPromoteID, userID, groupID) {
+  try {
+    const obj = {
+      user_id: userID,
+      group_id: groupID,
+    };
+    console.log(obj);
+    const data = {
+      credentials: "include",
+      mode: "cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    };
+    // To be confirmed with Ruichen
+    const theUrl = `${url}/api/user/${userToPromoteID}`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return err;
+  }
+}
+
+// Yang: demote a user (by userToPromoteID, groupID)
+// the "userID" here is the ID of the admin (if not admin, prompt error)
+async function demoteUser(userToPromoteID, userID, groupID) {
+  try {
+    const obj = {
+      user_id: userID,
+      group_id: groupID,
+    };
+    console.log(obj);
+    const data = {
+      credentials: "include",
+      mode: "cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    };
+    // To be confirmed with Ruichen
+    const theUrl = `${url}/api/user/${userToPromoteID}`;
+    const response = await fetch(theUrl, data);
+    return response;
+  } catch (err) {
+    return err;
+  }
+}
 
 module.exports = {
   login,
@@ -389,4 +582,12 @@ module.exports = {
   deletePost,
   quitGroup,
   getAllPublicGroups,
+  getAllPostsByGroupID,
+  getAllPostsByUserID,
+  getCommentByID,
+  flagPostForDeletion,
+  deleteComment,
+  editComment,
+  promoteUser,
+  demoteUser,
 };
