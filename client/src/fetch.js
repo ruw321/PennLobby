@@ -1,7 +1,8 @@
 /* eslint-disable space-before-blocks */
-const url = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
-  ? 'http://localhost:8080'
-  : '';
+const url =
+  !process.env.NODE_ENV || process.env.NODE_ENV === "development"
+    ? "http://localhost:8080"
+    : "";
 async function login(u, p) {
   const user = {
     username: u,
@@ -189,13 +190,14 @@ async function sendS3(theUrl, file) {
 async function getAllPublicGroups() {
   try {
     const theUrl = `${url}/api/group/public`;
-    const result = await fetch(theUrl, { method: 'GET' });
+    const result = await fetch(theUrl, { method: "GET" });
     const res = await result.json();
     return res;
   } catch (err) {
     return null;
   }
 }
+
 // get all posts
 async function getAllPosts() {
   try {
@@ -207,13 +209,13 @@ async function getAllPosts() {
     return null;
   }
 }
-async function createGroup(group){
+async function createGroup(group) {
   const data = {
-    credentials: 'include',
-    mode: 'cors',
-    method: 'POST',
+    credentials: "include",
+    mode: "cors",
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(group),
   };
@@ -227,11 +229,11 @@ async function createGroup(group){
 }
 
 // join a group by id
-async function joinGroup(userId, GroupId){
+async function joinGroup(userId, GroupId) {
   const data = {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ _id: userId, _group_id: GroupId }),
   };
@@ -247,11 +249,11 @@ async function joinGroup(userId, GroupId){
 }
 
 // quit a group by id
-async function quitGroup(userId, GroupId){
+async function quitGroup(userId, GroupId) {
   const data = {
-    method: 'DELETE',
+    method: "DELETE",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ _id: userId, _group_id: GroupId }),
   };
@@ -291,6 +293,9 @@ async function addPost(newPost) {
 }
 
 // TODO: user marks a post for deletion
+async function markPostForDeletion(userID, postID) {
+  
+}
 
 // TODO: admin deletes a post
 async function deletePost(userID, postID, groupID) {
@@ -300,11 +305,11 @@ async function deletePost(userID, postID, groupID) {
       groupId: groupID,
     };
     const data = {
-      credentials: 'include',
-      mode: 'cors',
-      method: 'DELETE',
+      credentials: "include",
+      mode: "cors",
+      method: "DELETE",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(obj),
     };
