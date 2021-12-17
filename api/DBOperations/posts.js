@@ -11,7 +11,7 @@ module.exports.getPosts = async (collection) => {
 // get post by id
 module.exports.getPostById = async (collection, ID) => {
   try {
-    const post = await collection.findOne({ id: ID });
+    const post = await collection.findOne({ _id: ID });
     return post;
   } catch (err) {
     throw new Error(`Error getting the post by id: ${err.message}`);
@@ -31,7 +31,7 @@ module.exports.addPost = async (collection, postObject) => {
 // delete post by id (only the post owner himself or admin can delete)
 module.exports.deletePostById = async (collection, ID) => {
   try {
-    const post = await collection.deleteOne({ id: ID });
+    const post = await collection.deleteOne({ _id: ID });
     return post;
   } catch (err) {
     throw new Error(`Error deleting the post by id: ${err.message}`);
