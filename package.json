@@ -11,9 +11,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "cd websockets && node server.js",
+    "start": "cd api && node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd websockets && npm install"
+    "build": "cd api && npm install"
   },
   "engines": {
     "node": "v14.15.1"
