@@ -53,7 +53,7 @@ module.exports.addUser = async (collection, userObject) => {
 // delete user by id
 module.exports.deleteUserById = async (collection, ID) => {
   try {
-    const user = await collection.deleteOne({ id: ID });
+    const user = await collection.deleteOne({ _id: ID });
     return user;
   } catch (err) {
     throw new Error(`Error deleting the user by id: ${err.message}`);

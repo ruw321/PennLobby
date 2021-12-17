@@ -32,11 +32,11 @@ router.route("/").post(async (req, res) => {
     return;
   }
   try {
-    const exists = await Topics.getTopicById(Topic, req.body._id); 
-    if (exists) {
-      res.status(409).json({ error: "topic is already in the database" });
-      return;
-    }
+    // const exists = await Topics.getTopicById(Topic, req.body._id); 
+    // if (exists) {
+    //   res.status(409).json({ error: "topic is already in the database" });
+    //   return;
+    // }
     const result = await Topics.addTopic(Topic, req.body);
     res.status(201).send(result);
   } catch (err) {
