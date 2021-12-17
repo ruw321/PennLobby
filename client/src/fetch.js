@@ -1,8 +1,7 @@
 /* eslint-disable space-before-blocks */
-const url =
-  !process.env.NODE_ENV || process.env.NODE_ENV === "development"
-    ? "http://localhost:8080"
-    : "";
+const url = !process.env.NODE_ENV || process.env.NODE_ENV === "development"
+  ? "http://localhost:8080"
+  : "";
 async function login(u, p) {
   const user = {
     username: u,
@@ -293,9 +292,9 @@ async function addPost(newPost) {
 }
 
 // TODO: user marks a post for deletion
-async function markPostForDeletion(userID, postID) {
+// async function markPostForDeletion(userID, postID) {
   
-}
+// }
 
 // TODO: admin deletes a post
 async function deletePost(userID, postID, groupID) {
