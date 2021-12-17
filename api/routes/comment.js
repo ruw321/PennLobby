@@ -20,8 +20,8 @@ const schema = {
 };
 
 // get all comments
-// TODO: fetch need to pass in post_id in url
-router.route("/:postId").get(async (req, res) => {
+// add "all" in url to differentiate with get a comment by id
+router.route("/all/:postId").get(async (req, res) => {
   try {
     const post = await Posts.getPostById(Post, req.params.postId);
     const comments = post.comment_ids;
@@ -72,10 +72,10 @@ router.route("/:id").put(async (req, res) => {
     const obj = req.body;
     // const { _id, ...rest } = obj;
     const comment = await Comments.getCommentById(Comment, req.params.id);
-    console.log(comment);
+    // console.log(comment);
     if (obj.user_id == comment.author_id) {
       const updatedObject = { content: obj.content };
-      console.log(updatedObject);
+      // console.log(updatedObject);
       const response = await Comments.updateCommentById(
         Comment,
         req.params.id,
