@@ -50,13 +50,15 @@ router.route("/").post(async (req, res) => {
     // }
     const newPost = await Posts.addPost(Post, req.body);
     const group = await Groups.getGroupById(Group, newPost.group_id);
-    const groupPostIds = group.post_ids.push(newPost._id);
-    await Groups.updateGroupById(newPost.group_id, {
+    const groupPostIds = group.post_ids;
+    groupPostIds.push(newPost._id);
+    await Groups.updateGroupById(Group, newPost.group_id, {
       post_ids: groupPostIds,
     });
     const user = await Users.getUserById(User, newPost.author_id);
-    const userPostIds = user.post_ids.push(newPost._id);
-    await Users.updateUserById(newPost.author_id, {
+    const userPostIds = user.post_ids;
+    userPostIds.push(newPost._id);
+    await Users.updateUserById(User, newPost.author_id, {
       post_ids: userPostIds,
     });
     res.status(201).send(newPost);
@@ -99,12 +101,12 @@ router.route("/:postId").delete(async (req, res) => {
       const groupPostIds = group.post_ids.filter(
         (id) => id != req.params.postId
       );
-      await Groups.updateGroupById(req.body.groupId, {
+      await Groups.updateGroupById(Group, req.body.groupId, {
         post_ids: groupPostIds,
       });
 
       const userPostIds = user.post_ids.filter((id) => id != req.params.postId);
-      await Users.updateUserById(req.body.userId, { post_ids: userPostIds });
+      await Users.updateUserById(User, req.body.userId, { post_ids: userPostIds });
 
       const commentIds = post.comment_ids;
       for (let i = 0; i < commentIds.length; i++) {

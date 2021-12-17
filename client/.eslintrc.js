@@ -26,5 +26,8 @@ module.exports = {
     "no-trailing-spaces": "off",
     "react/destructuring-assignment": "off",
     "react/jsx-wrap-multilines": "off",
+    "no-unused-vars": "off",
+    "operator-linebreak": "off",
+    "no-empty-function": "off",
   },
 };
