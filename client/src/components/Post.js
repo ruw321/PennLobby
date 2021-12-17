@@ -112,7 +112,6 @@ function MyPost(props) {
     const loadData = async () => {
       const postCards = await getAllPosts();
       // console.log(postCards);
-      // console.log(postCards);
       setAllPosts(postCards);
     };
     loadData();
@@ -162,7 +161,6 @@ function MyPost(props) {
                 <Grid container rowSpacing={3} columnSpacing={0}>
                   {/* {allPosts.filter((p) => !hide.includes(p._id)).map((post) => ( */}
                   {allPosts.map((post) => (
-
                     <PostCard key={post._id} post={post} hide={hide} updateHide={updateHide} whetherIn />
                   ))}
                 </Grid>
