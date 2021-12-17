@@ -1,0 +1,31 @@
+{
+  "name": "fall-2021-project-group-centric-social-network-team-31",
+  "version": "1.0.0",
+  "description": "PennLobby Websocket",
+  "main": "wsserver.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "heroku": "^7.59.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "cd client && npm start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd client && npm install"
+  },
+  "engines": {
+    "node": "v14.15.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cis557/fall-2021-project-group-centric-social-network-team-31.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cis557/fall-2021-project-group-centric-social-network-team-31/issues"
+  },
+  "homepage": "https://github.com/cis557/fall-2021-project-group-centric-social-network-team-31#readme"
+}
