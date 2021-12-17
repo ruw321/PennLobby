@@ -51,7 +51,7 @@ module.exports.addGroup = async (collection, groupObject) => {
 // delete group by id
 module.exports.deleteGroupById = async (collection, ID) => {
   try {
-    const group = await collection.deleteOne({ id: ID });
+    const group = await collection.deleteOne({ _id: ID });
     return group;
   } catch (err) {
     throw new Error(`Error deleting the group by id: ${err.message}`);
@@ -59,9 +59,9 @@ module.exports.deleteGroupById = async (collection, ID) => {
 };
 
 // delete group by owner
-module.exports.deleteGroupByOwner = async (collection, onweID) => {
+module.exports.deleteGroupByOwner = async (collection, ownerID) => {
   try {
-    const group = await collection.deleteMany({ owner: onweID });
+    const group = await collection.deleteMany({ owner: ownerID });
     return group;
   } catch (err) {
     throw new Error(`Error deleting the group by owner: ${err.message}`);

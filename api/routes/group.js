@@ -54,11 +54,11 @@ router.route("/").post(async (req, res) => {
     return;
   }
   try {
-    const exists = await Groups.getGroupByName(Group, req.body.name);
-    if (exists) {
-      res.status(409).json({ error: "group is already in the database" });
-      return;
-    }
+    // const exists = await Groups.getGroupByName(Group, req.body.name);
+    // if (exists) {
+    //   res.status(409).json({ error: "group is already in the database" });
+    //   return;
+    // }
     const to = req.body.topics;
     const newTopicID = [];
     for (let i = 0; i < to.length; i++) {

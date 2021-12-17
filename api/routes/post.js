@@ -34,8 +34,6 @@ router.route("/").get(async (req, res) => {
 });
 
 // add a new post
-// user - post_ids
-// group - post_ids
 router.route("/").post(async (req, res) => {
   const valid = ajv.validate(schema, req.body);
   if (!valid) {
@@ -70,7 +68,7 @@ router.route("/").post(async (req, res) => {
 // get a post by post id
 router.route("/:id").get(async (req, res) => {
   try {
-    const post = await Posts.getPostById(Post, req.body._id);
+    const post = await Posts.getPostById(Post, req.body._id); // req.body.post_id
     res.status(200).send(post);
   } catch (error) {
     res.status(400).json({ error: error.message });

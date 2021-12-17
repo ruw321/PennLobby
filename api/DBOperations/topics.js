@@ -11,7 +11,7 @@ module.exports.getTopics = async (collection) => {
 // get topic by id
 module.exports.getTopicById = async (collection, ID) => {
   try {
-    const topic = await collection.findOne({ id: ID });
+    const topic = await collection.findOne({ _id: ID });
     return topic;
   } catch (err) {
     throw new Error(`Error getting the topic by id: ${err.message}`);
@@ -41,7 +41,7 @@ module.exports.addTopic = async (collection, topicObject) => {
 // delete topic by id
 module.exports.deleteTopicById = async (collection, ID) => {
   try {
-    const topic = await collection.deleteOne({ id: ID });
+    const topic = await collection.deleteOne({ _id: ID });
     return topic;
   } catch (err) {
     throw new Error(`Error deleting the topic by id: ${err.message}`);
