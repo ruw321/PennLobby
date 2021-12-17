@@ -1,7 +1,7 @@
 /* eslint-disable space-before-blocks */
 const url = !process.env.NODE_ENV || process.env.NODE_ENV === "development"
   ? "http://localhost:8080"
-  : "";
+  : "https://penn-lobby-backend.herokuapp.com";
 async function login(u, p) {
   const user = {
     username: u,
