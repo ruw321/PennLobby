@@ -134,7 +134,7 @@ function MyPost(props) {
     setAllPosts(myPosts);
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const loadData = async () => {
       const postCards = await getAllPosts();
       // console.log(postCards);
