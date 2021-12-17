@@ -6,3 +6,6 @@ client/coverage
 controller/node_modules
 controller/coverage
 node_modules
+npm-debug.log
+.DS_Store
+/*.env
