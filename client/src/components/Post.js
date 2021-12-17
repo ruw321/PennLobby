@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
@@ -97,16 +99,40 @@ const trendingTopicsWeekly = [
 function MyPost(props) {
   const [allPosts, setAllPosts] = useState([]);
   const [refresh, setRefresh] = React.useState(props.refresh);
+  const userID = sessionStorage.getItem('id');
+
   React.useEffect(() => {
     setRefresh(props.refresh);
     const loadData = async () => {
       const postCards = await getAllPosts();
+      // console.log(userID);
       // console.log(postCards);
-      setAllPosts(postCards);
+      const myPosts = [];
+      for (const post of postCards) {
+        // console.log(post);
+        if (post.author_id === userID) {
+          myPosts.push(post);
+        }
+      }
+      console.log(myPosts);
+      setAllPosts(myPosts);
     };
     loadData();
   }, [props.refresh]);
-  // postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
+
+  // Yang: conflicts with Miaoyan
+  React.useEffect(async () => {
+    const postCards = await getAllPosts();
+    const myPosts = [];
+    for (const post of postCards) {
+      // console.log(post);
+      if (post.author_id === userID) {
+        myPosts.push(post);
+      }
+    }
+    console.log(myPosts);
+    setAllPosts(myPosts);
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
