@@ -35,41 +35,6 @@ function Copyright() {
 
 const theme = createTheme();
 
-// const postCardsHardcode = [
-//   {
-//     title: "Penn Football",
-//     size: "293",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-//   {
-//     title: "Penn Musical Lovers",
-//     size: "200",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-//   {
-//     title: "Penn Residential",
-//     size: "200",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-//   {
-//     title: "Daily Philadelphia",
-//     size: "200",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-// ];
-
 const trendingTopicsToday = [
   "Music",
   "Football",
@@ -105,15 +70,16 @@ function MyPost(props) {
     setRefresh(props.refresh);
     const loadData = async () => {
       const postCards = await getAllPosts();
-      // console.log(userID);
+      console.log("userID = ", userID);
       // console.log(postCards);
       const myPosts = [];
       for (const post of postCards) {
-        // console.log(post);
+        console.log(post);
         if (post.author_id === userID) {
           myPosts.push(post);
         }
       }
+      console.log("myPosts=");
       console.log(myPosts);
       setAllPosts(myPosts);
     };
@@ -121,18 +87,18 @@ function MyPost(props) {
   }, [props.refresh]);
 
   // Yang: conflicts with Miaoyan
-  React.useEffect(async () => {
-    const postCards = await getAllPosts();
-    const myPosts = [];
-    for (const post of postCards) {
-      // console.log(post);
-      if (post.author_id === userID) {
-        myPosts.push(post);
-      }
-    }
-    console.log(myPosts);
-    setAllPosts(myPosts);
-  }, []);
+  // React.useEffect(async () => {
+  //   const postCards = await getAllPosts();
+  //   const myPosts = [];
+  //   for (const post of postCards) {
+  //     // console.log(post);
+  //     if (post.author_id === userID) {
+  //       myPosts.push(post);
+  //     }
+  //   }
+  //   console.log(myPosts);
+  //   setAllPosts(myPosts);
+  // }, []);
 
   React.useEffect(() => {
     const loadData = async () => {
