@@ -316,7 +316,7 @@ async function flagPostForDeletion(userID, postID) {
   }
 }
 
-// TODO: admin deletes a post
+// admin deletes a post
 async function deletePost(userID, postID, groupID) {
   try {
     const obj = {
@@ -388,11 +388,10 @@ async function getAllComment(postID) {
 }
 
 // Yang: delete a comment
-async function deleteComment(userID, postID, groupID) {
+async function deleteComment(userID, commentID) {
   try {
     const obj = {
       userId: userID,
-      groupId: groupID,
     };
     const data = {
       credentials: "include",
@@ -403,7 +402,7 @@ async function deleteComment(userID, postID, groupID) {
       },
       body: JSON.stringify(obj),
     };
-    const theUrl = `${url}/api/post/${postID}`;
+    const theUrl = `${url}/api/comment/${commentID}`;
     const response = await fetch(theUrl, data);
     return response;
   } catch (err) {
@@ -426,7 +425,7 @@ async function getAllPostsByGroupID(groupID) {
   };
   try {
     // URL to be confirmed
-    const theUrl = `${url}/api//`;
+    const theUrl = `${url}/api/`;
     const response = await fetch(theUrl, data);
     return response;
   } catch (err) {
@@ -472,7 +471,7 @@ async function getCommentByID(commentID) {
   };
   try {
     // URL to be confirmed
-    const theUrl = `${url}/api/comment/`;
+    const theUrl = `${url}/api/comment/${commentID}`;
     const response = await fetch(theUrl, data);
     return response;
   } catch (err) {
