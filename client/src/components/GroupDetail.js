@@ -108,15 +108,12 @@ function GroupDetail(props) {
     setAllUsers(users);
     const curGroupObj = await getGroupByID(currGroup);
     setGroup(curGroupObj);
-    // console.log("group = ", group);
     const groupPosts = [];
     for (const post of postCards) {
-      // console.log(post);
       if (post.group_id === currGroup) {
         groupPosts.push(post);
       }
     }
-    // console.log(groupPosts);
     setPostCards(groupPosts);
   }, []);
 
@@ -175,10 +172,8 @@ function GroupDetail(props) {
       author_id: userID,
       group_id: currGroup,
     };
-    console.log(input);
     const res = await addPost(input);
     const print = await res.json();
-    console.log(print);
     setOpen(false);
     setPostMediaLink(null);
   };
@@ -222,7 +217,6 @@ function GroupDetail(props) {
     const userID = sessionStorage.getItem("id");
     const res = await quitGroup(userID, currGroup);
     const print = await res.json();
-    console.log(print);
     setOpenLeaveGroup(false);
   };
 
@@ -438,19 +432,9 @@ function GroupDetail(props) {
                   <CardHeader subheader={`Last active: ${group.last_active}`} />
                   <CardHeader subheader={`Created at: ${group.created_at}`} />
 
-                  {/* <CardHeader subheader="Number of members:" />
-                <CardHeader subheader="Number of posts:" />
-                <CardHeader subheader="Number of posts deleted:" />
-                <CardHeader subheader="Number of post flagged:" />
-                <CardHeader subheader="Number of post hidden:" /> */}
                 </Card>
 
                 <GroupMembers groupID={currGroup} />
-                {/* {groupMembers.map((topic, index) => (
-                <ListItem key={topic}>
-                  {`${(index + 1)}.  ${topic}`}
-                </ListItem>
-              ))} */}
 
               </Grid>
             </Grid>

@@ -16,7 +16,7 @@ import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
+import { red, pink } from '@mui/material/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -30,7 +30,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import {
-  deletePost, addComment, getAllComment, flagPostForDeletion, deleteComment, editComment, getCommentByID,
+  deletePost, addComment, getAllComment, flagPostForDeletion, deleteComment, editComment, getCommentByID, getUserByID
 } from "../fetch";
 
 const ExpandMore = styled((props) => {
@@ -89,7 +89,13 @@ function PostMedia(props) {
 }
 
 export default function PostCard(props) {
-  const { hide, updateHide, post } = props;
+  const { 
+    hide, 
+    updateHide, 
+    post, 
+    allPosts, 
+    updateAllPosts 
+  } = props;
 
   const userID = sessionStorage.getItem('id');
   const postID = post._id;
@@ -98,11 +104,13 @@ export default function PostCard(props) {
 
   // get all comments
   const [allComments, setAllComments] = React.useState([]);
+  const [showNormalFlag, setShowNormalFlag] = React.useState(true);
 
   React.useEffect(async () => {
     const commentIDs = post.comment_ids;
-    // console.log("comment IDs = ", commentIDs);
     const commentsToShow = [];
+    const userObj = await getUserByID(userID);
+
     for (const eachID of commentIDs) {
       // console.log("eachID = ", eachID);
       // const comment = getCommentByID("61bd1dc0598804265b55ba0e");
@@ -110,8 +118,12 @@ export default function PostCard(props) {
       // console.log("comment object = ", comment);
       commentsToShow.push(comment);
     }
-    // console.log("commentsToShow = ", commentsToShow);
     setAllComments(commentsToShow);
+    // console.log("commentsToShow = ", commentsToShow);
+    if (userObj.group_admins.includes(groupID) && post.flag_for_deletion) {
+      setShowNormalFlag(false);
+      console.log("ShowNormalFlag = ", showNormalFlag);
+    }
   }, []);
 
   // comment toggle down
@@ -133,10 +145,15 @@ export default function PostCard(props) {
   };
 
   const handleConfirmDeletePost = async () => {
-    console.log(userID, postID, groupID);
+    // console.log(userID, postID, groupID);
     const res = await deletePost(userID, postID, groupID);
-    const print = await res.json();
-    console.log(print);
+    let tempPosts = [];
+    if (res.ok) {
+      tempPosts = allPosts.filter((p) => String(p._id) !== postID);
+    }
+    // update the state in Post.js so that it can rerender and 
+    // reflect the change of deleting the post
+    updateAllPosts(tempPosts);
     setOpenDeletePost(false);
   };
 
@@ -153,7 +170,7 @@ export default function PostCard(props) {
 
   const handleConfirmHidePost = () => {
     hide.push(props.post._id);
-    console.log(props.post._id);
+    // console.log(props.post._id);
     updateHide(hide);
     setOpenHidePost(false);
   };
@@ -172,7 +189,7 @@ export default function PostCard(props) {
   const handleConfirmFlagPost = async () => {
     const res = await flagPostForDeletion(userID, postID);
     const print = await res.json();
-    console.log(print);
+    // console.log(print);
     setOpenFlagPost(false);
   };
 
@@ -186,10 +203,6 @@ export default function PostCard(props) {
   const handleCloseAnalytics = () => {
     setOpenAnalytics(false);
   };
-
-  // const handleConfirmAnalytics = () => {
-  //   setOpenAnalytics(false);
-  // };
 
   // delete a comment
   const [openDeleteComment, setOpenDeleteComment] = React.useState(false);
@@ -205,7 +218,7 @@ export default function PostCard(props) {
   const handleConfirmDeleteComment = async (commentID) => {
     const res = await deleteComment(userID, commentID);
     const print = await res.json();
-    console.log(print);
+    // console.log(print);
     setOpenDeleteComment(false);
   };
 
@@ -226,10 +239,10 @@ export default function PostCard(props) {
   };
 
   const handleConfirmEditComment = async (commentID) => {
-    console.log(editedComment);
+    // console.log(editedComment);
     const res = await editComment(editedComment, commentID, userID);
     const print = await res.json();
-    console.log(print);
+    // console.log(print);
     setOpenEditComment(false);
   };
 
@@ -242,7 +255,7 @@ export default function PostCard(props) {
   const handleSendNewComment = async () => {
     const res = await addComment(newComment, userID, postID);
     const print = await res.json();
-    console.log(print);
+    // console.log(print);
   };
 
   return (
@@ -311,7 +324,8 @@ export default function PostCard(props) {
 
             {/* flag as inappropriate */}
             <IconButton aria-label="settings" onClick={handleClickOpenFlagPost}>
-              <FlagIcon />
+              {showNormalFlag ? <FlagIcon /> : <FlagIcon sx={{ color: pink[500] }} /> } 
+              
             </IconButton>
 
             <Dialog
@@ -348,8 +362,13 @@ export default function PostCard(props) {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  The number of replies for this post:
-                  The post was created:
+                  The number of replies for this post: {post.comment_ids.length}
+                </DialogContentText>
+                <DialogContentText id="alert-dialog-description">
+                  The post was created: {post.created_at }
+                </DialogContentText>
+                <DialogContentText id="alert-dialog-description">
+                  Possibility of inappropriate content: {post.flag_for_deletion ? "True" : "False"}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>

@@ -91,11 +91,6 @@ async function deactivateAccount(id) {
   const data = {
     credentials: "include",
     method: "DELETE",
-    // headers: {
-    //   'Content-Type': 'application/json',
-    // },
-    // // you have to do JSON.stringify, otherwise CORS wouldnt allow it
-    // body: JSON.stringify(obj),
   };
   try {
     const theUrl = `${url}/api/user/${id}`;
@@ -118,7 +113,7 @@ async function getAllUsers() {
   }
 }
 
-// update user
+// update a user by id
 async function updateUserById(id, obj) {
   try {
     const data = {
@@ -137,11 +132,11 @@ async function updateUserById(id, obj) {
     return e;
   }
 }
+
 // register websocket for message
 async function registerMessage(username) {
   try {
     const theUrl = `${url}/api/message/register`;
-    // const data = `to=${receiver}&from=${sender}&message=${content}`;
     const data = { username };
     const result = await fetch(theUrl, {
       method: "POST", // or 'PUT'
@@ -156,11 +151,11 @@ async function registerMessage(username) {
     return null;
   }
 }
+
 // create a new message
 async function postMessage(sender, receiver, content) {
   try {
     const theUrl = `${url}/api/message`;
-    // const data = `to=${receiver}&from=${sender}&message=${content}`;
     const data = { to: receiver, from: sender, message: content };
     const res = await fetch(theUrl, {
       method: "POST", // or 'PUT'
@@ -179,7 +174,6 @@ async function postMessage(sender, receiver, content) {
 async function getS3Url() {
   try {
     const theUrl = `${url}/api/s3Url`;
-    // const data = `to=${receiver}&from=${sender}&message=${content}`;
     const result = await fetch(theUrl).then((res) => res.json());
     return result;
   } catch (err) {
@@ -190,7 +184,6 @@ async function getS3Url() {
 // update image/video url from Amazon S3
 async function sendS3(theUrl, file) {
   try {
-    // const data = `to=${receiver}&from=${sender}&message=${content}`;
     const result = await fetch(theUrl, {
       method: "PUT",
       headers: {
@@ -228,6 +221,7 @@ async function getAllGroups() {
   }
 }
 
+// get all public groups
 async function getAllPublicGroups() {
   try {
     const theUrl = `${url}/api/group/public`;
@@ -250,6 +244,8 @@ async function getAllPosts() {
     return null;
   }
 }
+
+// add a new group
 async function createGroup(group) {
   const data = {
     credentials: "include",
@@ -279,10 +275,8 @@ async function joinGroup(userId, GroupId) {
     body: JSON.stringify({ _id: userId, _group_id: GroupId }),
   };
   try {
-    console.log("check fetch join group 0");
     const theUrl = `${url}/api/join/`;
     const response = await fetch(theUrl, data);
-    console.log("check fetch join group 1");
     return response;
   } catch (e) {
     return e;
@@ -299,10 +293,8 @@ async function quitGroup(userId, GroupId) {
     body: JSON.stringify({ _id: userId, _group_id: GroupId }),
   };
   try {
-    console.log("check fetch quit group 0");
     const theUrl = `${url}/api/quit/`;
     const response = await fetch(theUrl, data);
-    console.log("check fetch quit group 1");
     return response;
   } catch (e) {
     return e;
@@ -334,7 +326,7 @@ async function addPost(newPost) {
   }
 }
 
-// Yang: flag a post for deletion
+// flag a post for deletion
 async function flagPostForDeletion(userID, postID) {
   try {
     const obj = {
@@ -381,15 +373,13 @@ async function deletePost(userID, postID, groupID) {
   }
 }
 
-// Yang: create a new comment
-// Ruichen: test passed
+// create a new comment
 async function addComment(newComment, userID, postID) {
   const comment = {
     content: newComment,
     author_id: userID,
     post_id: postID,
   };
-  console.log(comment);
   const data = {
     credentials: "include",
     method: "POST",
@@ -407,7 +397,7 @@ async function addComment(newComment, userID, postID) {
   }
 }
 
-// Yang: to get all comments from a PostID
+// get all comments by post id
 async function getAllComment(postID) {
   try {
     const theUrl = `${url}/api/comment/all/${postID}`;
@@ -419,7 +409,7 @@ async function getAllComment(postID) {
   }
 }
 
-// Yang: delete a comment
+// delete a comment by comment id
 async function deleteComment(userID, commentID) {
   try {
     const obj = {
@@ -442,7 +432,7 @@ async function deleteComment(userID, commentID) {
   }
 }
 
-// Yang: getAllPostsByGroupID
+// get all posts by group id
 async function getAllPostsByGroupID(groupID) {
   const input = {
     group_id: groupID,
@@ -456,7 +446,6 @@ async function getAllPostsByGroupID(groupID) {
     body: JSON.stringify(input),
   };
   try {
-    // URL to be confirmed
     const theUrl = `${url}/api/`;
     const response = await fetch(theUrl, data);
     return response;
@@ -465,7 +454,7 @@ async function getAllPostsByGroupID(groupID) {
   }
 }
 
-// Yang: getAllPostsByUserID
+// get all posts by user id
 async function getAllPostsByUserID(userID) {
   const input = {
     user_id: userID,
@@ -479,8 +468,7 @@ async function getAllPostsByUserID(userID) {
     body: JSON.stringify(input),
   };
   try {
-    // URL to be confirmed
-    const theUrl = `${url}/api//`;
+    const theUrl = `${url}/api/`;
     const response = await fetch(theUrl, data);
     return response;
   } catch (err) {
@@ -488,12 +476,11 @@ async function getAllPostsByUserID(userID) {
   }
 }
 
-// Yang: getCommentByID (the ID of comment itself)
+// get a comment by comment id
 async function getCommentByID(commentID) {
   try {
     const theUrl = `${url}/api/comment/${commentID}`;
     const response = await fetch(theUrl, { method: "GET" });
-    // console.log("response = ", response);
     const res = await response.json();
     return res;
   } catch (err) {
@@ -501,16 +488,14 @@ async function getCommentByID(commentID) {
   }
 }
 
-// Yang: edit a comment
+// edit a comment
 // update the old comment object with newComment as its content
 async function editComment(newComment, commentID, userID) {
   try {
     const obj = {
       content: newComment,
-      // comment_id: commentID,
       user_id: userID,
     };
-    console.log(obj);
     const data = {
       credentials: "include",
       mode: "cors",
@@ -520,7 +505,6 @@ async function editComment(newComment, commentID, userID) {
       },
       body: JSON.stringify(obj),
     };
-    // To be confirmed with Ruichen
     const theUrl = `${url}/api/comment/${commentID}`;
     const response = await fetch(theUrl, data);
     return response;
@@ -529,7 +513,7 @@ async function editComment(newComment, commentID, userID) {
   }
 }
 
-// Yang: promote a user (by userToPromoteID, groupID)
+// promote a user (by userToPromoteID, groupID)
 // the "userID" here is the ID of the admin (if not admin, prompt error)
 async function promoteUser(userToPromoteID, userID, groupID) {
   try {
@@ -537,7 +521,6 @@ async function promoteUser(userToPromoteID, userID, groupID) {
       user_id: userID,
       group_id: groupID,
     };
-    console.log(obj);
     const data = {
       credentials: "include",
       mode: "cors",
@@ -547,7 +530,6 @@ async function promoteUser(userToPromoteID, userID, groupID) {
       },
       body: JSON.stringify(obj),
     };
-    // To be confirmed with Ruichen
     const theUrl = `${url}/api/user/promote/${userToPromoteID}`;
     const response = await fetch(theUrl, data);
     return response;
@@ -556,7 +538,7 @@ async function promoteUser(userToPromoteID, userID, groupID) {
   }
 }
 
-// Yang: demote a user (by userToPromoteID, groupID)
+// demote a user (by userToPromoteID, groupID)
 // the "userID" here is the ID of the admin (if not admin, prompt error)
 async function demoteUser(userToDemoteID, userID, groupID) {
   try {
@@ -564,7 +546,6 @@ async function demoteUser(userToDemoteID, userID, groupID) {
       user_id: userID,
       group_id: groupID,
     };
-    console.log(obj);
     const data = {
       credentials: "include",
       mode: "cors",
@@ -574,7 +555,6 @@ async function demoteUser(userToDemoteID, userID, groupID) {
       },
       body: JSON.stringify(obj),
     };
-    // To be confirmed with Ruichen
     const theUrl = `${url}/api/user/demote/${userToDemoteID}`;
     const response = await fetch(theUrl, data);
     return response;
@@ -583,7 +563,7 @@ async function demoteUser(userToDemoteID, userID, groupID) {
   }
 }
 
-// Get all topics:
+// get all topics
 async function getAllTopics() {
   try {
     const theUrl = `${url}/api/topic`;
@@ -595,7 +575,7 @@ async function getAllTopics() {
   }
 }
 
-// Get topic by ID:
+// get a topic by topic id
 async function getTopicByID(topicID) {
   try {
     const theUrl = `${url}/api/topic/id/${topicID}`;
@@ -607,7 +587,7 @@ async function getTopicByID(topicID) {
   }
 }
 
-// Get topic by name:
+// get a topic by topic name
 async function getTopicByName(topicName) {
   try {
     const theUrl = `${url}/api/topic/name/${topicName}`;
@@ -623,6 +603,18 @@ async function getTopicByName(topicName) {
 async function getAllNotifications() {
   try {
     const theUrl = `${url}/api/notification`;
+    const result = await fetch(theUrl, { method: "GET" });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Get user by id
+async function getUserByID(userID) {
+  try {
+    const theUrl = `${url}/api/user/id/${userID}`;
     const result = await fetch(theUrl, { method: "GET" });
     const res = await result.json();
     return res;
@@ -704,4 +696,5 @@ module.exports = {
   getAllNotifications,
   sendNotification,
   deleteNotification,
+  getUserByID,
 };

@@ -27,7 +27,7 @@ import {
 
 function GroupCard(props) {
   const {
-    post, whetherIn, groupId, updateCurrGroup, updateStatus,
+    post, whetherIn, updateCurrGroup, updateStatus, groupCards, updateGroupCards,
   } = props;
 
   const [tags, setTags] = React.useState([]);
@@ -35,10 +35,10 @@ function GroupCard(props) {
   React.useEffect(async () => {
     const allTopicObj = [];
     const allTopicTags = [];
-    
+
     for (let i = 0; i < post.topics.length; i++) {
       const curTopicObj = await getTopicByID(post.topics[i]);
-      console.log("curTopicObj = ", curTopicObj);
+      // console.log("curTopicObj = ", curTopicObj);
       allTopicTags.push(curTopicObj.name);
     }
     setTags(allTopicTags);
@@ -82,15 +82,28 @@ function GroupCard(props) {
 
   const handleQuitGroup = async () => {
     const userID = sessionStorage.getItem("id");
-    console.log(post.groupId);
     const res = await quitGroup(userID, post.groupId);
-    const print = await res.json();
-    console.log(print);
+    if (res.ok) {
+      let tempCards = groupCards;
+      tempCards = tempCards.filter((card) => card.groupId !== post.groupId);
+      updateGroupCards(tempCards);
+    }
     setOpen2(false);
   };
 
+  // open detail for groups that the user 
+  // has not joined yet 
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
   const buttonsNotIn = [
-    <Button key="one" onClick={() => updateStatus('groupdetail')} className="groupBtn1" style={{ textTransform: "none" }}>
+    <Button key="one" onClick={handleClickOpenDialog} className="groupBtn1" style={{ textTransform: "none" }}>
       View Detail
     </Button>,
 
@@ -165,8 +178,25 @@ function GroupCard(props) {
             className="groupBtnGroup"
           >
             {whetherIn ? buttonsIn : buttonsNotIn}
+            <Dialog
+              open={openDialog}
+              onClose={handleCloseDialog}
+            >
+              <DialogTitle id="alert-dialog-title">
+                Not authorized!
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  You have to be a member of this group to view the details!
+                  Please Click the Join Group button to request to join the group.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDialog}>Close</Button>
+              </DialogActions>
+            </Dialog>
           </ButtonGroup>
-  
+
           {/* confirm join group */}
           <Dialog
             open={open}
@@ -190,7 +220,7 @@ function GroupCard(props) {
               </Button>
             </DialogActions>
           </Dialog>
-  
+
           {/* confirm quit group */}
           <Dialog
             open={open2}
