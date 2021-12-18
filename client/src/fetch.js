@@ -598,7 +598,19 @@ async function getAllTopics() {
 // Get topic by ID:
 async function getTopicByID(topicID) {
   try {
-    const theUrl = `${url}/api/topic/${topicID}`;
+    const theUrl = `${url}/api/topic/id/${topicID}`;
+    const result = await fetch(theUrl, { method: "GET" });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Get topic by name:
+async function getTopicByName(topicName) {
+  try {
+    const theUrl = `${url}/api/topic/name/${topicName}`;
     const result = await fetch(theUrl, { method: "GET" });
     const res = await result.json();
     return res;
@@ -641,4 +653,5 @@ module.exports = {
   registerMessage,
   getAllTopics,
   getTopicByID,
+  getTopicByName,
 };
