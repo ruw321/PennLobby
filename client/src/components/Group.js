@@ -29,7 +29,7 @@ import { useNavigate } from 'react-router-dom';
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
 import {
-  createGroup, getAllGroups, getAllPublicGroups, logout, 
+  createGroup, getAllGroups, getAllTopics, getAllPublicGroups, logout, 
 } from "../fetch";
 
 function Copyright() {
@@ -92,7 +92,6 @@ function MyGroup(props) {
     }
     let groups = await getAllGroups();
     groups = groups.filter((x) => x.member_ids.includes(userID));
-
     const newGroupCards = groups.map((g) =>
       (
         {
@@ -106,6 +105,7 @@ function MyGroup(props) {
           memberIds: g.member_ids,
         }
       ));
+    
     // groupsToShow
     // filter
     setGroupCards(newGroupCards);
@@ -201,7 +201,7 @@ function MyGroup(props) {
     // console.log(groupType);
     // console.log(groupDescription);
     const group = {
-      owner: "61a9b32b2762ea6563fcaf57",
+      owner: userID,
       name: groupName,
       description: groupDescription,
       type: groupType,
