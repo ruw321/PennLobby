@@ -299,7 +299,6 @@ async function quitGroup(userId, GroupId) {
     body: JSON.stringify({ _id: userId, _group_id: GroupId }),
   };
   try {
-    console.log("check fetch quit group 0");
     const theUrl = `${url}/api/quit/`;
     const response = await fetch(theUrl, data);
     console.log("check fetch quit group 1");

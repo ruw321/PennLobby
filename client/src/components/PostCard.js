@@ -89,7 +89,13 @@ function PostMedia(props) {
 }
 
 export default function PostCard(props) {
-  const { hide, updateHide, post } = props;
+  const { 
+    hide, 
+    updateHide, 
+    post, 
+    allPosts, 
+    updateAllPosts 
+  } = props;
 
   const userID = sessionStorage.getItem('id');
   const postID = post._id;
@@ -135,8 +141,13 @@ export default function PostCard(props) {
   const handleConfirmDeletePost = async () => {
     console.log(userID, postID, groupID);
     const res = await deletePost(userID, postID, groupID);
-    const print = await res.json();
-    console.log(print);
+    let tempPosts = [];
+    if (res.ok) {
+      tempPosts = allPosts.filter((p) => String(p._id) !== postID);
+    }
+    // update the state in Post.js so that it can rerender and 
+    // reflect the change of deleting the post
+    updateAllPosts(tempPosts);
     setOpenDeletePost(false);
   };
 
@@ -186,10 +197,6 @@ export default function PostCard(props) {
   const handleCloseAnalytics = () => {
     setOpenAnalytics(false);
   };
-
-  // const handleConfirmAnalytics = () => {
-  //   setOpenAnalytics(false);
-  // };
 
   // delete a comment
   const [openDeleteComment, setOpenDeleteComment] = React.useState(false);
