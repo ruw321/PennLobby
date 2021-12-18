@@ -29,5 +29,6 @@ module.exports = {
     "no-unused-vars": "off",
     "operator-linebreak": "off",
     "no-empty-function": "off",
+    "comma-dangle": "off",
   },
 };
