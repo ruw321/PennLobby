@@ -25,8 +25,6 @@ function GroupCard(props) {
   const {
     post, whetherIn, groupId, updateCurrGroup, updateStatus,
   } = props;
-
-  console.log(`Groupcard: ${JSON.stringify(post)}`);
   // confirm join group button
   const [open, setOpen] = React.useState(false);
 
