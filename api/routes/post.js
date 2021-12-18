@@ -104,7 +104,7 @@ router.route("/flag/:postId").put(async (req, res) => {
 router.route("/:postId").delete(async (req, res) => {
   try {
     const post = await Posts.getPostById(Post, req.params.postId);
-    const group = await Groups.getGroupById(User, req.body.groupId);
+    const group = await Groups.getGroupById(Group, req.body.groupId);
     const user = await Users.getUserById(User, req.body.userId);
     if (req.body.userId == post.author_id || user.group_admins.includes(eq.body.groupId)) {
       await Posts.deletePostById(Post, req.params.postId);
@@ -131,6 +131,7 @@ router.route("/:postId").delete(async (req, res) => {
     }
     res.status(200).send(post);
   } catch (error) {
+    console.log("exception");
     res.status(400).json({ error: error.message });
   }
 });

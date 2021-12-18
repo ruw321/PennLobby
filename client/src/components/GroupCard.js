@@ -27,7 +27,7 @@ import {
 
 function GroupCard(props) {
   const {
-    post, whetherIn, groupId, updateCurrGroup, updateStatus,
+    post, whetherIn, updateCurrGroup, updateStatus, groupCards, updateGroupCards,
   } = props;
 
   const [tags, setTags] = React.useState([]);
@@ -38,7 +38,6 @@ function GroupCard(props) {
     
     for (let i = 0; i < post.topics.length; i++) {
       const curTopicObj = await getTopicByID(post.topics[i]);
-      console.log("curTopicObj = ", curTopicObj);
       allTopicTags.push(curTopicObj.name);
     }
     setTags(allTopicTags);
@@ -58,8 +57,6 @@ function GroupCard(props) {
   const handleJoinGroup = async () => {
     // Need to get user from session storage
     const userID = sessionStorage.getItem("id");
-    console.log(userID);
-    console.log(post.groupId);
     const res = await joinGroup(userID, post.groupId);
     const print = await res.json();
     console.log(print);
@@ -79,10 +76,12 @@ function GroupCard(props) {
 
   const handleQuitGroup = async () => {
     const userID = sessionStorage.getItem("id");
-    console.log(post.groupId);
     const res = await quitGroup(userID, post.groupId);
-    const print = await res.json();
-    console.log(print);
+    if (res.ok) {
+      let tempCards = groupCards;
+      tempCards = tempCards.filter((card) => card.groupId !== post.groupId);
+      updateGroupCards(tempCards);
+    }
     setOpen2(false);
   };
 
