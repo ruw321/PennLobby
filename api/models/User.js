@@ -11,7 +11,6 @@ const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   password: { type: String, required: true },
-  // profile pic
   group_ids: [{ type: Schema.Types.ObjectId, ref: "Group" }],
   post_ids: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   comment_ids: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
