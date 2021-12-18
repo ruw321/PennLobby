@@ -80,7 +80,20 @@ router.route("/:id").put(async (req, res) => {
   try {
     const obj = req.body;
     const { _id, ...rest } = obj;
-    const post = await Posts.updatePostById(Post, req.body._id, rest);
+    const post = await Posts.updatePostById(Post, req.params.id, rest);
+    res.status(200).send(post);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// an admin user marks a post for deletion
+router.route("/flag/:postId").put(async (req, res) => {
+  try {
+    const userId = req.body.user_id;
+    const post = await Posts.updatePostById(Post, req.params.postId, {
+      flag_for_deletion: true,
+    });
     res.status(200).send(post);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -90,7 +103,7 @@ router.route("/:id").put(async (req, res) => {
 // delete a post by post id
 router.route("/:postId").delete(async (req, res) => {
   try {
-    const post = await Posts.getPostById(Post, req.body._id);
+    const post = await Posts.getPostById(Post, req.params.postId);
     const group = await Groups.getGroupById(User, req.body.groupId);
     const user = await Users.getUserById(User, req.body.userId);
     if (req.body.userId == post.author_id || user.admin) {

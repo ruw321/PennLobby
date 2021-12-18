@@ -37,7 +37,6 @@ router.route("/").get(async (req, res) => {
 
 // get all public groups
 router.route("/public").get(async (_req, res) => {
-  console.log("here");
   try {
     const p_groups = await Groups.getPublicGroups(Group);
     res.status(200).send(p_groups);
@@ -96,7 +95,7 @@ router.route("/").post(async (req, res) => {
 // get a group by id
 router.route("/:id").get(async (req, res) => {
   try {
-    const group = await Groups.getGroupById(Group, req.body._id);
+    const group = await Groups.getGroupById(Group, req.params.id);
     res.status(200).send(group);
   } catch (error) {
     res.status(400).json({ error: error.message });

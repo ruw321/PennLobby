@@ -133,7 +133,7 @@ router.route("/:id").put(async (req, res) => {
     try {
       const obj = req.body;
       const { _id, ...rest } = obj;
-      const user = await Users.updateUserById(User, req.body._id, rest);
+      const user = await Users.updateUserById(User, req.params.id, rest);
       res.status(200).send(user);
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -175,6 +175,66 @@ router.route("/join/").put(async (req, res) => {
     res.status(200).send(newUsers);
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+});
+
+// a group admin promotes another group member from member to admin
+router.route("/promote/:userToPromoteId").put(async (req, res) => {
+  if (req.isAuthenticated) {
+    try {
+      const user = await Users.getUserById(User, req.body.user_id);
+      const userToPromote = await Users.getUserById(
+        User,
+        req.params.userToPromoteId
+      );
+      if (userToPromote.group_ids.includes(req.body.group_id) && user.admin) {
+        const response = await Users.updateUserById(
+          User,
+          req.params.userToPromoteId,
+          { admin: true }
+        );
+        res.status(200).send(response);
+      } else {
+        res
+          .status(400)
+          .json({ error: "You are either not authorized to promote this user, or this user is not in the group!" });
+        return;
+      }
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  } else {
+    res.status(401).json({ error: "You are not authorized." });
+  }
+});
+
+// a group admin demotes another group member from admin to member
+router.route("/demote/:userToPromoteId").put(async (req, res) => {
+  if (req.isAuthenticated) {
+    try {
+      const user = await Users.getUserById(User, req.body.user_id);
+      const userToPromote = await Users.getUserById(
+        User,
+        req.params.userToPromoteId
+      );
+      if (userToPromote.group_ids.includes(req.body.group_id) && user.admin) {
+        const response = await Users.updateUserById(
+          User,
+          req.params.userToPromoteId,
+          { admin: false }
+        );
+        res.status(200).send(response);
+      } else {
+        res
+          .status(400)
+          .json({ error: "You are either not authorized to demote this user, or this user is not in the group!" });
+        return;
+      }
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  } else {
+    res.status(401).json({ error: "You are not authorized." });
   }
 });
 
