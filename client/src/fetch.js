@@ -204,6 +204,18 @@ async function sendS3(theUrl, file) {
   }
 }
 
+// get all groups
+async function getAllGroups() {
+  try {
+    const theUrl = `${url}/api/group`;
+    const result = await fetch(theUrl, { method: "GET" });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
 async function getAllPublicGroups() {
   try {
     const theUrl = `${url}/api/group/public`;
@@ -590,6 +602,7 @@ module.exports = {
   addComment,
   deletePost,
   quitGroup,
+  getAllGroups,
   getAllPublicGroups,
   getAllPostsByGroupID,
   getAllPostsByUserID,

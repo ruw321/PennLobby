@@ -28,7 +28,9 @@ import { FormControlLabel } from "@material-ui/core";
 import { useNavigate } from 'react-router-dom';
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
-import { createGroup, getAllPublicGroups, logout } from "../fetch";
+import {
+  createGroup, getAllGroups, getAllPublicGroups, logout, 
+} from "../fetch";
 
 function Copyright() {
   return (
@@ -80,6 +82,7 @@ function MyGroup(props) {
   const [groupCards, setGroupCards] = React.useState([]);
   // const navigate = useNavigate();
   const userName = sessionStorage.getItem('username');
+  const userID = sessionStorage.getItem('id');
 
   React.useEffect(async () => {
     if (!userName) {
@@ -87,7 +90,9 @@ function MyGroup(props) {
       // navigate('/login');
       updateStatus('login');
     }
-    const groups = await getAllPublicGroups();
+    let groups = await getAllGroups();
+    groups = groups.filter((x) => x.member_ids.includes(userID));
+
     const newGroupCards = groups.map((g) =>
       (
         {
