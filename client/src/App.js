@@ -94,7 +94,7 @@ function App() {
                 {status === 'profile' && <Profile updateStatus={updateStatus} />}
                 {status === 'message' && <Messages contacts={contacts} messages={messages} texts={texts} friends={friends} />}
                 {status === 'groupdetail' && <GroupDetail currGroup={currGroup} />}
-                {status === 'groupmembers' && <GroupMembers />}
+                {/* {status === 'groupmembers' && <GroupMembers />} */}
               </>
           }
           />

@@ -163,7 +163,7 @@ function Lobby(props) {
     if (userName) {
       setLoggedin(true);
     }
-    const groups = await getAllPublicGroups();
+    const groups = await getAllPublicGroups() || [];
     const groupToShow = [];
     const newGroupCards = groups.map((g) =>
       (

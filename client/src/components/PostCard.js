@@ -169,7 +169,7 @@ export default function PostCard(props) {
   };
 
   const handleConfirmHidePost = () => {
-    hide.push(props.post._id);
+    hide.push(postID);
     // console.log(props.post._id);
     updateHide(hide);
     setOpenHidePost(false);
