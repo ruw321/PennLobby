@@ -104,15 +104,12 @@ function GroupDetail(props) {
     const postCards = await getAllPosts();
     const curGroupObj = await getGroupByID(currGroup);
     setGroup(curGroupObj);
-    // console.log("group = ", group);
     const groupPosts = [];
     for (const post of postCards) {
-      // console.log(post);
       if (post.group_id === currGroup) {
         groupPosts.push(post);
       }
     }
-    // console.log(groupPosts);
     setPostCards(groupPosts);
   }, []);
 
@@ -171,10 +168,8 @@ function GroupDetail(props) {
       author_id: userID,
       group_id: currGroup,
     };
-    console.log(input);
     const res = await addPost(input);
     const print = await res.json();
-    console.log(print);
     setOpen(false);
     setPostMediaLink(null);
   };
@@ -205,7 +200,6 @@ function GroupDetail(props) {
     const userID = sessionStorage.getItem("id");
     const res = await quitGroup(userID, currGroup);
     const print = await res.json();
-    console.log(print);
     setOpenLeaveGroup(false);
   };
 

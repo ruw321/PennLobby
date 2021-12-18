@@ -36,7 +36,7 @@ export default function AccountDeactivate({ updateStatus }) {
         // navigate('/login');
         updateStatus('login');
       } else {
-        console.log("something went wrong");
+        // console.log("something went wrong");
       }
     }
   }, [userID]);

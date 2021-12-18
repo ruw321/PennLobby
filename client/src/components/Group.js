@@ -29,10 +29,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Divider,
   FormLabel,
-  List,
-  ListItem,
   Radio,
   RadioGroup,
   TextField,
@@ -42,7 +39,12 @@ import { useNavigate } from "react-router-dom";
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
 import {
-  createGroup, getAllGroups, getAllTopics, getAllPublicGroups, logout, 
+  createGroup,
+  getAllGroups,
+  getAllTopics,
+  getTopicByName,
+  getAllPublicGroups,
+  logout,
 } from "../fetch";
 
 function Copyright() {
@@ -109,14 +111,23 @@ async function sortGroup(method) {
   return groups;
 }
 
+async function filterByTopic(topicList) {
+  let groups = await getAllPublicGroups();
+  for (let i = 0; i < topicList.length; i++) {
+    const topic = await getTopicByName(topicList[i]);
+    groups = groups.filter((group) => group.topic_ids.includes(topic._id));
+  }
+  return groups;
+}
+
 function MyGroup(props) {
   const { updateCurrGroup, updateStatus } = props;
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
   const [groupCards, setGroupCards] = React.useState([]);
   // const navigate = useNavigate();
-  const userName = sessionStorage.getItem('username');
-  const userID = sessionStorage.getItem('id');
+  const userName = sessionStorage.getItem("username");
+  const userID = sessionStorage.getItem("id");
   React.useEffect(async () => {
     if (!userName) {
       // navigate('/login');
@@ -124,26 +135,34 @@ function MyGroup(props) {
     }
     let groups = await getAllGroups();
     groups = groups.filter((x) => x.member_ids.includes(userID));
-    const newGroupCards = groups.map((g) =>
-      (
-        {
-          title: g.name,
-          size: g.member_ids.length,
-          description: g.description,
-          image: "https://source.unsplash.com/random",
-          imageLabel: "Image Text",
-          topics: g.topic_ids,
-          groupId: g._id,
-          memberIds: g.member_ids,
-        }
-      ));
+    const newGroupCards = groups.map((g) => ({
+      title: g.name,
+      size: g.member_ids.length,
+      description: g.description,
+      image: "https://source.unsplash.com/random",
+      imageLabel: "Image Text",
+      topics: g.topic_ids,
+      groupId: g._id,
+      memberIds: g.member_ids,
+    }));
     setGroupCards(newGroupCards);
   }, []);
 
-  const handleChangeTopics = (event) => {
+  const handleChangeTopics = async (event) => {
     const {
       target: { value },
     } = event;
+    const groups = await filterByTopic(value);
+    const newGroupCards = groups.map((g) => ({
+      title: g.name,
+      size: g.member_ids.length,
+      description: g.description,
+      image: "https://source.unsplash.com/random",
+      imageLabel: "Image Text",
+      topics: g.topic_ids,
+      groupId: g._id,
+    }));
+    setGroupCards(newGroupCards);
     setSelectTopics(
       // On autofill we get a the stringified value.
       typeof value === "string" ? value.split(",") : value
@@ -170,26 +189,6 @@ function MyGroup(props) {
       typeof value === "string" ? value.split(",") : value
     );
   };
-  const useStyles = makeStyles({
-    // This group of buttons will be aligned to the right
-    rightToolbar: {
-      marginLeft: "auto",
-      marginRight: -12,
-    },
-    menuButton: {
-      marginRight: 16,
-      marginLeft: -12,
-    },
-  });
-  const classes = useStyles();
-
-  // // for radio button
-
-  // const [value, setValue] = React.useState('female');
-
-  // const handleChange = (event) => {
-  //   setValue(event.target.value);
-  // };
 
   // for groupName form
   const [groupName, setGroupName] = React.useState("");
@@ -222,8 +221,6 @@ function MyGroup(props) {
     );
   };
 
-  // for Create a new group
-
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -235,7 +232,7 @@ function MyGroup(props) {
   };
 
   const handleSubmit = async () => {
-    const id = sessionStorage.getItem('id');
+    const id = sessionStorage.getItem("id");
     const group = {
       owner: id,
       name: groupName,
@@ -244,7 +241,21 @@ function MyGroup(props) {
       topics: selectedTopic,
     };
     const res = await createGroup(group);
-    const print = await res.json();
+    if (res.ok) {
+      const newgroups = groupCards;
+      const ngroup = await res.json();
+      const newGroupCard = {
+        title: ngroup.name,
+        size: ngroup.member_ids.length,
+        description: ngroup.description,
+        image: "https://source.unsplash.com/random",
+        imageLabel: "Image Text",
+        topics: ngroup.topic_ids,
+        groupId: ngroup._id,
+      };
+      newgroups.push(newGroupCard);
+      setGroupCards(newgroups);
+    }
     setOpen(false);
   };
 
@@ -435,6 +446,8 @@ function MyGroup(props) {
                         whetherIn
                         updateCurrGroup={updateCurrGroup}
                         updateStatus={updateStatus}
+                        groupCards={groupCards}
+                        updateGroupCards={(newcards) => setGroupCards(newcards)}
                       />
                     ))}
                   </Grid>

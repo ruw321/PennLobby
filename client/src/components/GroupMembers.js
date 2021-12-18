@@ -33,10 +33,10 @@ export default function GroupMembers(props) {
 
   React.useEffect(async () => {
     let allUsers = await getAllUsers();
-    console.log("all users = ", allUsers);
+    // console.log("all users = ", allUsers);
 
     allUsers = allUsers.filter((x) => x.group_ids.includes(groupID));
-    console.log("all users filtered = ", allUsers, groupID);
+    // console.log("all users filtered = ", allUsers, groupID);
     const users = allUsers.map((g) =>
       (
         {
@@ -45,7 +45,7 @@ export default function GroupMembers(props) {
           groupIDs: g.group_ids,
         }
       ));
-    console.log("users mapped = ", users);
+    // console.log("users mapped = ", users);
     setGroupMembers(users);
   }, []);
 
@@ -63,7 +63,7 @@ export default function GroupMembers(props) {
   const handleConfirmPromote = async (userToPromoteID) => {
     const res = await promoteUser(userToPromoteID, userID, groupID);
     const print = await res.json();
-    console.log(print);
+    // console.log(print);
     setOpen(false);
   };
 
@@ -79,10 +79,10 @@ export default function GroupMembers(props) {
   };
 
   const handleConfirmDemote = async (userToDemoteID) => {
-    console.log("userToDemote ID", userToDemoteID);
+    // console.log("userToDemote ID", userToDemoteID);
     const res = await demoteUser(userToDemoteID, userID, groupID);
     const print = await res.json();
-    console.log(print);
+    // console.log(print);
     setOpen2(false);
   };
   return (

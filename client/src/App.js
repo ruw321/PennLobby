@@ -39,17 +39,14 @@ function App() {
   const updateCurrGroup = (g) => { setCurrGroup(g); };
   useEffect(() => {
     authenticate();
-    console.log('authenticate!!!');
   }, [userName]);
   useEffect(() => {
     getAllUsers().then((response) => {
       if (!response) { return; }
       setFriends(response.filter((r) => r.username !== sessionStorage.getItem('username')));
-      // .filter((r) => r !== sessionStorage.getItem('username'))
     });
     setRefresh(!refresh);
     const cleanup = () => { sessionStorage.getItem('token'); };
-    console.log('texts', texts);
     // we need to cleanup when leaving the tab
     window.addEventListener('beforeunload', cleanup);
     
@@ -93,7 +90,7 @@ function App() {
                 {status === 'signup' && <Signup updateStatus={updateStatus} />}
                 {status === 'lobby' && <Lobby updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />}
                 {status === 'group' && <Group updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />}
-                {status === 'post' && <Post refresh={refresh} />}
+                {status === 'post' && <Post refresh={refresh} updateStatus={updateStatus} />}
                 {status === 'profile' && <Profile updateStatus={updateStatus} />}
                 {status === 'message' && <Messages contacts={contacts} messages={messages} texts={texts} friends={friends} />}
                 {status === 'groupdetail' && <GroupDetail currGroup={currGroup} />}
