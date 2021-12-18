@@ -1,3 +1,5 @@
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
@@ -40,7 +42,7 @@ import { useNavigate } from "react-router-dom";
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
 import {
-  createGroup, getAllGroups, getAllPublicGroups, logout, 
+  createGroup, getAllGroups, getAllTopics, getAllPublicGroups, logout, 
 } from "../fetch";
 
 function Copyright() {
@@ -122,7 +124,6 @@ function MyGroup(props) {
     }
     let groups = await getAllGroups();
     groups = groups.filter((x) => x.member_ids.includes(userID));
-
     const newGroupCards = groups.map((g) =>
       (
         {
@@ -136,8 +137,6 @@ function MyGroup(props) {
           memberIds: g.member_ids,
         }
       ));
-    // groupsToShow
-    // filter
     setGroupCards(newGroupCards);
   }, []);
 

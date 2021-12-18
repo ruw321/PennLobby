@@ -1,3 +1,7 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
@@ -17,14 +21,29 @@ import { Dialog } from "@material-ui/core";
 import {
   DialogActions, DialogContent, DialogContentText, DialogTitle,
 } from "@mui/material";
-import { joinGroup, quitGroup } from '../fetch';
-
-const tags = ["Football", "Sports", "Entertainment"];
+import {
+  joinGroup, quitGroup, getAllTopics, getTopicByID, 
+} from '../fetch';
 
 function GroupCard(props) {
   const {
     post, whetherIn, groupId, updateCurrGroup, updateStatus,
   } = props;
+
+  const [tags, setTags] = React.useState([]);
+
+  React.useEffect(async () => {
+    const allTopicObj = [];
+    const allTopicTags = [];
+    
+    for (let i = 0; i < post.topics.length; i++) {
+      const curTopicObj = await getTopicByID(post.topics[i]);
+      console.log("curTopicObj = ", curTopicObj);
+      allTopicTags.push(curTopicObj.name);
+    }
+    setTags(allTopicTags);
+  }, []);
+
   // confirm join group button
   const [open, setOpen] = React.useState(false);
 
@@ -79,6 +98,7 @@ function GroupCard(props) {
       Members
     </Button>,
   ];
+
   const buttonsIn = [
     <Button key="one" className="groupBtn1" style={{ textTransform: "none" }} onClick={() => { updateCurrGroup(post.groupId); updateStatus('groupdetail'); }}>
       View Detail
