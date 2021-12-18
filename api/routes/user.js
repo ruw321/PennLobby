@@ -31,6 +31,7 @@ const schema = {
     blocking: { type: "array" },
     blocked_by: { type: "array" },
     avatar_url: { type: "string" },
+    notification_ids: { type: "array" },
   },
   required: ["username", "email", "firstName", "lastName", "password"],
 };

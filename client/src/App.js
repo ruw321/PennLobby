@@ -29,7 +29,7 @@ function App() {
   const [messages, setMessages] = useState(0); // counts messages sent and received - lift up state
   const texts = useRef([]); // mutable reference to store messages. Do not overuse!
   const [friends, setFriends] = useState([]);
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState(sessionStorage.getItem('username') || '');
   const [refresh, setRefresh] = useState(false);
   const [currGroup, setCurrGroup] = useState('');
   const updateStatus = (s) => setStatus(s);
@@ -39,6 +39,7 @@ function App() {
   const updateCurrGroup = (g) => { setCurrGroup(g); };
   useEffect(() => {
     authenticate();
+    console.log('authenticate!!!');
   }, [userName]);
   useEffect(() => {
     getAllUsers().then((response) => {
@@ -56,7 +57,6 @@ function App() {
       window.removeEventListener('beforeunload', cleanup);
     };
   }, [contacts, messages, texts]);
-
   const authenticate = async () => {
     setupWSConnection(updateContacts, updateMessages, texts); // setup ws connection
     setContacts((contacts) => contacts + 1); // update state to trigger re-rendering and useEffect
