@@ -72,10 +72,8 @@ router.route("/:id").put(async (req, res) => {
     const obj = req.body;
     // const { _id, ...rest } = obj;
     const comment = await Comments.getCommentById(Comment, req.params.id);
-    // console.log(comment);
     if (obj.user_id == comment.author_id) {
       const updatedObject = { content: obj.content };
-      // console.log(updatedObject);
       const response = await Comments.updateCommentById(
         Comment,
         req.params.id,
