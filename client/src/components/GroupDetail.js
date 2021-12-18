@@ -420,19 +420,9 @@ function GroupDetail(props) {
                   <CardHeader subheader={`Last active: ${group.last_active}`} />
                   <CardHeader subheader={`Created at: ${group.created_at}`} />
 
-                  {/* <CardHeader subheader="Number of members:" />
-                <CardHeader subheader="Number of posts:" />
-                <CardHeader subheader="Number of posts deleted:" />
-                <CardHeader subheader="Number of post flagged:" />
-                <CardHeader subheader="Number of post hidden:" /> */}
                 </Card>
 
                 <GroupMembers groupID={currGroup} />
-                {/* {groupMembers.map((topic, index) => (
-                <ListItem key={topic}>
-                  {`${(index + 1)}.  ${topic}`}
-                </ListItem>
-              ))} */}
 
               </Grid>
             </Grid>

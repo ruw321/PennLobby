@@ -619,6 +619,18 @@ async function getTopicByName(topicName) {
   }
 }
 
+// Get user by id
+async function getUserByID(userID) {
+  try {
+    const theUrl = `${url}/api/user/id/${userID}`;
+    const result = await fetch(theUrl, { method: "GET" });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
 module.exports = {
   login,
   signup,
@@ -654,4 +666,5 @@ module.exports = {
   getAllTopics,
   getTopicByID,
   getTopicByName,
+  getUserByID,
 };

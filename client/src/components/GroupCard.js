@@ -38,7 +38,7 @@ function GroupCard(props) {
     
     for (let i = 0; i < post.topics.length; i++) {
       const curTopicObj = await getTopicByID(post.topics[i]);
-      console.log("curTopicObj = ", curTopicObj);
+      // console.log("curTopicObj = ", curTopicObj);
       allTopicTags.push(curTopicObj.name);
     }
     setTags(allTopicTags);
