@@ -21,7 +21,8 @@ const userSchema = new mongoose.Schema({
   blocked_by: [{ type: Schema.Types.ObjectId, ref: "User" }],
   admin: { type: Boolean, default: false, required: true },
   created_at: { type: Date, default: Date.now(), required: true },
-  avatar_url: { type: String, default: '' },
+  avatar_url: { type: String, default: "" },
+  notification_ids: [{ type: Schema.Types.ObjectId, ref: "Notification" }],
 });
 
 // this function is referenced from: 

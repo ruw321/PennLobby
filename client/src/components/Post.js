@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
@@ -33,41 +35,6 @@ function Copyright() {
 
 const theme = createTheme();
 
-// const postCardsHardcode = [
-//   {
-//     title: "Penn Football",
-//     size: "293",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-//   {
-//     title: "Penn Musical Lovers",
-//     size: "200",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-//   {
-//     title: "Penn Residential",
-//     size: "200",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-//   {
-//     title: "Daily Philadelphia",
-//     size: "200",
-//     description:
-//       "This is a wider card with supporting text below as a natural lead-in to additional content.",
-//     image: "https://source.unsplash.com/random",
-//     imageLabel: "Image Text",
-//   },
-// ];
-
 const trendingTopicsToday = [
   "Music",
   "Football",
@@ -97,21 +64,45 @@ const trendingTopicsWeekly = [
 function MyPost(props) {
   const [allPosts, setAllPosts] = useState([]);
   const [refresh, setRefresh] = React.useState(props.refresh);
+  const userID = sessionStorage.getItem('id');
+
   React.useEffect(() => {
     setRefresh(props.refresh);
     const loadData = async () => {
       const postCards = await getAllPosts();
+      console.log("userID = ", userID);
       // console.log(postCards);
-      setAllPosts(postCards);
+      const myPosts = [];
+      for (const post of postCards) {
+        console.log(post);
+        if (post.author_id === userID) {
+          myPosts.push(post);
+        }
+      }
+      console.log("myPosts=");
+      console.log(myPosts);
+      setAllPosts(myPosts);
     };
     loadData();
   }, [props.refresh]);
-  // postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
 
-  useEffect(() => {
+  // Yang: conflicts with Miaoyan
+  // React.useEffect(async () => {
+  //   const postCards = await getAllPosts();
+  //   const myPosts = [];
+  //   for (const post of postCards) {
+  //     // console.log(post);
+  //     if (post.author_id === userID) {
+  //       myPosts.push(post);
+  //     }
+  //   }
+  //   console.log(myPosts);
+  //   setAllPosts(myPosts);
+  // }, []);
+
+  React.useEffect(() => {
     const loadData = async () => {
       const postCards = await getAllPosts();
-      // console.log(postCards);
       // console.log(postCards);
       setAllPosts(postCards);
     };
@@ -162,7 +153,6 @@ function MyPost(props) {
                 <Grid container rowSpacing={3} columnSpacing={0}>
                   {/* {allPosts.filter((p) => !hide.includes(p._id)).map((post) => ( */}
                   {allPosts.map((post) => (
-
                     <PostCard key={post._id} post={post} hide={hide} updateHide={updateHide} whetherIn />
                   ))}
                 </Grid>

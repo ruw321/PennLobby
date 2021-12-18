@@ -1,7 +1,8 @@
+/* eslint-disable max-len */
 import React from 'react';
 // import { useNavigate } from 'react-router-dom';
 import {
-  IconButton, Avatar, Menu, MenuItem,
+  IconButton, Avatar, Menu, MenuItem, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
 } from '@mui/material';
 import Button from "@mui/material/Button";
 import NotificationsNoneIcon from '@mui/icons-material/Notifications';
@@ -11,6 +12,9 @@ export default function UserAvatar({ setLoggedin, updateStatus }) {
   // const classes = useStyles();
   // const navigate = useNavigate();
   // const username = sessionStorage.getItem('username');
+
+  // eslint-disable-next-line no-unused-vars
+  const userID = sessionStorage.getItem("id");
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const open = Boolean(anchorEl);
@@ -34,9 +38,20 @@ export default function UserAvatar({ setLoggedin, updateStatus }) {
     updateStatus('lobby');
   };
 
+  // For admin user, the invitation list display
+  const [openInvitation, setOpenInvitation] = React.useState(false);
+
+  const handleClickOpenInvitation = () => {
+    setOpenInvitation(true);
+  };
+
+  const handleCloseInvitation = () => {
+    setOpenInvitation(false);
+  };
+
   return (
     <div>
-      <IconButton aria-label="delete" onClick={() => updateStatus('lobby')}>
+      <IconButton aria-label="delete" onClick={handleClickOpenInvitation}>
         <NotificationsNoneIcon />
       </IconButton>
       <Button
@@ -48,6 +63,30 @@ export default function UserAvatar({ setLoggedin, updateStatus }) {
       >
         <Avatar src="https://material-ui.com/static/images/avatar/1.jpg" />
       </Button>
+
+      {/* Invitation / Request Dialog */}
+      <Dialog
+        open={openInvitation}
+        onClose={handleCloseInvitation}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          The invitation & requests
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Need to map invitation & requests
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseInvitation}>Cancel</Button>
+          {/* <Button onClick={() => { handleConfirmPromote(user._id); }} autoFocus>
+            Confirm
+          </Button> */}
+
+        </DialogActions>
+      </Dialog>
 
       <Menu
         id="basic-menu"

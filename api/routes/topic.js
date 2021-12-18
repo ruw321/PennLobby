@@ -32,11 +32,11 @@ router.route("/").post(async (req, res) => {
     return;
   }
   try {
-    const exists = await Topics.getTopicById(Topic, req.body._id); 
-    if (exists) {
-      res.status(409).json({ error: "topic is already in the database" });
-      return;
-    }
+    // const exists = await Topics.getTopicById(Topic, req.body._id); 
+    // if (exists) {
+    //   res.status(409).json({ error: "topic is already in the database" });
+    //   return;
+    // }
     const result = await Topics.addTopic(Topic, req.body);
     res.status(201).send(result);
   } catch (err) {
@@ -47,7 +47,7 @@ router.route("/").post(async (req, res) => {
 // get a topic by id
 router.route("/:id").get(async (req, res) => {
   try {
-    const topic = await Topics.getTopicById(Topic, req.body._id); 
+    const topic = await Topics.getTopicById(Topic, req.params.id); 
     res.status(200).send(topic);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -59,7 +59,7 @@ router.route("/:id").put(async (req, res) => {
   try {
     const obj = req.body;
     const { _id, ...rest} = obj;
-    const topic = await Topics.updateTopicById(Topic, req.body._id, rest);
+    const topic = await Topics.updateTopicById(Topic, req.params.id, rest);
     res.status(200).send(topic);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -69,7 +69,7 @@ router.route("/:id").put(async (req, res) => {
 // delete a topic by id
 router.route("/:id").delete(async (req, res) => {
   try {
-    const topic = await Topics.deleteTopicById(Topic, req.body._id);
+    const topic = await Topics.deleteTopicById(Topic, req.params.id);
     res.status(200).send(topic);
   } catch (error) {
     res.status(400).json({ error: error.message });

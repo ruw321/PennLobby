@@ -37,7 +37,6 @@ router.route("/").get(async (req, res) => {
 
 // get all public groups
 router.route("/public").get(async (_req, res) => {
-  console.log("here");
   try {
     const p_groups = await Groups.getPublicGroups(Group);
     res.status(200).send(p_groups);
@@ -54,11 +53,11 @@ router.route("/").post(async (req, res) => {
     return;
   }
   try {
-    const exists = await Groups.getGroupByName(Group, req.body.name);
-    if (exists) {
-      res.status(409).json({ error: "group is already in the database" });
-      return;
-    }
+    // const exists = await Groups.getGroupByName(Group, req.body.name);
+    // if (exists) {
+    //   res.status(409).json({ error: "group is already in the database" });
+    //   return;
+    // }
     const to = req.body.topics;
     const newTopicID = [];
     for (let i = 0; i < to.length; i++) {
@@ -82,8 +81,9 @@ router.route("/").post(async (req, res) => {
     // add this group's id to owner.group_ids
     const user = await Users.getUserById(User, req.body.owner);
     // const group = await Groups.getGroupByName(Group, newGroup.name);
-    const userGroupIds = user.group_ids.push(result._id);
-    await Users.updateUserById(req.body.owner, {
+    const userGroupIds = user.group_ids;
+    userGroupIds.push(result._id);
+    await Users.updateUserById(User, req.body.owner, {
       group_ids: userGroupIds,
     });
     res.status(201).send(result);
@@ -95,7 +95,7 @@ router.route("/").post(async (req, res) => {
 // get a group by id
 router.route("/:id").get(async (req, res) => {
   try {
-    const group = await Groups.getGroupById(Group, req.body._id);
+    const group = await Groups.getGroupById(Group, req.params.id);
     res.status(200).send(group);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -126,7 +126,7 @@ router.route("/:groupId").delete(async (req, res) => {
       for (let i = 0; i < topicIds.length; i++) {
         const topic = await Topics.getTopicById(Topic, topicIds[i]);
         const topicGroupIds = topic.group_ids.filter((id) => id != topicIds[i]);
-        await Topics.updateTopicById(topicIds[i], {
+        await Topics.updateTopicById(Topic, topicIds[i], {
           group_ids: topicGroupIds,
         });
       }
@@ -135,7 +135,7 @@ router.route("/:groupId").delete(async (req, res) => {
       for (let i = 0; i < memberIds.length; i++) {
         const user = await Users.getUserById(User, memberIds[i]);
         const userGroupIds = user.group_ids.filter((id) => id != memberIds[i]);
-        await Users.updateUserById(memberIds[i], {
+        await Users.updateUserById(User, memberIds[i], {
           group_ids: userGroupIds,
         });
       }

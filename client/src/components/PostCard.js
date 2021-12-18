@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable react/jsx-props-no-spreading */
@@ -24,7 +26,9 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
-import { deletePost, addComment, getAllComments } from "../fetch";
+import {
+  deletePost, addComment, getAllComments, flagPostForDeletion, deleteComment, editComment, getCommentByID,
+} from "../fetch";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -42,17 +46,26 @@ export default function PostCard(props) {
 
   const userID = sessionStorage.getItem('id');
   const postID = post._id;
+  const groupID = post.group_id;
+  const authorID = post.author_id;
 
   // get all comments
   const [allComments, setAllComments] = React.useState([]);
 
   React.useEffect(async () => {
-    // const allCommentsDB = await getAllComments(postID);
-    const comments = [{
-      postID: "61b82519446d6c20ca33f30a",
-      authorID: "61b8222e311a421f9026e54d",
-      content: "This is my first comment",
-    }];
+    const commentIDs = post.comment_ids;
+    console.log(commentIDs);
+    const commentsToShow = [];
+    for (const eachID of commentIDs) {
+      const comment = getCommentByID(eachID);
+      commentsToShow.push(comment);
+    }
+    console.log(commentsToShow);
+    // const comments = [{
+    //   postID: "61b82519446d6c20ca33f30a",
+    //   authorID: "61b8222e311a421f9026e54d",
+    //   content: "This is my first comment",
+    // }];
     // const comments = allCommentsDB.map((g) =>
     //   (
     //     {
@@ -61,7 +74,7 @@ export default function PostCard(props) {
     //       content: "This is my first comment",
     //     }
     //   ));
-    setAllComments(comments);
+    setAllComments(commentsToShow);
   }, []);
 
   // comment toggle down
@@ -83,9 +96,7 @@ export default function PostCard(props) {
   };
 
   const handleConfirmDeletePost = async () => {
-    const temp = "61b8222e311a421f9026e54d";
-    // const userID = sessionStorage.getItem("id");
-    const res = await deletePost(temp, props.post._id, props.post.group_id);
+    const res = await deletePost(userID, props.post._id, props.post.group_id);
     const print = await res.json();
     console.log(print);
     setOpenDeletePost(false);
@@ -109,7 +120,7 @@ export default function PostCard(props) {
     setOpenHidePost(false);
   };
 
-  // flag a post as inappropriate
+  // flag a post for deletion
   const [openFlagPost, setOpenFlagPost] = React.useState(false);
 
   const handleClickOpenFlagPost = () => {
@@ -120,8 +131,10 @@ export default function PostCard(props) {
     setOpenFlagPost(false);
   };
 
-  const handleConfirmFlagPost = () => {
-
+  const handleConfirmFlagPost = async () => {
+    const res = await flagPostForDeletion(userID, postID);
+    const print = await res.json();
+    console.log(print);
   };
 
   // post analytics
@@ -143,7 +156,6 @@ export default function PostCard(props) {
   const [openDeleteComment, setOpenDeleteComment] = React.useState(false);
 
   const handleClickOpenDeleteComment = () => {
-    console.log("check1");
     setOpenDeleteComment(true);
   };
 
@@ -152,22 +164,43 @@ export default function PostCard(props) {
   };
 
   const handleConfirmDeleteComment = async () => {
-    // const temp = "61b8222e311a421f9026e54d";
-    // // const userID = sessionStorage.getItem("id");
-    // const res = await deletePost(temp, props.post._id, props.post.group_id);
-    // const print = await res.json();
-    // console.log(print);
+    const res = await deleteComment(userID, props.post._id, props.post.group_id);
+    const print = await res.json();
+    console.log(print);
     setOpenDeleteComment(false);
   };
 
-  // send a reply(comments) to a post
-  const [reply, setReply] = React.useState('');
-  const handleChangeReply = (event) => {
-    setReply(event.target.value);
+  // edit a comment
+  const [openEditComment, setOpenEditComment] = React.useState(false);
+  const [editedComment, setEditedComment] = React.useState(false);
+
+  const handleClickOpenEditComment = () => {
+    setOpenEditComment(true);
   };
 
-  const handleSendReply = async () => {
-    const res = await addComment(reply, userID, postID);
+  const handleCloseEditComment = () => {
+    setOpenEditComment(false);
+  };
+
+  const handleChangeEditedComment = (event) => {
+    setEditedComment(event.target.value);
+  };
+
+  const handleConfirmEditComment = async (commentID) => {
+    const res = await editComment(editedComment, commentID, userID);
+    const print = await res.json();
+    console.log(print);
+    setOpenEditComment(false);
+  };
+
+  // send a comment to a post
+  const [newComment, setNewComment] = React.useState('');
+  const handleChangeNewComment = (event) => {
+    setNewComment(event.target.value);
+  };
+
+  const handleSendNewComment = async () => {
+    const res = await addComment(newComment, userID, postID);
     const print = await res.json();
     console.log(print);
   };
@@ -311,7 +344,7 @@ export default function PostCard(props) {
 
         {/* TODO: add real comments */}
         {allComments.map((comment) => (
-          <div className="comments">
+          <div key={comment} className="comments">
             <CardHeader
               avatar={
                 <Avatar sx={{ bgcolor: "#ffaa00" }} aria-label="recipe">
@@ -346,13 +379,35 @@ export default function PostCard(props) {
                   </Dialog>
 
                   {/* Edit a comment */}
-                  <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
+                  <IconButton aria-label="settings" onClick={handleClickOpenEditComment}>
                     <EditIcon />
                   </IconButton>
+                  <Dialog
+                    open={openEditComment}
+                    onClose={handleCloseEditComment}
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      Please enter your new comment.
+                    </DialogTitle>
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="Reply"
+                      multiline
+                      fullWidth
+                      rows={4}
+                      onChange={handleChangeEditedComment}
+                    />
+                    <DialogActions>
+                      <Button onClick={handleCloseEditComment}>Cancel</Button>
+                      <Button onClick={() => { handleConfirmEditComment(comment._id); }} autoFocus>
+                        Confirm
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </div>
             }
-              title="Shrimp and Chorizo Paella"
-              subheader="September 14, 2016"
+              title={comment.author_id}
+              subheader={comment.created_at}
             />
           
             <CardContent>
@@ -362,82 +417,6 @@ export default function PostCard(props) {
             </CardContent>
           </div>
         ))}
-        {/* TODO: add real comments */}
-        <div className="comments">
-          <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: "#ffaa00" }} aria-label="recipe">
-                R
-              </Avatar>
-            }
-            action={
-              <div>
-                {/* Delete a comment */}
-                <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
-                  <DeleteIcon />
-                </IconButton>
-
-                <Dialog
-                  open={openDeleteComment}
-                  onClose={handleCloseDeleteComment}
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    Do you want to delete this reply?
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      You have to be the author or the group administrator to delete this post.
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseDeleteComment}>Cancel</Button>
-                    <Button onClick={handleConfirmDeleteComment} autoFocus>
-                      Confirm
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-
-                {/* Edit a comment */}
-                <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
-                  <EditIcon />
-                </IconButton>
-              </div>
-            }
-            title="Shrimp and Chorizo Paella"
-            subheader="September 14, 2016"
-          />
-          
-          <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              Comment Comment Comment Comment Comment Comment Comment Comment
-            </Typography>
-          </CardContent>
-        </div>
-
-        {/* repetition */}
-        <div className="comments">
-          <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: "#00aa7f" }} aria-label="recipe">
-                R
-              </Avatar>
-            }
-            action={
-              <IconButton aria-label="settings">
-                <DeleteIcon />
-              </IconButton>
-            }
-            title="Shrimp and Chorizo Paella"
-            subheader="September 14, 2016"
-          />
-          <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              This impressive paella is a perfect party dish and a fun meal to
-              cook together with your guests. Add 1 cup of frozen peas along
-              with the mussels, if you like.
-            </Typography>
-          </CardContent>
-        </div>
 
         <div className="reply">
           <TextField
@@ -446,11 +425,11 @@ export default function PostCard(props) {
             multiline
             fullWidth
             rows={4}
-            onChange={handleChangeReply}
+            onChange={handleChangeNewComment}
           />
           <div className="replyButton">
-            <Button variant="contained" startIcon={<ReplyIcon />} onClick={handleSendReply}>
-              Reply
+            <Button variant="contained" startIcon={<ReplyIcon />} onClick={handleSendNewComment}>
+              Send
             </Button>
           </div>
         </div>

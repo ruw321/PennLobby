@@ -1,5 +1,5 @@
-// get all posts
-module.exports.getPosts = async (collection) => {
+// get all notifications
+module.exports.getNotifications = async (collection) => {
   try {
     const posts = await collection.find({});
     return posts;
