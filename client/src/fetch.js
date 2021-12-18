@@ -301,14 +301,13 @@ async function flagPostForDeletion(userID, postID) {
     const data = {
       credentials: "include",
       mode: "cors",
-      // method to be confirmed with Ruichen
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(obj),
     };
-    const theUrl = `${url}/api/post/${postID}`;
+    const theUrl = `${url}/api/post/flag/${postID}`;
     const response = await fetch(theUrl, data);
     return response;
   } catch (err) {
@@ -460,24 +459,14 @@ async function getAllPostsByUserID(userID) {
 
 // Yang: getCommentByID (the ID of comment itself)
 async function getCommentByID(commentID) {
-  const input = {
-    comment_id: commentID,
-  };
-  const data = {
-    credentials: "include",
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(input),
-  };
   try {
-    // URL to be confirmed
     const theUrl = `${url}/api/comment/${commentID}`;
-    const response = await fetch(theUrl, data);
-    return response;
+    const response = await fetch(theUrl, { method: "GET" });
+    // console.log("response = ", response);
+    const res = await response.json();
+    return res;
   } catch (err) {
-    return null;
+    return err;
   }
 }
 
@@ -487,20 +476,21 @@ async function editComment(newComment, commentID, userID) {
   try {
     const obj = {
       content: newComment,
-      comment_id: commentID,
+      // comment_id: commentID,
       user_id: userID,
     };
+    console.log(obj);
     const data = {
       credentials: "include",
       mode: "cors",
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(obj),
     };
     // To be confirmed with Ruichen
-    const theUrl = `${url}/api/post/${commentID}`;
+    const theUrl = `${url}/api/comment/${commentID}`;
     const response = await fetch(theUrl, data);
     return response;
   } catch (err) {
@@ -527,7 +517,7 @@ async function promoteUser(userToPromoteID, userID, groupID) {
       body: JSON.stringify(obj),
     };
     // To be confirmed with Ruichen
-    const theUrl = `${url}/api/user/${userToPromoteID}`;
+    const theUrl = `${url}/api/user/promote/${userToPromoteID}`;
     const response = await fetch(theUrl, data);
     return response;
   } catch (err) {
@@ -554,7 +544,7 @@ async function demoteUser(userToPromoteID, userID, groupID) {
       body: JSON.stringify(obj),
     };
     // To be confirmed with Ruichen
-    const theUrl = `${url}/api/user/${userToPromoteID}`;
+    const theUrl = `${url}/api/user/demote/${userToPromoteID}`;
     const response = await fetch(theUrl, data);
     return response;
   } catch (err) {

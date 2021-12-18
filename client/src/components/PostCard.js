@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable max-len */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-unused-vars */
@@ -27,7 +28,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import {
-  deletePost, addComment, getAllComments, flagPostForDeletion, deleteComment, editComment, getCommentByID,
+  deletePost, addComment, getAllComment, flagPostForDeletion, deleteComment, editComment, getCommentByID,
 } from "../fetch";
 
 const ExpandMore = styled((props) => {
@@ -54,26 +55,16 @@ export default function PostCard(props) {
 
   React.useEffect(async () => {
     const commentIDs = post.comment_ids;
-    console.log(commentIDs);
+    // console.log("comment IDs = ", commentIDs);
     const commentsToShow = [];
     for (const eachID of commentIDs) {
-      const comment = getCommentByID(eachID);
+      // console.log("eachID = ", eachID);
+      // const comment = getCommentByID("61bd1dc0598804265b55ba0e");
+      const comment = await getCommentByID(eachID);
+      // console.log("comment object = ", comment);
       commentsToShow.push(comment);
     }
-    console.log(commentsToShow);
-    // const comments = [{
-    //   postID: "61b82519446d6c20ca33f30a",
-    //   authorID: "61b8222e311a421f9026e54d",
-    //   content: "This is my first comment",
-    // }];
-    // const comments = allCommentsDB.map((g) =>
-    //   (
-    //     {
-    //       postID: "61b82519446d6c20ca33f30a",
-    //       authorID: "61b8222e311a421f9026e54d",
-    //       content: "This is my first comment",
-    //     }
-    //   ));
+    // console.log("commentsToShow = ", commentsToShow);
     setAllComments(commentsToShow);
   }, []);
 
@@ -96,7 +87,8 @@ export default function PostCard(props) {
   };
 
   const handleConfirmDeletePost = async () => {
-    const res = await deletePost(userID, props.post._id, props.post.group_id);
+    console.log(userID, postID, groupID);
+    const res = await deletePost(userID, postID, groupID);
     const print = await res.json();
     console.log(print);
     setOpenDeletePost(false);
@@ -135,6 +127,7 @@ export default function PostCard(props) {
     const res = await flagPostForDeletion(userID, postID);
     const print = await res.json();
     console.log(print);
+    setOpenFlagPost(false);
   };
 
   // post analytics
@@ -163,8 +156,8 @@ export default function PostCard(props) {
     setOpenDeleteComment(false);
   };
 
-  const handleConfirmDeleteComment = async () => {
-    const res = await deleteComment(userID, props.post._id, props.post.group_id);
+  const handleConfirmDeleteComment = async (commentID) => {
+    const res = await deleteComment(userID, commentID);
     const print = await res.json();
     console.log(print);
     setOpenDeleteComment(false);
@@ -187,6 +180,7 @@ export default function PostCard(props) {
   };
 
   const handleConfirmEditComment = async (commentID) => {
+    console.log(editedComment);
     const res = await editComment(editedComment, commentID, userID);
     const print = await res.json();
     console.log(print);
@@ -344,7 +338,7 @@ export default function PostCard(props) {
 
         {/* TODO: add real comments */}
         {allComments.map((comment) => (
-          <div key={comment} className="comments">
+          <div key={comment._id} className="comments">
             <CardHeader
               avatar={
                 <Avatar sx={{ bgcolor: "#ffaa00" }} aria-label="recipe">
@@ -372,7 +366,7 @@ export default function PostCard(props) {
                     </DialogContent>
                     <DialogActions>
                       <Button onClick={handleCloseDeleteComment}>Cancel</Button>
-                      <Button onClick={handleConfirmDeleteComment} autoFocus>
+                      <Button onClick={() => { handleConfirmDeleteComment(comment._id); }} autoFocus>
                         Confirm
                       </Button>
                     </DialogActions>
@@ -407,7 +401,7 @@ export default function PostCard(props) {
                 </div>
             }
               title={comment.author_id}
-              subheader={comment.created_at}
+              // subheader={comment.created_at}
             />
           
             <CardContent>
