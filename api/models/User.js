@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
   admin: { type: Boolean, default: false, required: true },
   created_at: { type: Date, default: Date.now(), required: true },
   avatar_url: { type: String, default: "" },
-  notification_ids: [{ type: Schema.Types.ObjectId, ref: "Notification" }],
+  notification_ids: [ { type: Schema.Types.ObjectId, ref: "Notification" } ],
 });
 
 // this function is referenced from: 
