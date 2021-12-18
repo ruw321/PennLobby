@@ -45,9 +45,19 @@ router.route("/").post(async (req, res) => {
 });
 
 // get a topic by id
-router.route("/:id").get(async (req, res) => {
+router.route("/id/:topicId").get(async (req, res) => {
   try {
-    const topic = await Topics.getTopicById(Topic, req.params.id); 
+    const topic = await Topics.getTopicById(Topic, req.params.topicId); 
+    res.status(200).send(topic);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// get a topic by name
+router.route("/name/:topicName").get(async (req, res) => {
+  try {
+    const topic = await Topics.getTopicByName(Topic, req.params.topicName); 
     res.status(200).send(topic);
   } catch (error) {
     res.status(400).json({ error: error.message });
