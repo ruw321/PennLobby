@@ -105,9 +105,6 @@ function MyGroup(props) {
           memberIds: g.member_ids,
         }
       ));
-    
-    // groupsToShow
-    // filter
     setGroupCards(newGroupCards);
   }, []);
 
