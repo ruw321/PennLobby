@@ -98,6 +98,14 @@ function GroupDetail(props) {
   const [group, setGroup] = React.useState('');
   const [allUsers, setAllUsers] = React.useState([]);
 
+  // hide post
+
+  const [hide, setHide] = React.useState([]);
+  
+  const updateHide = (post) => {
+    setPostCards(postCards.filter((p) => !post.includes(p._id)));
+    setHide(post);
+  };
   // const [numMembers, setNumMembers] = React.useState(0);
   // const [numPosts, setNumPosts] = React.useState(0);  
   // const [numTopics, setNumTopics] = React.useState(0);  
@@ -397,12 +405,21 @@ function GroupDetail(props) {
               </Dialog>
             </Box>
 
+            {/* All post inside this group */}
             <Grid container spacing={2}>
               <Grid item key={1} xs={6} md={9}>
                 <Container sx={{ pt: 2 }} maxWidth="lg">
                   <Grid container rowSpacing={3} columnSpacing={0}>
                     {postCards.map((post) => (
-                      <PostCard key={post.title} post={post} whetherIn />
+                      <PostCard
+                        key={post.title}
+                        post={post}
+                        hide={hide}
+                        updateHide={updateHide}
+                        allPosts={postCards}
+                        updateAllPosts={(newPosts) => setPostCards(newPosts)}
+                        whetherIn
+                      />
                     ))}
                   </Grid>
                 </Container>
@@ -440,6 +457,7 @@ function GroupDetail(props) {
             </Grid>
           </Container>
         </main>
+
         {/* Footer */}
         <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
           <Typography variant="h6" align="center" gutterBottom>

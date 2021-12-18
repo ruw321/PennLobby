@@ -23,6 +23,8 @@ import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { demoteUser, getAllUsers, promoteUser } from '../fetch';
 
 export default function GroupMembers(props) {
@@ -33,8 +35,6 @@ export default function GroupMembers(props) {
 
   React.useEffect(async () => {
     let allUsers = await getAllUsers();
-    // console.log("all users = ", allUsers);
-
     allUsers = allUsers.filter((x) => x.group_ids.includes(groupID));
     // console.log("all users filtered = ", allUsers, groupID);
     const users = allUsers.map((g) =>
@@ -43,6 +43,7 @@ export default function GroupMembers(props) {
           userID: g._id,
           name: g.username,
           groupIDs: g.group_ids,
+          group_admins: g.group_admins,
         }
       ));
     // console.log("users mapped = ", users);
@@ -105,6 +106,9 @@ export default function GroupMembers(props) {
             <CardHeader
               action={(
                 <div>
+                  <IconButton>
+                    {user.group_admins.includes(groupID) ? <ManageAccountsIcon color="success" /> : <PeopleAltIcon />}
+                  </IconButton>
                   <IconButton onClick={handleClickOpen}>
                     <ArrowUpwardIcon />
                   </IconButton>
