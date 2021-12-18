@@ -464,16 +464,6 @@ function MyGroup(props) {
                 >
                   {/* Trending Topics */}
                   <TrendingTopics />
-                  {/* Group Analysis */}
-                  <Grid item xs={12} md={6}>
-                    <Typography
-                      sx={{ mt: 4, mb: 2 }}
-                      variant="h6"
-                      component="div"
-                    >
-                      Text only
-                    </Typography>
-                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
