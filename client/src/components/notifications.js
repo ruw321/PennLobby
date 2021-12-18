@@ -19,7 +19,9 @@ export const setupWSConnection = (updateContacts, updateMessages, texts) => {
   // Listener for messages
   socket.addEventListener('message', (event) => {
     // parse message to json
-    if (typeof (event.data) === 'string') {
+    try {
+      JSON.parse(event.data);
+    } catch (e) {
       return;
     }
     const pushMessage = JSON.parse(event.data);
