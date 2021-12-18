@@ -12,6 +12,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 
 export default function TrendingTopics(props) {
+  // To do
   const trendingTopicsToday = [
     "Music",
     "Football",
@@ -52,10 +53,10 @@ export default function TrendingTopics(props) {
           borderBottom: 1, borderColor: 'divider',
         }}
         >
-          <Grid className="topic">Top Trending Topics</Grid>
+          <Grid className="topic">Group Suggestions</Grid>
           <TabList className="tablist" onChange={handleChange} centered>
-            <Tab label="Today" value="1" />
-            <Tab label="Weekly" value="2" />
+            <Tab label="Most Popular" value="1" />
+            <Tab label="Most Active" value="2" />
           </TabList>
         </Box>
         <TabPanel value="1">

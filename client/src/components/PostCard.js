@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/media-has-caption */
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable max-len */
 /* eslint-disable no-restricted-syntax */
@@ -41,6 +43,50 @@ const ExpandMore = styled((props) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
+
+function PostMedia(props) {
+  const { msg } = props;
+  if (msg.indexOf('(link-image)http') === 0) {
+    return (
+      <Typography variant="body2" color="text.secondary">
+        <img src={msg.split('(link-image)')[1]} style={{ maxWidth: "100%", maxHeight: "200px", }} />
+      </Typography>
+    );
+  }
+  if (msg.indexOf('(link-video)http') === 0) {
+    return (
+      <Typography variant="body2" color="text.secondary">
+        <video controls style={{ width: "100%" }}>
+          <source
+            src={msg.split('(link-video)')[1]}
+            type="video/mp4"
+          />
+          Sorry, your browser does not support embedded videos.
+        </video>
+      </Typography>
+      
+    );
+  }
+  if (msg.indexOf('(link-audio)http') === 0) {
+    return (
+      <Typography variant="body2" color="text.secondary">
+        <audio
+          controls
+          style={{ width: "100%" }}
+          src={msg.split('(link-audio)')[1]}
+        >
+          Your browser does not support the audio element.
+        </audio>
+      </Typography>
+
+    );
+  }
+  return (
+    <Typography variant="body2" color="text.secondary">
+      {msg}
+    </Typography>
+  );
+}
 
 export default function PostCard(props) {
   const { hide, updateHide, post } = props;
@@ -317,9 +363,7 @@ export default function PostCard(props) {
         subheader={props.post.created_at}
       />
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {props.post.content}
-        </Typography>
+        <PostMedia msg={props.post && props.post.content} />
       </CardContent>
       <CardActions disableSpacing>
 

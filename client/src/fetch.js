@@ -409,17 +409,6 @@ async function addComment(newComment, userID, postID) {
 
 // Yang: to get all comments from a PostID
 async function getAllComment(postID) {
-  // const comment = {
-  //   post_id: postID,
-  // };
-  // const data = {
-  //   credentials: "include",
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(comment),
-  // };
   try {
     const theUrl = `${url}/api/comment/all/${postID}`;
     const result = await fetch(theUrl, { method: "GET" });
@@ -594,6 +583,30 @@ async function demoteUser(userToDemoteID, userID, groupID) {
   }
 }
 
+// Get all topics:
+async function getAllTopics() {
+  try {
+    const theUrl = `${url}/api/topic`;
+    const result = await fetch(theUrl, { method: "GET" });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Get topic by ID:
+async function getTopicByID(topicID) {
+  try {
+    const theUrl = `${url}/api/topic/${topicID}`;
+    const result = await fetch(theUrl, { method: "GET" });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
 module.exports = {
   login,
   signup,
@@ -626,4 +639,6 @@ module.exports = {
   promoteUser,
   demoteUser,
   registerMessage,
+  getAllTopics,
+  getTopicByID,
 };
