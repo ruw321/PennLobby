@@ -528,7 +528,7 @@ async function promoteUser(userToPromoteID, userID, groupID) {
     const data = {
       credentials: "include",
       mode: "cors",
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -545,7 +545,7 @@ async function promoteUser(userToPromoteID, userID, groupID) {
 
 // Yang: demote a user (by userToPromoteID, groupID)
 // the "userID" here is the ID of the admin (if not admin, prompt error)
-async function demoteUser(userToPromoteID, userID, groupID) {
+async function demoteUser(userToDemoteID, userID, groupID) {
   try {
     const obj = {
       user_id: userID,
@@ -555,14 +555,14 @@ async function demoteUser(userToPromoteID, userID, groupID) {
     const data = {
       credentials: "include",
       mode: "cors",
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(obj),
     };
     // To be confirmed with Ruichen
-    const theUrl = `${url}/api/user/demote/${userToPromoteID}`;
+    const theUrl = `${url}/api/user/demote/${userToDemoteID}`;
     const response = await fetch(theUrl, data);
     return response;
   } catch (err) {

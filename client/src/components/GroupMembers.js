@@ -32,52 +32,23 @@ export default function GroupMembers(props) {
   const [groupMembers, setGroupMembers] = React.useState([]);
 
   React.useEffect(async () => {
-    const allMembers = await getAllUsers();
-    // const newGroupCards = allMembers.map((g) =>
-    //   (
-    //     {
-    //       title: g.name,
-    //       size: g.member_ids.length,
-    //       description: g.description,
-    //       image: "https://source.unsplash.com/random",
-    //       imageLabel: "Image Text",
-    //       topics: g.topic_ids,
-    //       groupId: g._id,
-    //       memberIds: g.member_ids,
-    //       whetherIn: false,
-    //     }
-    //   ));
+    let allUsers = await getAllUsers();
+    console.log("all users = ", allUsers);
+
     const userInGroup = [];
-    for (const each in allMembers) {
-      if (each.group_ids.includes(groupID)) {
-        userInGroup.push(each);
-      }
-    }
-    setGroupMembers(allMembers);
-
-    // const userInGroup = [];
-    // for (const each in allMembers) {
-    //   if (true) {
-    //     userInGroup.push(each);
-    //   }
-    // }
-    // setGroupMembers(userInGroup);
+    allUsers = allUsers.filter((x) => x.group_ids.includes(groupID));
+    console.log("all users filtered = ", allUsers, groupID);
+    const users = allUsers.map((g) =>
+      (
+        {
+          userID: g._id,
+          name: g.username,
+          groupIDs: g.group_ids,
+        }
+      ));
+    console.log("users mapped = ", users);
+    setGroupMembers(users);
   }, []);
-
-  // const groupMembers = [
-  //   "user11111",
-  //   "user2",
-  //   "user3",
-  //   "user4",
-  //   "user5",
-  //   "user6",
-  //   "user1",
-  //   "user2",
-  //   "user3",
-  //   "user4",
-  //   "user5",
-  //   "user6",
-  // ];
 
   // Promote as admin icon button
   const [open, setOpen] = React.useState(false);
@@ -109,6 +80,7 @@ export default function GroupMembers(props) {
   };
 
   const handleConfirmDemote = async (userToDemoteID) => {
+    console.log("userToDemote ID", userToDemoteID);
     const res = await demoteUser(userToDemoteID, userID, groupID);
     const print = await res.json();
     console.log(print);
@@ -142,7 +114,7 @@ export default function GroupMembers(props) {
                   </IconButton>
                 </div>
           )}
-              subheader={user}
+              subheader={user.name}
             />
 
             {/* Promote Dialog */}
@@ -162,7 +134,7 @@ export default function GroupMembers(props) {
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={() => { handleConfirmPromote(user._id); }} autoFocus>
+                <Button onClick={() => { handleConfirmPromote(user.userID); }} autoFocus>
                   Confirm
                 </Button>
 
@@ -186,7 +158,7 @@ export default function GroupMembers(props) {
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose2}>Cancel</Button>
-                <Button onClick={() => { handleConfirmDemote(user._id); }} autoFocus>
+                <Button onClick={() => { handleConfirmDemote(user.userID); }} autoFocus>
                   Confirm
                 </Button>
               </DialogActions>
