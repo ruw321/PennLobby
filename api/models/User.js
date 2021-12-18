@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
   blocking: [{ type: Schema.Types.ObjectId, ref: "User" }],
   blocked_by: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  admin: { type: Boolean, default: false, required: true },
+  group_admins: [{ type: Schema.Types.ObjectId, ref: "Group" }],
   created_at: { type: Date, default: Date.now(), required: true },
   avatar_url: { type: String, default: "" },
   notification_ids: [ { type: Schema.Types.ObjectId, ref: "Notification" } ],

@@ -39,7 +39,9 @@ import { FormControlLabel } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
-import { createGroup, getAllPublicGroups, logout } from "../fetch";
+import {
+  createGroup, getAllGroups, getAllPublicGroups, logout, 
+} from "../fetch";
 
 function Copyright() {
   return (
@@ -111,23 +113,31 @@ function MyGroup(props) {
   const [selectSortBy, setSelectSortBy] = React.useState([]);
   const [groupCards, setGroupCards] = React.useState([]);
   // const navigate = useNavigate();
-  const userName = sessionStorage.getItem("username");
-
+  const userName = sessionStorage.getItem('username');
+  const userID = sessionStorage.getItem('id');
   React.useEffect(async () => {
     if (!userName) {
       // navigate('/login');
       updateStatus("login");
     }
-    const groups = await getAllPublicGroups();
-    const newGroupCards = groups.map((g) => ({
-      title: g.name,
-      size: g.member_ids.length,
-      description: g.description,
-      image: "https://source.unsplash.com/random",
-      imageLabel: "Image Text",
-      topics: g.topic_ids,
-      groupId: g._id,
-    }));
+    let groups = await getAllGroups();
+    groups = groups.filter((x) => x.member_ids.includes(userID));
+
+    const newGroupCards = groups.map((g) =>
+      (
+        {
+          title: g.name,
+          size: g.member_ids.length,
+          description: g.description,
+          image: "https://source.unsplash.com/random",
+          imageLabel: "Image Text",
+          topics: g.topic_ids,
+          groupId: g._id,
+          memberIds: g.member_ids,
+        }
+      ));
+    // groupsToShow
+    // filter
     setGroupCards(newGroupCards);
   }, []);
 
@@ -226,8 +236,9 @@ function MyGroup(props) {
   };
 
   const handleSubmit = async () => {
+    const id = sessionStorage.getItem('id');
     const group = {
-      owner: "61a9b32b2762ea6563fcaf57",
+      owner: id,
       name: groupName,
       description: groupDescription,
       type: groupType,

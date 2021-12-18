@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -116,12 +118,14 @@ async function sortGroup(method) {
   return groups;
 }
 
-function Lobby() {
+function Lobby(props) {
+  const { updateCurrGroup, updateStatus } = props;
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
   const [loggedIn, setLoggedin] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [groupCards, setGroupCards] = React.useState([]);
+  const userID = sessionStorage.getItem('id');
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -151,16 +155,30 @@ function Lobby() {
       setLoggedin(true);
     }
     const groups = await getAllPublicGroups();
-    const newGroupCards = groups.map((g) => ({
-      title: g.name,
-      size: g.member_ids.length,
-      description: g.description,
-      image: "https://source.unsplash.com/random",
-      imageLabel: "Image Text",
-      topics: g.topic_ids,
-      groupId: g._id,
-    }));
-    setGroupCards(newGroupCards);
+    const groupToShow = [];
+    const newGroupCards = groups.map((g) =>
+      (
+        {
+          title: g.name,
+          size: g.member_ids.length,
+          description: g.description,
+          image: "https://source.unsplash.com/random",
+          imageLabel: "Image Text",
+          topics: g.topic_ids,
+          groupId: g._id,
+          memberIds: g.member_ids,
+          whetherIn: false,
+        }
+      ));
+    for (const eachGroup of newGroupCards) {
+      if (eachGroup.memberIds.includes(userID)) {
+        eachGroup.whetherIn = true;
+      } else if (eachGroup.memberIds.includes(userID)) {
+        eachGroup.whetherIn = false;
+      }
+      groupToShow.push(eachGroup);
+    }
+    setGroupCards(groupToShow);
   }, []);
 
   const handleChangeTopics = (event) => {
@@ -266,12 +284,8 @@ function Lobby() {
               <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container rowSpacing={3} columnSpacing={0}>
                   {groupCards.map((post) => (
-                    <GroupCard
-                      key={post.title}
-                      post={post}
-                      whetherIn={false}
-                      groupId={post._id}
-                    />
+                    // <GroupCard key={post.title} post={post} whetherIn={false} groupId={post._id} />
+                    <GroupCard key={post.title} post={post} whetherIn={post.whetherIn} updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />
                   ))}
                 </Grid>
               </Container>

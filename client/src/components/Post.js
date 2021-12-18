@@ -74,13 +74,13 @@ function MyPost(props) {
       // console.log(postCards);
       const myPosts = [];
       for (const post of postCards) {
-        console.log(post);
+        // console.log(post);
         if (post.author_id === userID) {
           myPosts.push(post);
         }
       }
-      console.log("myPosts=");
-      console.log(myPosts);
+      // console.log("myPosts=");
+      // console.log(myPosts);
       setAllPosts(myPosts);
     };
     loadData();
