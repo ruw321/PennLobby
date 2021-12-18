@@ -98,8 +98,11 @@ function MyGroup(props) {
           imageLabel: "Image Text",
           topics: g.topic_ids,
           groupId: g._id,
+          memberIds: g.member_ids,
         }
       ));
+    // groupsToShow
+    // filter
     setGroupCards(newGroupCards);
   }, []);
 

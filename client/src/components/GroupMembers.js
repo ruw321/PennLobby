@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable max-len */
@@ -29,22 +30,38 @@ export default function GroupMembers(props) {
   const userID = sessionStorage.getItem("id");
 
   const [groupMembers, setGroupMembers] = React.useState([]);
+
   React.useEffect(async () => {
     const allMembers = await getAllUsers();
+    // const newGroupCards = allMembers.map((g) =>
+    //   (
+    //     {
+    //       title: g.name,
+    //       size: g.member_ids.length,
+    //       description: g.description,
+    //       image: "https://source.unsplash.com/random",
+    //       imageLabel: "Image Text",
+    //       topics: g.topic_ids,
+    //       groupId: g._id,
+    //       memberIds: g.member_ids,
+    //       whetherIn: false,
+    //     }
+    //   ));
+    const userInGroup = [];
+    for (const each in allMembers) {
+      if (each.group_ids.includes(groupID)) {
+        userInGroup.push(each);
+      }
+    }
+    setGroupMembers(allMembers);
+
     // const userInGroup = [];
     // for (const each in allMembers) {
-    //   if (each.group_ids.includes(groupID)) {
+    //   if (true) {
     //     userInGroup.push(each);
     //   }
     // }
     // setGroupMembers(userInGroup);
-    const userInGroup = [];
-    for (const each in allMembers) {
-      if (true) {
-        userInGroup.push(each);
-      }
-    }
-    setGroupMembers(userInGroup);
   }, []);
 
   // const groupMembers = [

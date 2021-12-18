@@ -91,7 +91,7 @@ function App() {
                 {(status !== 'login' && status !== 'signup') && <Menu updateStatus={updateStatus} />}
                 {status === 'login' && <Login updateUserName={updateUserName} updateStatus={updateStatus} />}
                 {status === 'signup' && <Signup updateStatus={updateStatus} />}
-                {status === 'lobby' && <Lobby />}
+                {status === 'lobby' && <Lobby updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />}
                 {status === 'group' && <Group updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />}
                 {status === 'post' && <Post refresh={refresh} />}
                 {status === 'profile' && <Profile updateStatus={updateStatus} />}
