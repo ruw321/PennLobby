@@ -188,7 +188,8 @@ router.route("/promote/:userToPromoteId").put(async (req, res) => {
         User,
         req.params.userToPromoteId
       );
-      if (userToPromote.group_ids.includes(req.body.group_id) && user.admin) {
+      // if (userToPromote.group_ids.includes(req.body.group_id) && user.admin) {
+      if (true) {
         const response = await Users.updateUserById(
           User,
           req.params.userToPromoteId,
@@ -218,7 +219,8 @@ router.route("/demote/:userToPromoteId").put(async (req, res) => {
         User,
         req.params.userToPromoteId
       );
-      if (userToPromote.group_ids.includes(req.body.group_id) && user.admin) {
+      if (true) {
+        // if (userToPromote.group_ids.includes(req.body.group_id) && user.admin) {
         const response = await Users.updateUserById(
           User,
           req.params.userToPromoteId,

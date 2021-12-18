@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -95,12 +97,14 @@ const trendingTopicsWeekly = [
   "Football",
 ];
 
-function Lobby() {
+function Lobby(props) {
+  const { updateCurrGroup, updateStatus } = props;
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
   const [loggedIn, setLoggedin] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [groupCards, setGroupCards] = React.useState([]);
+  const userID = sessionStorage.getItem('id');
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -130,7 +134,7 @@ function Lobby() {
       setLoggedin(true);
     }
     const groups = await getAllPublicGroups();
-    console.log(groups);
+    const groupToShow = [];
     const newGroupCards = groups.map((g) =>
       (
         {
@@ -141,9 +145,19 @@ function Lobby() {
           imageLabel: "Image Text",
           topics: g.topic_ids,
           groupId: g._id,
+          memberIds: g.member_ids,
+          whetherIn: false,
         }
       ));
-    setGroupCards(newGroupCards);
+    for (const eachGroup of newGroupCards) {
+      if (eachGroup.memberIds.includes(userID)) {
+        eachGroup.whetherIn = true;
+      } else if (eachGroup.memberIds.includes(userID)) {
+        eachGroup.whetherIn = false;
+      }
+      groupToShow.push(eachGroup);
+    }
+    setGroupCards(groupToShow);
   }, []);
 
   const handleChangeTopics = (event) => {
@@ -235,7 +249,8 @@ function Lobby() {
               <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container rowSpacing={3} columnSpacing={0}>
                   {groupCards.map((post) => (
-                    <GroupCard key={post.title} post={post} whetherIn={false} groupId={post._id} />
+                    // <GroupCard key={post.title} post={post} whetherIn={false} groupId={post._id} />
+                    <GroupCard key={post.title} post={post} whetherIn={post.whetherIn} updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />
                   ))}
                 </Grid>
               </Container>
