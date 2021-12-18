@@ -7,7 +7,8 @@ export const setupWSConnection = (updateContacts, updateMessages, texts) => {
   }
 
   // Create WebSocket connection
-  const socket = new WebSocket('ws://penn-lobby-websocket.herokuapp.com/', sessionStorage.getItem('token'));
+  // const socket = new WebSocket('ws://penn-lobby-websocket.herokuapp.com/', sessionStorage.getItem('token'));
+  const socket = new WebSocket('ws://localhost:8085/', sessionStorage.getItem('token'));
 
   // Connection opened
   socket.addEventListener('open', () => {

@@ -1,25 +1,27 @@
 const router = require('express').Router();   
 const passport = require('passport');
-const jwt = require('jsonwebtoken');
-const WebSocket = require('ws');
-const serverToken = jwt.sign({
-  name: 'webserver',
-}, 'this_is_a_secret', { expiresIn: '1h' });
-const url = 'ws://penn-lobby-websocket.herokuapp.com/';
-const connection = new WebSocket(url, {
-  headers: { token: serverToken },
-});
-connection.onopen = () => {
-  connection.send('["webserver"]');
-};
+// const jwt = require('jsonwebtoken');
+// const WebSocket = require('ws');
+// const serverToken = jwt.sign({
+//   name: 'webserver',
+// }, 'this_is_a_secret', { expiresIn: '1h' });
+// const url = 'ws://penn-lobby-websocket.herokuapp.com/';
+// const url = 'ws://localhost:8085/';
 
-connection.onerror = (error) => {
-  console.log(`WebSocket error: ${error}`);
-};
+// const connection = new WebSocket(url, {
+//   headers: { token: serverToken },
+// });
+// connection.onopen = () => {
+//   connection.send('["webserver"]');
+// };
 
-connection.onmessage = (e) => {
-  console.log(e.data);
-};
+// connection.onerror = (error) => {
+//   console.log(`WebSocket error: ${error}`);
+// };
+
+// connection.onmessage = (e) => {
+//   console.log(e.data);
+// };
 
 router.post('/login', function (req, res, next) {
   passport.authenticate('local', function (err, user, info) {
@@ -56,16 +58,17 @@ router.post('/login', function (req, res, next) {
     // user information to the session
     req.logIn(user, function(err) {    // if success
       if (err) { return next(err); }
+      return res.status(200).json({ id: user.id, user: user.username});
       // create jwt token
-      let userToken;
-      // create and send JWT to a the user
-      userToken = jwt.sign({
-        name: user.username,
-      }, 'this_is_a_secret', { expiresIn: '1h' });
-      // Notify WS Server to update all connected clients
-      const msg = {type: 'new user', data: user.username}
-      connection.send(JSON.stringify(msg));  
-      return res.status(200).json({ id: user.id, token: userToken, user: user.username});
+      // let userToken;
+      // // create and send JWT to a the user
+      // userToken = jwt.sign({
+      //   name: user.username,
+      // }, 'this_is_a_secret', { expiresIn: '1h' });
+      // // Notify WS Server to update all connected clients
+      // const msg = {type: 'new user', data: user.username}
+      // connection.send(JSON.stringify(msg));  
+      // return res.status(200).json({ id: user.id, token: userToken, user: user.username});
     })
   })(req, res, next);
 });

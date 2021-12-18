@@ -5,7 +5,9 @@ const WebSocket = require('ws');
 const serverToken = jwt.sign({
   name: 'webserver',
 }, 'this_is_a_secret', { expiresIn: '1h' });
-const url = 'ws://penn-lobby-websocket.herokuapp.com/';
+// const url = 'ws://penn-lobby-websocket.herokuapp.com/';
+const url = 'ws://localhost:8085/';
+
 const connection = new WebSocket(url, {
   headers: { token: serverToken },
 });
@@ -20,6 +22,19 @@ connection.onmessage = (e) => {
   console.log(e.data);
 };
 
+router.post('/register', function (req, _res) {
+  console.log('register````', req.body);
+  // create jwt token
+  let userToken;
+  // create and send JWT to a the user
+  userToken = jwt.sign({
+    name: req.body.username,
+  }, 'this_is_a_secret', { expiresIn: '1h' });
+  // Notify WS Server to update all connected clients
+  const msg = {type: 'new user', data: req.body.username}
+  connection.send(JSON.stringify(msg));  
+  return _res.status(200).json({ token: userToken, username: req.body.username});
+});
 
 router.post('/', function (req, _res) {
   console.log('Received a message');
