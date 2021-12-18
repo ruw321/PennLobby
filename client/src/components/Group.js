@@ -83,22 +83,21 @@ const sortMethod = [
   "Size: Small-Large",
   "Most Active",
 ];
-
 async function sortGroup(method) {
   let groups = await getAllPublicGroups();
-  if (sortMethod === "Recently Active") {
+  if (method === "Recently Active") {
     groups = groups.sort(
       (group1, group2) => group2.last_active - group1.last_active
     );
-  } else if (sortMethod === "Size: Large-Small") {
+  } else if (method === "Size: Large-Small") {
     groups = groups.sort(
       (group1, group2) => group2.member_ids.length - group1.member_ids.length
     );
-  } else if (sortMethod === "Size: Small-Large") {
+  } else if (method === "Size: Small-Large") {
     groups = groups.sort(
       (group1, group2) => group1.member_ids.length - group2.member_ids.length
     );
-  } else if (sortMethod === "Most Active") {
+  } else if (method === "Most Active") {
     groups = groups.sort(
       (group1, group2) => group2.post_ids.length - group1.post_ids.length
     );
@@ -116,7 +115,6 @@ function MyGroup(props) {
 
   React.useEffect(async () => {
     if (!userName) {
-      console.log("here");
       // navigate('/login');
       updateStatus("login");
     }
@@ -142,10 +140,22 @@ function MyGroup(props) {
       typeof value === "string" ? value.split(",") : value
     );
   };
-  const handleChangeSortBy = (event) => {
+
+  const handleChangeSortBy = async (event) => {
     const {
       target: { value },
     } = event;
+    const groups = await sortGroup(value);
+    const newGroupCards = groups.map((g) => ({
+      title: g.name,
+      size: g.member_ids.length,
+      description: g.description,
+      image: "https://source.unsplash.com/random",
+      imageLabel: "Image Text",
+      topics: g.topic_ids,
+      groupId: g._id,
+    }));
+    setGroupCards(newGroupCards);
     setSelectSortBy(
       // On autofill we get a the stringified value.
       typeof value === "string" ? value.split(",") : value
@@ -225,7 +235,6 @@ function MyGroup(props) {
     };
     const res = await createGroup(group);
     const print = await res.json();
-    console.log(print);
     setOpen(false);
   };
 
