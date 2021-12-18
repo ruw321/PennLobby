@@ -214,24 +214,23 @@ router.route("/promote/:userToPromoteId").put(async (req, res) => {
 });
 
 // a group admin demotes another group member from admin to member
-router.route("/demote/:userToPromoteId").put(async (req, res) => {
+router.route("/demote/:userToDemote").put(async (req, res) => {
   if (req.isAuthenticated) {
     try {
       const user = await Users.getUserById(User, req.body.user_id);
-      const userToPromote = await Users.getUserById(
+      const UserToDemote = await Users.getUserById(
         User,
-        req.params.userToPromoteId
+        req.params.userToDemote
       );
       const gIDs = user.group_admins;
       const gID = req.body.group_id;
-      const currG = await Groups.getGroupById(gID);
-      
-      if (userToPromote.group_ids.includes(gID) && gIDs.includes(gID) && currG.owner != req.params.userToPromoteId) {
-        const gIDs2 = userToPromote.group_admins;
+      const currG = await Groups.getGroupById(Group, gID);
+      if (UserToDemote.group_ids.includes(gID) && gIDs.includes(gID) && currG.owner != req.params.userToDemote) {
+        const gIDs2 = UserToDemote.group_admins;
         gIDs2.splice(gIDs2.indexOf(gID), 1);
         const response = await Users.updateUserById(
           User,
-          req.params.userToPromoteId,
+          req.params.userToDemote,
           { group_admins: gIDs2 }
         );
         res.status(200).send(response);
