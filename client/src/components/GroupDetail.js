@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-restricted-syntax */
@@ -32,7 +33,7 @@ import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
 import GroupMembers from "./GroupMembers";
 import {
-  addPost, getAllPostsByGroupID, sendS3, getS3Url, quitGroup, getAllPosts, getGroupByID, 
+  addPost, getAllPostsByGroupID, sendS3, getS3Url, quitGroup, getAllPosts, getGroupByID, getAllUsers, sendNotification,
 } from "../fetch";
 
 function Copyright() {
@@ -95,6 +96,7 @@ function GroupDetail(props) {
 
   const [postCards, setPostCards] = React.useState([]);
   const [group, setGroup] = React.useState('');
+  const [allUsers, setAllUsers] = React.useState([]);
 
   // const [numMembers, setNumMembers] = React.useState(0);
   // const [numPosts, setNumPosts] = React.useState(0);  
@@ -102,6 +104,8 @@ function GroupDetail(props) {
 
   React.useEffect(async () => {
     const postCards = await getAllPosts();
+    const users = await getAllUsers();
+    setAllUsers(users);
     const curGroupObj = await getGroupByID(currGroup);
     setGroup(curGroupObj);
     // console.log("group = ", group);
@@ -189,7 +193,20 @@ function GroupDetail(props) {
   const handleClose2 = () => {
     setOpen2(false);
   };
+  const [inviteUsername, setInviteUsername] = React.useState("");
+  const handleChangeInvite = (event) => {
+    setInviteUsername(event.target.value);
+  };
 
+  const handelConfimInvite = async () => {
+    if (!allUsers.find((u) => u.username === inviteUsername)) {
+      return;
+    }
+    const id = allUsers.find((u) => u.username === inviteUsername)._id;
+    const data = { content: `(invite group)${currGroup}(user)${id}`, sender_id: userID, receiver_ids: allUsers.filter((u) => u.group_admins.includes(currGroup)).map((u) => u._id) };
+    await sendNotification(data);
+    setOpen2(false);
+  };
   // for leave a group dialog
   const [openLeaveGroup, setOpenLeaveGroup] = React.useState(false);
 
@@ -352,11 +369,12 @@ function GroupDetail(props) {
                     type="email"
                     fullWidth
                     variant="standard"
+                    onChange={handleChangeInvite}
                   />
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleClose2}>Cancel</Button>
-                  <Button onClick={handleClose2}>Confirm</Button>
+                  <Button onClick={handelConfimInvite}>Confirm</Button>
                 </DialogActions>
               </Dialog>
 

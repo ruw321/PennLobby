@@ -619,6 +619,53 @@ async function getTopicByName(topicName) {
   }
 }
 
+// get all Notifications
+async function getAllNotifications() {
+  try {
+    const theUrl = `${url}/api/notification`;
+    const result = await fetch(theUrl, { method: "GET" });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+// send Notifications
+async function sendNotification(msg) {
+  try {
+    const theUrl = `${url}/api/notification`;
+    const data = {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(msg),
+    };
+    const result = await fetch(theUrl, data);
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
+// delete Notifications
+async function deleteNotification(id) {
+  try {
+    const theUrl = `${url}/api/notification/${id}`;
+    const data = {
+      credentials: "include",
+      method: "DELETE",
+    };
+    const result = await fetch(theUrl, data);
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
 module.exports = {
   login,
   signup,
@@ -654,4 +701,7 @@ module.exports = {
   getAllTopics,
   getTopicByID,
   getTopicByName,
+  getAllNotifications,
+  sendNotification,
+  deleteNotification,
 };
