@@ -47,10 +47,8 @@ function Signup({ updateStatus }) {
     const r = await signup(newUser);
     const response = await r.json();
     if (response.username) {
-      sessionStorage.setItem('username', response.username);
       // the following comment makes eslint ignore the error of _id
       /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
-      sessionStorage.setItem('id', response._id);
       setRedirect(true);
     } else {
       setErrorMes(response.error);
@@ -61,7 +59,7 @@ function Signup({ updateStatus }) {
   useEffect(() => {
     if (redirect) {
       // navigate(`/lobby`);
-      updateStatus('lobby');
+      updateStatus('login');
     }
   }, [redirect]);
 
