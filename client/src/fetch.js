@@ -137,7 +137,25 @@ async function updateUserById(id, obj) {
     return e;
   }
 }
-
+// register websocket for message
+async function registerMessage(username) {
+  try {
+    const theUrl = `${url}/api/message/register`;
+    // const data = `to=${receiver}&from=${sender}&message=${content}`;
+    const data = { username };
+    const result = await fetch(theUrl, {
+      method: "POST", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
 // create a new message
 async function postMessage(sender, receiver, content) {
   try {
@@ -591,4 +609,5 @@ module.exports = {
   editComment,
   promoteUser,
   demoteUser,
+  registerMessage,
 };

@@ -16,7 +16,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 // import { useNavigate } from 'react-router-dom';
 // import { joinChat } from './getData';
-import { login } from '../fetch';
+import { login, registerMessage } from '../fetch';
 
 // referenced from https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
 function Copyright() {
@@ -51,12 +51,14 @@ function Login(props) {
         const u = await login(username, password);
         const response = await u.json();
         if (u.ok) {
+          const msgNewUser = await registerMessage(username);
+          sessionStorage.setItem('token', msgNewUser.token);
           sessionStorage.setItem('username', username);
           updateUserName(username);
           sessionStorage.setItem('id', response.id);
-          if (response.token) {
-            sessionStorage.setItem('token', response.token); // store token in session storage
-          }
+          // if (response.token) {
+          //   sessionStorage.setItem('token', response.token); // store token in session storage
+          // }
           setRedirect(true);
         } else if (response.error === "too many failed requests") {
           setBadUser(username);
