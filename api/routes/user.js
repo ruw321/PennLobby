@@ -188,6 +188,7 @@ router.route("/promote/:userToPromoteId").put(async (req, res) => {
         User,
         req.params.userToPromoteId
       );
+
       const g_id = req.body.group_id;
       if (userToPromote.group_ids.includes(req.body.group_id) && user.group_admins.includes(g_id)) {
         const groupAdmins = userToPromote.group_admins;
@@ -224,6 +225,7 @@ router.route("/demote/:userToPromoteId").put(async (req, res) => {
       const gIDs = user.group_admins;
       const gID = req.body.group_id;
       const currG = await Groups.getGroupById(gID);
+      
       if (userToPromote.group_ids.includes(gID) && gIDs.includes(gID) && currG.owner != req.params.userToPromoteId) {
         const gIDs2 = userToPromote.group_admins;
         gIDs2.splice(gIDs2.indexOf(gID), 1);

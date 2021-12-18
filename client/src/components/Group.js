@@ -22,13 +22,26 @@ import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import {
-  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormLabel, List, ListItem, Radio, RadioGroup, TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Divider,
+  FormLabel,
+  List,
+  ListItem,
+  Radio,
+  RadioGroup,
+  TextField,
 } from "@mui/material";
 import { FormControlLabel } from "@material-ui/core";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
-import { createGroup, getAllPublicGroups, logout } from "../fetch";
+import {
+  createGroup, getAllGroups, getAllPublicGroups, logout, 
+} from "../fetch";
 
 function Copyright() {
   return (
@@ -73,6 +86,28 @@ const sortMethod = [
   "Most Active",
 ];
 
+async function sortGroup(method) {
+  let groups = await getAllPublicGroups();
+  if (sortMethod === "Recently Active") {
+    groups = groups.sort(
+      (group1, group2) => group2.last_active - group1.last_active
+    );
+  } else if (sortMethod === "Size: Large-Small") {
+    groups = groups.sort(
+      (group1, group2) => group2.member_ids.length - group1.member_ids.length
+    );
+  } else if (sortMethod === "Size: Small-Large") {
+    groups = groups.sort(
+      (group1, group2) => group1.member_ids.length - group2.member_ids.length
+    );
+  } else if (sortMethod === "Most Active") {
+    groups = groups.sort(
+      (group1, group2) => group2.post_ids.length - group1.post_ids.length
+    );
+  }
+  return groups;
+}
+
 function MyGroup(props) {
   const { updateCurrGroup, updateStatus } = props;
   const [selectTopics, setSelectTopics] = React.useState([]);
@@ -80,14 +115,16 @@ function MyGroup(props) {
   const [groupCards, setGroupCards] = React.useState([]);
   // const navigate = useNavigate();
   const userName = sessionStorage.getItem('username');
-
+  const userID = sessionStorage.getItem('id');
   React.useEffect(async () => {
     if (!userName) {
       console.log("here");
       // navigate('/login');
-      updateStatus('login');
+      updateStatus("login");
     }
-    const groups = await getAllPublicGroups();
+    let groups = await getAllGroups();
+    groups = groups.filter((x) => x.member_ids.includes(userID));
+
     const newGroupCards = groups.map((g) =>
       (
         {
@@ -98,8 +135,11 @@ function MyGroup(props) {
           imageLabel: "Image Text",
           topics: g.topic_ids,
           groupId: g._id,
+          memberIds: g.member_ids,
         }
       ));
+    // groupsToShow
+    // filter
     setGroupCards(newGroupCards);
   }, []);
 
@@ -109,7 +149,7 @@ function MyGroup(props) {
     } = event;
     setSelectTopics(
       // On autofill we get a the stringified value.
-      typeof value === "string" ? value.split(",") : value,
+      typeof value === "string" ? value.split(",") : value
     );
   };
   const handleChangeSortBy = (event) => {
@@ -118,7 +158,7 @@ function MyGroup(props) {
     } = event;
     setSelectSortBy(
       // On autofill we get a the stringified value.
-      typeof value === "string" ? value.split(",") : value,
+      typeof value === "string" ? value.split(",") : value
     );
   };
   const useStyles = makeStyles({
@@ -143,19 +183,19 @@ function MyGroup(props) {
   // };
 
   // for groupName form
-  const [groupName, setGroupName] = React.useState('');
+  const [groupName, setGroupName] = React.useState("");
   const handleChangeGroupName = (event) => {
     setGroupName(event.target.value);
   };
 
   // for groupType form
-  const [groupType, setGroupType] = React.useState('');
+  const [groupType, setGroupType] = React.useState("");
   const handleChangeGroupType = (event) => {
     setGroupType(event.target.value);
   };
 
   // for groupDescription form
-  const [groupDescription, setGroupDescription] = React.useState('');
+  const [groupDescription, setGroupDescription] = React.useState("");
   const handleChangeGroupDescription = (event) => {
     setGroupDescription(event.target.value);
   };
@@ -169,7 +209,7 @@ function MyGroup(props) {
     } = event;
     setSelectedTopic(
       // On autofill we get a the stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(",") : value
     );
   };
 
@@ -186,12 +226,6 @@ function MyGroup(props) {
   };
 
   const handleSubmit = async () => {
-    // createGroup(group);
-
-    // console.log(groupName);
-    console.log(selectedTopic);
-    // console.log(groupType);
-    // console.log(groupDescription);
     const id = sessionStorage.getItem('id');
     const group = {
       owner: id,
@@ -269,11 +303,19 @@ function MyGroup(props) {
                           ))}
                         </Select>
                       </FormControl>
-                      <Button variant="contained" sx={{ m: 1, height: 55, width: 262 }} onClick={handleClickOpen}>Create a New Group</Button>
+                      <Button
+                        variant="contained"
+                        sx={{ m: 1, height: 55, width: 262 }}
+                        onClick={handleClickOpen}
+                      >
+                        Create a New Group
+                      </Button>
 
                       <Dialog open={open} onClose={handleClose}>
                         {/* <Grid container spacing={2}> */}
-                        <DialogTitle>Please provide group information</DialogTitle>
+                        <DialogTitle>
+                          Please provide group information
+                        </DialogTitle>
                         <DialogContent>
                           {/* <Divider /> */}
                           <DialogContentText>
@@ -298,10 +340,26 @@ function MyGroup(props) {
                               row
                               aria-label="Group Type"
                               name="controlled-radio-buttons-group"
-                            // onChange={handleChangeGroupType}
+                              // onChange={handleChangeGroupType}
                             >
-                              <FormControlLabel control={<Radio value="public" onChange={handleChangeGroupType} />} label="Public" />
-                              <FormControlLabel control={<Radio value="private" onChange={handleChangeGroupType} />} label="Private" />
+                              <FormControlLabel
+                                control={
+                                  <Radio
+                                    value="public"
+                                    onChange={handleChangeGroupType}
+                                  />
+                                }
+                                label="Public"
+                              />
+                              <FormControlLabel
+                                control={
+                                  <Radio
+                                    value="private"
+                                    onChange={handleChangeGroupType}
+                                  />
+                                }
+                                label="Private"
+                              />
                             </RadioGroup>
                           </FormControl>
 
@@ -323,7 +381,9 @@ function MyGroup(props) {
                             Please select group topics.
                           </DialogContentText>
                           <FormControl sx={{ m: 1, width: 300 }}>
-                            <InputLabel id="demo-multiple-checkbox-label">Group Topics</InputLabel>
+                            <InputLabel id="demo-multiple-checkbox-label">
+                              Group Topics
+                            </InputLabel>
                             <Select
                               labelId="demo-multiple-checkbox-label"
                               id="demo-multiple-checkbox"
@@ -331,18 +391,19 @@ function MyGroup(props) {
                               value={selectedTopic}
                               onChange={handleChangeSelectedTopic}
                               input={<OutlinedInput label="Tag" />}
-                              renderValue={(selected) => selected.join(', ')}
+                              renderValue={(selected) => selected.join(", ")}
                               MenuProps={MenuProps}
                             >
                               {topics.map((topic) => (
                                 <MenuItem key={topic} value={topic}>
-                                  <Checkbox checked={selectedTopic.indexOf(topic) > -1} />
+                                  <Checkbox
+                                    checked={selectedTopic.indexOf(topic) > -1}
+                                  />
                                   <ListItemText primary={topic} />
                                 </MenuItem>
                               ))}
                             </Select>
                           </FormControl>
-
                         </DialogContent>
 
                         <DialogActions>
@@ -360,25 +421,38 @@ function MyGroup(props) {
                 <Container sx={{ pt: 2 }} maxWidth="lg">
                   <Grid container rowSpacing={3} columnSpacing={0}>
                     {groupCards.map((post) => (
-                      <GroupCard key={post.title} post={post} whetherIn updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />
+                      <GroupCard
+                        key={post.title}
+                        post={post}
+                        whetherIn
+                        updateCurrGroup={updateCurrGroup}
+                        updateStatus={updateStatus}
+                      />
                     ))}
                   </Grid>
                 </Container>
-
               </Grid>
 
               <Grid item key={2} xs={6} md={3}>
-                <Grid container align="center" justify="center" alignItems="center" spacing={2}>
+                <Grid
+                  container
+                  align="center"
+                  justify="center"
+                  alignItems="center"
+                  spacing={2}
+                >
                   {/* Trending Topics */}
                   <TrendingTopics />
                   {/* Group Analysis */}
                   <Grid item xs={12} md={6}>
-                    <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+                    <Typography
+                      sx={{ mt: 4, mb: 2 }}
+                      variant="h6"
+                      component="div"
+                    >
                       Text only
                     </Typography>
-
                   </Grid>
-
                 </Grid>
               </Grid>
             </Grid>
@@ -402,8 +476,8 @@ function MyGroup(props) {
         {/* End footer */}
       </ThemeProvider>
     );
-  } 
-  return (<div />);
+  }
+  return <div />;
 }
 
 export default MyGroup;
