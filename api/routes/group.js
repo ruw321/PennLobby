@@ -78,13 +78,15 @@ router.route("/").post(async (req, res) => {
     for (let i = 0; i < newTopicID.length; i++) {
       top.addGroupIDToTopic(Topic, groupID, newTopicID[i]);
     }
-    // add this group's id to owner.group_ids
+    // add this group's id to owner.group_ids and make owner the admin
     const user = await Users.getUserById(User, req.body.owner);
-    // const group = await Groups.getGroupByName(Group, newGroup.name);
     const userGroupIds = user.group_ids;
     userGroupIds.push(result._id);
+    const adminGroups = user.group_admins;
+    adminGroups.push(result._id);
     await Users.updateUserById(User, req.body.owner, {
       group_ids: userGroupIds,
+      group_admins: adminGroups,
     });
     res.status(201).send(result);
   } catch (err) {
@@ -120,8 +122,9 @@ router.route("/:groupId").delete(async (req, res) => {
     const group = await Groups.getGroupById(Group, req.params.groupId);
     const owner = await Users.getUserById(User, group.owner);
     const curUser = await Users.getUserById(User, req.body.userId);
+    const groupAdmins = curUser.group_admins;
 
-    if (owner == curUser || curUser.admin) {
+    if (owner == curUser || groupAdmins.includes(req.params.groupId)) {
       const topicIds = group.topic_ids;
       for (let i = 0; i < topicIds.length; i++) {
         const topic = await Topics.getTopicById(Topic, topicIds[i]);

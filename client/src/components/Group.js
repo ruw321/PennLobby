@@ -192,8 +192,9 @@ function MyGroup(props) {
     console.log(selectedTopic);
     // console.log(groupType);
     // console.log(groupDescription);
+    const id = sessionStorage.getItem('id');
     const group = {
-      owner: "61a9b32b2762ea6563fcaf57",
+      owner: id,
       name: groupName,
       description: groupDescription,
       type: groupType,
