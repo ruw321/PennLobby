@@ -118,6 +118,12 @@ async function sortGroup(method) {
   return groups;
 }
 
+// async function filterByTopic(topicName) {
+//   const topic = await getTopicByName(topicName);
+  
+//   // getTopicByID(topicID) {
+// }
+
 function Lobby(props) {
   const { updateCurrGroup, updateStatus } = props;
   const [selectTopics, setSelectTopics] = React.useState([]);
