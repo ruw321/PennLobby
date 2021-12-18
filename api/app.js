@@ -94,8 +94,6 @@ app.get('/api/s3Url', async (req, res) => {
   res.send({ url })
 })
 
-// TODO: more routes
-
 // '*': match any other url if all previous urls do not match
 app.all('*', (req, res, next) => {
   next(new ExpressError('Page Not Found', 404));
