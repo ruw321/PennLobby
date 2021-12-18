@@ -142,7 +142,7 @@ function Lobby() {
           topics: g.topic_ids,
           groupId: g._id,
         }
-      ));
+      )); 
     setGroupCards(newGroupCards);
   }, []);
 
