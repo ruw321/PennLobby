@@ -27,7 +27,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { useNavigate } from 'react-router-dom';
 import TrendingTopics from "./TrendingTopics";
 import GroupCard from "./GroupCard";
-import { getAllPublicGroups, logout } from '../fetch';
+import { getAllPublicGroups, getTopicByName, logout } from '../fetch';
 import "./GroupDetail.css";
 
 function Copyright() {
@@ -118,11 +118,14 @@ async function sortGroup(method) {
   return groups;
 }
 
-// async function filterByTopic(topicName) {
-//   const topic = await getTopicByName(topicName);
-  
-//   // getTopicByID(topicID) {
-// }
+async function filterByTopic(topicList) {
+  let groups = await getAllPublicGroups();
+  for (let i = 0; i < topicList.length; i++) {
+    const topic = await getTopicByName(topicList[i]);
+    groups = groups.filter((group) => group.topic_ids.includes(topic._id));
+  }
+  return groups;
+}
 
 function Lobby(props) {
   const { updateCurrGroup, updateStatus } = props;
@@ -187,17 +190,26 @@ function Lobby(props) {
     setGroupCards(groupToShow);
   }, []);
 
-  const handleChangeTopics = (event) => {
+  const handleChangeTopics = async (event) => {
     const {
-      target: { value },
+      target: { value }, // value is an array of topics
     } = event;
+    const groups = await filterByTopic(value);
+    const newGroupCards = groups.map((g) => ({
+      title: g.name,
+      size: g.member_ids.length,
+      description: g.description,
+      image: "https://source.unsplash.com/random",
+      imageLabel: "Image Text",
+      topics: g.topic_ids,
+      groupId: g._id,
+    }));
+    setGroupCards(newGroupCards);
     setSelectTopics(
       // On autofill we get a the stringified value.
       typeof value === "string" ? value.split(",") : value
     );
   };
-
-  // async function sortGroup(method) {
 
   const handleChangeSortBy = async (event) => {
     // value: sortMethod

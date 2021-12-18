@@ -30,5 +30,7 @@ module.exports = {
     "operator-linebreak": "off",
     "no-empty-function": "off",
     "comma-dangle": "off",
+    "no-await-in-loop": "off",
+    "no-plusplus": "off",
   },
 };

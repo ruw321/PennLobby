@@ -139,7 +139,7 @@ export default function PostCard(props) {
   };
 
   const handleConfirmDeletePost = async () => {
-    console.log(userID, postID, groupID);
+    // console.log(userID, postID, groupID);
     const res = await deletePost(userID, postID, groupID);
     let tempPosts = [];
     if (res.ok) {
@@ -164,7 +164,7 @@ export default function PostCard(props) {
 
   const handleConfirmHidePost = () => {
     hide.push(props.post._id);
-    console.log(props.post._id);
+    // console.log(props.post._id);
     updateHide(hide);
     setOpenHidePost(false);
   };
@@ -183,7 +183,7 @@ export default function PostCard(props) {
   const handleConfirmFlagPost = async () => {
     const res = await flagPostForDeletion(userID, postID);
     const print = await res.json();
-    console.log(print);
+    // console.log(print);
     setOpenFlagPost(false);
   };
 
@@ -212,7 +212,7 @@ export default function PostCard(props) {
   const handleConfirmDeleteComment = async (commentID) => {
     const res = await deleteComment(userID, commentID);
     const print = await res.json();
-    console.log(print);
+    // console.log(print);
     setOpenDeleteComment(false);
   };
 
@@ -233,10 +233,10 @@ export default function PostCard(props) {
   };
 
   const handleConfirmEditComment = async (commentID) => {
-    console.log(editedComment);
+    // console.log(editedComment);
     const res = await editComment(editedComment, commentID, userID);
     const print = await res.json();
-    console.log(print);
+    // console.log(print);
     setOpenEditComment(false);
   };
 
@@ -249,7 +249,7 @@ export default function PostCard(props) {
   const handleSendNewComment = async () => {
     const res = await addComment(newComment, userID, postID);
     const print = await res.json();
-    console.log(print);
+    // console.log(print);
   };
 
   return (

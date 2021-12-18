@@ -39,7 +39,6 @@ function App() {
   const updateCurrGroup = (g) => { setCurrGroup(g); };
   useEffect(() => {
     authenticate();
-    console.log('authenticate!!!');
   }, [userName]);
   useEffect(() => {
     getAllUsers().then((response) => {
@@ -48,7 +47,6 @@ function App() {
     });
     setRefresh(!refresh);
     const cleanup = () => { sessionStorage.getItem('token'); };
-    console.log('texts', texts);
     // we need to cleanup when leaving the tab
     window.addEventListener('beforeunload', cleanup);
     

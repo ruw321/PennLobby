@@ -59,7 +59,6 @@ function GroupCard(props) {
     const userID = sessionStorage.getItem("id");
     const res = await joinGroup(userID, post.groupId);
     const print = await res.json();
-    console.log(print);
     setOpen(false);
   };
 
