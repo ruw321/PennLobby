@@ -35,7 +35,6 @@ export default function GroupMembers(props) {
     let allUsers = await getAllUsers();
     console.log("all users = ", allUsers);
 
-    const userInGroup = [];
     allUsers = allUsers.filter((x) => x.group_ids.includes(groupID));
     console.log("all users filtered = ", allUsers, groupID);
     const users = allUsers.map((g) =>
