@@ -60,7 +60,6 @@ function GroupCard(props) {
 
   const handleQuitGroup = async () => {
     const userID = sessionStorage.getItem("id");
-    console.log(userID);
     console.log(post.groupId);
     const res = await quitGroup(userID, post.groupId);
     const print = await res.json();
@@ -144,6 +143,7 @@ function GroupCard(props) {
           >
             {whetherIn ? buttonsIn : buttonsNotIn}
           </ButtonGroup>
+  
           {/* confirm join group */}
           <Dialog
             open={open}

@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -94,13 +96,36 @@ const trendingTopicsWeekly = [
   "Music",
   "Football",
 ];
+async function sortGroup(method) {
+  let groups = await getAllPublicGroups();
+  if (method === "Recently Active") {
+    groups = groups.sort(
+      (group1, group2) => group2.last_active - group1.last_active
+    );
+  } else if (method === "Size: Large-Small") {
+    groups = groups.sort(
+      (group1, group2) => group2.member_ids.length - group1.member_ids.length
+    );
+  } else if (method === "Size: Small-Large") {
+    groups = groups.sort(
+      (group1, group2) => group1.member_ids.length - group2.member_ids.length
+    );
+  } else if (method === "Most Active") {
+    groups = groups.sort(
+      (group1, group2) => group2.post_ids.length - group1.post_ids.length
+    );
+  }
+  return groups;
+}
 
-function Lobby() {
+function Lobby(props) {
+  const { updateCurrGroup, updateStatus } = props;
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
   const [loggedIn, setLoggedin] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [groupCards, setGroupCards] = React.useState([]);
+  const userID = sessionStorage.getItem('id');
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -118,19 +143,19 @@ function Lobby() {
 
   const handleLogout = async () => {
     handleClose();
-    sessionStorage.removeItem('username');
+    sessionStorage.removeItem("username");
     setLoggedin(false);
     await logout();
   };
 
-  const userName = sessionStorage.getItem('username');
+  const userName = sessionStorage.getItem("username");
 
   React.useEffect(async () => {
     if (userName) {
       setLoggedin(true);
     }
     const groups = await getAllPublicGroups();
-    console.log(groups);
+    const groupToShow = [];
     const newGroupCards = groups.map((g) =>
       (
         {
@@ -141,9 +166,19 @@ function Lobby() {
           imageLabel: "Image Text",
           topics: g.topic_ids,
           groupId: g._id,
+          memberIds: g.member_ids,
+          whetherIn: false,
         }
       ));
-    setGroupCards(newGroupCards);
+    for (const eachGroup of newGroupCards) {
+      if (eachGroup.memberIds.includes(userID)) {
+        eachGroup.whetherIn = true;
+      } else if (eachGroup.memberIds.includes(userID)) {
+        eachGroup.whetherIn = false;
+      }
+      groupToShow.push(eachGroup);
+    }
+    setGroupCards(groupToShow);
   }, []);
 
   const handleChangeTopics = (event) => {
@@ -152,17 +187,31 @@ function Lobby() {
     } = event;
     setSelectTopics(
       // On autofill we get a the stringified value.
-      typeof value === "string" ? value.split(",") : value,
+      typeof value === "string" ? value.split(",") : value
     );
   };
 
-  const handleChangeSortBy = (event) => {
+  // async function sortGroup(method) {
+
+  const handleChangeSortBy = async (event) => {
+    // value: sortMethod
     const {
       target: { value },
     } = event;
+    const groups = await sortGroup(value);
+    const newGroupCards = groups.map((g) => ({
+      title: g.name,
+      size: g.member_ids.length,
+      description: g.description,
+      image: "https://source.unsplash.com/random",
+      imageLabel: "Image Text",
+      topics: g.topic_ids,
+      groupId: g._id,
+    }));
+    setGroupCards(newGroupCards);
     setSelectSortBy(
       // On autofill we get a the stringified value.
-      typeof value === "string" ? value.split(",") : value,
+      typeof value === "string" ? value.split(",") : value
     );
   };
 
@@ -235,7 +284,8 @@ function Lobby() {
               <Container sx={{ pt: 2 }} maxWidth="lg">
                 <Grid container rowSpacing={3} columnSpacing={0}>
                   {groupCards.map((post) => (
-                    <GroupCard key={post.title} post={post} whetherIn={false} groupId={post._id} />
+                    // <GroupCard key={post.title} post={post} whetherIn={false} groupId={post._id} />
+                    <GroupCard key={post.title} post={post} whetherIn={post.whetherIn} updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />
                   ))}
                 </Grid>
               </Container>

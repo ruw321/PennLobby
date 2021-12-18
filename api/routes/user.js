@@ -31,6 +31,7 @@ const schema = {
     blocking: { type: "array" },
     blocked_by: { type: "array" },
     avatar_url: { type: "string" },
+    notification_ids: { type: "array" },
   },
   required: ["username", "email", "firstName", "lastName", "password"],
 };
@@ -187,11 +188,15 @@ router.route("/promote/:userToPromoteId").put(async (req, res) => {
         User,
         req.params.userToPromoteId
       );
-      if (userToPromote.group_ids.includes(req.body.group_id) && user.admin) {
+
+      const g_id = req.body.group_id;
+      if (userToPromote.group_ids.includes(req.body.group_id) && user.group_admins.includes(g_id)) {
+        const groupAdmins = userToPromote.group_admins;
+        groupAdmins.push(g_id);
         const response = await Users.updateUserById(
           User,
           req.params.userToPromoteId,
-          { admin: true }
+          { group_admins: groupAdmins }
         );
         res.status(200).send(response);
       } else {
@@ -217,11 +222,17 @@ router.route("/demote/:userToPromoteId").put(async (req, res) => {
         User,
         req.params.userToPromoteId
       );
-      if (userToPromote.group_ids.includes(req.body.group_id) && user.admin) {
+      const gIDs = user.group_admins;
+      const gID = req.body.group_id;
+      const currG = await Groups.getGroupById(gID);
+      
+      if (userToPromote.group_ids.includes(gID) && gIDs.includes(gID) && currG.owner != req.params.userToPromoteId) {
+        const gIDs2 = userToPromote.group_admins;
+        gIDs2.splice(gIDs2.indexOf(gID), 1);
         const response = await Users.updateUserById(
           User,
           req.params.userToPromoteId,
-          { admin: false }
+          { group_admins: gIDs2 }
         );
         res.status(200).send(response);
       } else {
