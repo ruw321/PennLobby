@@ -30,7 +30,7 @@ import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
 import GroupMembers from "./GroupMembers";
 import {
-  addPost, getAllPostsByGroupID, sendS3, getS3Url, quitGroup, getAllPosts, 
+  addPost, getAllPostsByGroupID, sendS3, getS3Url, quitGroup, getAllPosts, getGroupByID, 
 } from "../fetch";
 
 function Copyright() {
@@ -63,9 +63,17 @@ function GroupDetail(props) {
   const { currGroup } = props;
 
   const [postCards, setPostCards] = React.useState([]);
+  const [group, setGroup] = React.useState('');
+
+  // const [numMembers, setNumMembers] = React.useState(0);
+  // const [numPosts, setNumPosts] = React.useState(0);  
+  // const [numTopics, setNumTopics] = React.useState(0);  
 
   React.useEffect(async () => {
     const postCards = await getAllPosts();
+    const curGroupObj = await getGroupByID(currGroup);
+    setGroup(curGroupObj);
+    // console.log("group = ", group);
     const groupPosts = [];
     for (const post of postCards) {
       // console.log(post);
@@ -73,29 +81,9 @@ function GroupDetail(props) {
         groupPosts.push(post);
       }
     }
-    console.log(groupPosts);
+    // console.log(groupPosts);
     setPostCards(groupPosts);
   }, []);
-
-  // To DO!!
-  // const [postCards, setPostCards] = React.useState([]);
-  // React.useEffect(async () => {
-  //   // if (!userName) {
-  //   //   updateStatus('login');
-  //   // }
-  //   const posts = await getAllPostsByGroupID(currGroup);
-  //   const postCards = posts.map((g) =>
-  //     (
-  //       {
-  //         title: g.title,
-  //         commentsIDs: g.comment_ids,
-  //         content: g.content,
-  //         groupID: g.group_id,
-  //         authorID: g.author_id,
-  //       }
-  //     ));
-  //   setPostCards(postCards);
-  // }, []);
 
   // event handler for file selection
   const updateFileInput = async (evt, type) => {
@@ -191,238 +179,247 @@ function GroupDetail(props) {
   const Input = styled('input')({
     display: 'none',
   });
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <main>
-        {/* Hero unit */}
-        {/* Filter and Sort options */}
 
-        <Container maxWidth="lg" justify="flex-end">
+  if (group) {
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <main>
+          {/* Hero unit */}
+          {/* Filter and Sort options */}
 
-          <Box sx={{
-            pt: 2, pl: 2, pb: 2, display: 'flex', justifyContent: 'space-between', margin: '10px', borderBottom: 1, borderColor: 'grey.500',
-          }}
-          >
-            <Typography variant="h4">
-              {`GroupID = ${currGroup}`}
-              <Typography variant="h6">
-                Group description Group description Group description Group description
-              </Typography>
-            </Typography>
-            <Button variant="contained" sx={{ m: 1, height: 50, width: 262 }} onClick={handleClickOpen2}>Invite Someone</Button>
-            <Button variant="contained" sx={{ m: 1, height: 50, width: 262 }} onClick={handleClickOpenLeaveGroup}>Leave Group</Button>
-            <Button variant="contained" sx={{ m: 1, height: 50, width: 262 }} onClick={handleClickOpen}>New Post</Button>
+          <Container maxWidth="lg" justify="flex-end">
 
-            {/* Create a New Post Dialog */}
-            <Dialog open={open} onClose={handleClose}>
-              <DialogTitle>Create a new post</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Title
-                </DialogContentText>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="name"
-                  multiline
-                  label="title (max 30 words)"
-                  type="email"
-                  fullWidth
-                  variant="standard"
-                  sx={{ pb: 3 }}
-                  onChange={handleChangeTitleText}
-                />
-                <DialogContentText>
-                  Please type the new post content here. Your group is waiting for your input!
-                </DialogContentText>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="name"
-                  multiline
-                  rows={8}
-                  label="new post (max 300 words)"
-                  type="email"
-                  fullWidth
-                  variant="standard"
-                  sx={{ pb: 3 }}
-                  onChange={handleChangePostText}
-                />
-
-                {/* 3 Media Upload Buttons */}
-                <DialogContentText>
-                  Please upload picture, video, or audio media.
-                </DialogContentText>
-                <Grid
-                  container
-                  style={{
-                    bottom: '0', padding: '10px', backgroundColor: 'white',
-                  }}
-                  justifyContent="space-evenly"
-                >
-                  <Grid item xs={0.5}>
-                    <Fab color="primary" aria-label="add" size="small">
-                      <label htmlFor="icon-button-image" style={{ lineHeight: "0px" }}>
-                        <Input
-                          accept="image/*"
-                          id="icon-button-image"
-                          type="file"
-                          onChange={(e) => updateFileInput(e, 'image')}
-                        />
-                        <InsertPhotoIcon />
-                      </label>
-                    </Fab>
-                  </Grid>
-                  <Grid item xs={0.5}>
-                    <Fab color="primary" aria-label="add" size="small">
-                      <label htmlFor="icon-button-video" style={{ lineHeight: "0px" }}>
-                        <Input
-                          accept="video/mp4"
-                          id="icon-button-video"
-                          type="file"
-                          onChange={(e) => updateFileInput(e, 'video')}
-                        />
-                        <VideoCameraBackIcon />
-                      </label>
-                    </Fab>
-                  </Grid>
-                  <Grid item xs={0.5}>
-                    <Fab color="primary" aria-label="add" size="small">
-                      <label htmlFor="icon-button-audio" style={{ lineHeight: "0px" }}>
-                        <Input
-                          accept="audio/*"
-                          id="icon-button-audio"
-                          type="file"
-                          onChange={(e) => updateFileInput(e, 'audio')}
-                        />
-                        <KeyboardVoiceIcon />
-                      </label>
-                    </Fab>
-                  </Grid>
-                </Grid>
-              </DialogContent>
-
-              <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleSubmitNewPost}>Send</Button>
-              </DialogActions>
-            </Dialog>
-
-            {/* Invite Someone to Group Dialog */}
-            <Dialog open={open2} onClose={handleClose2}>
-              <DialogTitle>Invite Someone to Join the Group</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Please enter the username of the person you want to invite.
-                </DialogContentText>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="name"
-                  rows={1}
-                  label="username"
-                  type="email"
-                  fullWidth
-                  variant="standard"
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose2}>Cancel</Button>
-                <Button onClick={handleClose2}>Confirm</Button>
-              </DialogActions>
-            </Dialog>
-
-            {/* Leave Group Dialog */}
-            <Dialog
-              open={openLeaveGroup}
-              onClose={handleCloseLeaveGroup}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
+            <Box sx={{
+              pt: 2, pl: 2, pb: 2, display: 'flex', justifyContent: 'space-between', margin: '10px', borderBottom: 1, borderColor: 'grey.500',
+            }}
             >
-              <DialogTitle id="alert-dialog-title">
-                Confirm to leave this group?
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  By confirming, you will leave this group and will not be able to
-                  view the posts within.
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleCloseLeaveGroup}>Cancel</Button>
-                <Button onClick={handleConfirmLeaveGroup} autoFocus>
-                  Confirm
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </Box>
-
-          <Grid container spacing={2}>
-            <Grid item key={1} xs={6} md={9}>
-              <Container sx={{ pt: 2 }} maxWidth="lg">
-                <Grid container rowSpacing={3} columnSpacing={0}>
-                  {postCards.map((post) => (
-                    <PostCard key={post.title} post={post} whetherIn />
-                  ))}
-                </Grid>
-              </Container>
-            </Grid>
-            <Grid
-              item
-              xs={3}
-              md={3}
-              direction="column"
-              alignItems="center"
-              justify="center"
-            >
-              {/* Group Analysis */}
-              <Card elevetion={1} sx={{ mt: 2, mb: 2 }}>
-                <Typography
-                  centered
-                  variant="h6"
-                  sx={{
-                    padding: 2, color: 'white', bgcolor: 'primary.main', textAlign: "center",
-                  }}
-                >
-                  Group Analytics
+              <Typography variant="h4">
+                {group.name}
+                <Typography variant="h6">
+                  {group.description}
                 </Typography>
-                <CardHeader subheader="Number of members:" />
+              </Typography>
+              <Button variant="contained" sx={{ m: 1, height: 50, width: 262 }} onClick={handleClickOpen2}>Invite Someone</Button>
+              <Button variant="contained" sx={{ m: 1, height: 50, width: 262 }} onClick={handleClickOpenLeaveGroup}>Leave Group</Button>
+              <Button variant="contained" sx={{ m: 1, height: 50, width: 262 }} onClick={handleClickOpen}>New Post</Button>
+
+              {/* Create a New Post Dialog */}
+              <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Create a new post</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Title
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    multiline
+                    label="title (max 30 words)"
+                    type="email"
+                    fullWidth
+                    variant="standard"
+                    sx={{ pb: 3 }}
+                    onChange={handleChangeTitleText}
+                  />
+                  <DialogContentText>
+                    Please type the new post content here. Your group is waiting for your input!
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    multiline
+                    rows={8}
+                    label="new post (max 300 words)"
+                    type="email"
+                    fullWidth
+                    variant="standard"
+                    sx={{ pb: 3 }}
+                    onChange={handleChangePostText}
+                  />
+
+                  {/* 3 Media Upload Buttons */}
+                  <DialogContentText>
+                    Please upload picture, video, or audio media.
+                  </DialogContentText>
+                  <Grid
+                    container
+                    style={{
+                      bottom: '0', padding: '10px', backgroundColor: 'white',
+                    }}
+                    justifyContent="space-evenly"
+                  >
+                    <Grid item xs={0.5}>
+                      <Fab color="primary" aria-label="add" size="small">
+                        <label htmlFor="icon-button-image" style={{ lineHeight: "0px" }}>
+                          <Input
+                            accept="image/*"
+                            id="icon-button-image"
+                            type="file"
+                            onChange={(e) => updateFileInput(e, 'image')}
+                          />
+                          <InsertPhotoIcon />
+                        </label>
+                      </Fab>
+                    </Grid>
+                    <Grid item xs={0.5}>
+                      <Fab color="primary" aria-label="add" size="small">
+                        <label htmlFor="icon-button-video" style={{ lineHeight: "0px" }}>
+                          <Input
+                            accept="video/mp4"
+                            id="icon-button-video"
+                            type="file"
+                            onChange={(e) => updateFileInput(e, 'video')}
+                          />
+                          <VideoCameraBackIcon />
+                        </label>
+                      </Fab>
+                    </Grid>
+                    <Grid item xs={0.5}>
+                      <Fab color="primary" aria-label="add" size="small">
+                        <label htmlFor="icon-button-audio" style={{ lineHeight: "0px" }}>
+                          <Input
+                            accept="audio/*"
+                            id="icon-button-audio"
+                            type="file"
+                            onChange={(e) => updateFileInput(e, 'audio')}
+                          />
+                          <KeyboardVoiceIcon />
+                        </label>
+                      </Fab>
+                    </Grid>
+                  </Grid>
+                </DialogContent>
+
+                <DialogActions>
+                  <Button onClick={handleClose}>Cancel</Button>
+                  <Button onClick={handleSubmitNewPost}>Send</Button>
+                </DialogActions>
+              </Dialog>
+
+              {/* Invite Someone to Group Dialog */}
+              <Dialog open={open2} onClose={handleClose2}>
+                <DialogTitle>Invite Someone to Join the Group</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Please enter the username of the person you want to invite.
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    rows={1}
+                    label="username"
+                    type="email"
+                    fullWidth
+                    variant="standard"
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose2}>Cancel</Button>
+                  <Button onClick={handleClose2}>Confirm</Button>
+                </DialogActions>
+              </Dialog>
+
+              {/* Leave Group Dialog */}
+              <Dialog
+                open={openLeaveGroup}
+                onClose={handleCloseLeaveGroup}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  Confirm to leave this group?
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    By confirming, you will leave this group and will not be able to
+                    view the posts within.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseLeaveGroup}>Cancel</Button>
+                  <Button onClick={handleConfirmLeaveGroup} autoFocus>
+                    Confirm
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </Box>
+
+            <Grid container spacing={2}>
+              <Grid item key={1} xs={6} md={9}>
+                <Container sx={{ pt: 2 }} maxWidth="lg">
+                  <Grid container rowSpacing={3} columnSpacing={0}>
+                    {postCards.map((post) => (
+                      <PostCard key={post.title} post={post} whetherIn />
+                    ))}
+                  </Grid>
+                </Container>
+              </Grid>
+              <Grid
+                item
+                xs={3}
+                md={3}
+                direction="column"
+                alignItems="center"
+                justify="center"
+              >
+                {/* Group Analysis */}
+                <Card elevetion={1} sx={{ mt: 2, mb: 2 }}>
+                  <Typography
+                    centered
+                    variant="h6"
+                    sx={{
+                      padding: 2, color: 'white', bgcolor: 'primary.main', textAlign: "center",
+                    }}
+                  >
+                    Group Analytics
+                  </Typography>
+
+                  <CardHeader subheader={`Number of members: ${group.member_ids.length}`} />
+                  <CardHeader subheader={`Number of posts: ${group.post_ids.length}`} />
+                  <CardHeader subheader={`Last active: ${group.last_active}`} />
+                  <CardHeader subheader={`Created at: ${group.created_at}`} />
+
+                  {/* <CardHeader subheader="Number of members:" />
                 <CardHeader subheader="Number of posts:" />
                 <CardHeader subheader="Number of posts deleted:" />
                 <CardHeader subheader="Number of post flagged:" />
-                <CardHeader subheader="Number of post hidden:" />
-              </Card>
+                <CardHeader subheader="Number of post hidden:" /> */}
+                </Card>
 
-              <GroupMembers groupID={currGroup} />
-              {/* {groupMembers.map((topic, index) => (
+                <GroupMembers groupID={currGroup} />
+                {/* {groupMembers.map((topic, index) => (
                 <ListItem key={topic}>
                   {`${(index + 1)}.  ${topic}`}
                 </ListItem>
               ))} */}
 
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
-      </main>
-      {/* Footer */}
-      <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="p"
-        >
-          Something here to give the footer a purpose!
-        </Typography>
-        <Copyright />
-      </Box>
-      {/* End footer */}
-    </ThemeProvider>
-  );
-}
+          </Container>
+        </main>
+        {/* Footer */}
+        <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
+          <Typography variant="h6" align="center" gutterBottom>
+            Footer
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
+            color="text.secondary"
+            component="p"
+          >
+            Something here to give the footer a purpose!
+          </Typography>
+          <Copyright />
+        </Box>
+        {/* End footer */}
+      </ThemeProvider>
+    );
+  } return (<div />); 
+} 
 
 export default GroupDetail;

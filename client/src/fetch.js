@@ -204,6 +204,18 @@ async function sendS3(theUrl, file) {
   }
 }
 
+// get a group by ID
+async function getGroupByID(groupID) {
+  try {
+    const theUrl = `${url}/api/group/${groupID}`;
+    const result = await fetch(theUrl, { method: "GET" });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
 // get all groups
 async function getAllGroups() {
   try {
@@ -593,6 +605,7 @@ module.exports = {
   getS3Url,
   sendS3,
   createGroup,
+  getGroupByID,
   joinGroup,
   userChangePassword,
   deactivateAccount,
