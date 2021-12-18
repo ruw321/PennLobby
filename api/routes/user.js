@@ -188,12 +188,15 @@ router.route("/promote/:userToPromoteId").put(async (req, res) => {
         User,
         req.params.userToPromoteId
       );
-      // if (userToPromote.group_ids.includes(req.body.group_id) && user.admin) {
-      if (true) {
+
+      const g_id = req.body.group_id;
+      if (userToPromote.group_ids.includes(req.body.group_id) && user.group_admins.includes(g_id)) {
+        const groupAdmins = userToPromote.group_admins;
+        groupAdmins.push(g_id);
         const response = await Users.updateUserById(
           User,
           req.params.userToPromoteId,
-          { admin: true }
+          { group_admins: groupAdmins }
         );
         res.status(200).send(response);
       } else {
@@ -211,20 +214,24 @@ router.route("/promote/:userToPromoteId").put(async (req, res) => {
 });
 
 // a group admin demotes another group member from admin to member
-router.route("/demote/:userToPromoteId").put(async (req, res) => {
+router.route("/demote/:userToDemote").put(async (req, res) => {
   if (req.isAuthenticated) {
     try {
       const user = await Users.getUserById(User, req.body.user_id);
-      const userToPromote = await Users.getUserById(
+      const UserToDemote = await Users.getUserById(
         User,
-        req.params.userToPromoteId
+        req.params.userToDemote
       );
-      if (true) {
-        // if (userToPromote.group_ids.includes(req.body.group_id) && user.admin) {
+      const gIDs = user.group_admins;
+      const gID = req.body.group_id;
+      const currG = await Groups.getGroupById(Group, gID);
+      if (UserToDemote.group_ids.includes(gID) && gIDs.includes(gID) && currG.owner != req.params.userToDemote) {
+        const gIDs2 = UserToDemote.group_admins;
+        gIDs2.splice(gIDs2.indexOf(gID), 1);
         const response = await Users.updateUserById(
           User,
-          req.params.userToPromoteId,
-          { admin: false }
+          req.params.userToDemote,
+          { group_admins: gIDs2 }
         );
         res.status(200).send(response);
       } else {

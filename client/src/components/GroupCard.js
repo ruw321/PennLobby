@@ -29,6 +29,7 @@ function GroupCard(props) {
   const {
     post, whetherIn, groupId, updateCurrGroup, updateStatus,
   } = props;
+<<<<<<< HEAD
 
   const [tags, setTags] = React.useState([]);
 
@@ -44,6 +45,8 @@ function GroupCard(props) {
     setTags(allTopicTags);
   }, []);
 
+=======
+>>>>>>> 96c8cde894eb6bd6f641dc95520b43e13f4361cc
   // confirm join group button
   const [open, setOpen] = React.useState(false);
 

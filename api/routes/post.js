@@ -106,7 +106,7 @@ router.route("/:postId").delete(async (req, res) => {
     const post = await Posts.getPostById(Post, req.params.postId);
     const group = await Groups.getGroupById(User, req.body.groupId);
     const user = await Users.getUserById(User, req.body.userId);
-    if (req.body.userId == post.author_id || user.admin) {
+    if (req.body.userId == post.author_id || user.group_admins.includes(eq.body.groupId)) {
       await Posts.deletePostById(Post, req.params.postId);
 
       const groupPostIds = group.post_ids.filter(
