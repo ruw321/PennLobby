@@ -133,7 +133,7 @@ router.route("/:id").put(async (req, res) => {
     try {
       const obj = req.body;
       const { _id, ...rest } = obj;
-      const user = await Users.updateUserById(User, req.body._id, rest);
+      const user = await Users.updateUserById(User, req.params.id, rest);
       res.status(200).send(user);
     } catch (error) {
       res.status(400).json({ error: error.message });

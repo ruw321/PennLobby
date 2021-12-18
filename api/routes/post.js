@@ -87,6 +87,19 @@ router.route("/:id").put(async (req, res) => {
   }
 });
 
+// an admin user marks a post for deletion
+router.route("/flag/:postId").put(async (req, res) => {
+  try {
+    const userId = req.body.user_id;
+    const post = await Posts.updatePostById(Post, req.params.postId, {
+      flag_for_deletion: true,
+    });
+    res.status(200).send(post);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 // delete a post by post id
 router.route("/:postId").delete(async (req, res) => {
   try {

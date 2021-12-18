@@ -16,6 +16,7 @@ const topicRouter = require("./routes/topic");
 const messageRouter = require("./routes/message");
 const joinRouter = require("./routes/join");
 const quitRouter = require("./routes/quit");
+const notificationRouter = require("./routes/notification");
 const ExpressError = require("./utils/ExpressError");
 const session = require('express-session');  // session middleware
 // const bodyParser = require('body-parser'); // parser middleware
@@ -87,6 +88,7 @@ app.use("/api/topic", topicRouter);
 app.use("/api/message", messageRouter);
 app.use('/api/join', joinRouter);
 app.use('/api/quit', quitRouter);
+app.use("/api/notification", notificationRouter);
 app.get('/api/s3Url', async (req, res) => {
   const url = await sThree.generator()
   res.send({ url })
