@@ -226,8 +226,9 @@ function MyGroup(props) {
   };
 
   const handleSubmit = async () => {
+    const id = sessionStorage.getItem('id');
     const group = {
-      owner: "61a9b32b2762ea6563fcaf57",
+      owner: id,
       name: groupName,
       description: groupDescription,
       type: groupType,
