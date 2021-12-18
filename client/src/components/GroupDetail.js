@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/media-has-caption */
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
@@ -58,6 +60,35 @@ const postCards = [
   },
 ];
 
+function PostMediaInput(props) {
+  const { msg } = props;
+  if (msg.indexOf('(link-image)http') === 0) {
+    return (
+      <img src={msg.split('(link-image)')[1]} style={{ width: "100%" }} />
+    );
+  }
+  if (msg.indexOf('(link-video)http') === 0) {
+    return (
+      <video controls style={{ width: "100%" }}>
+        <source
+          src={msg.split('(link-video)')[1]}
+          type="video/mp4"
+        />
+        Sorry, your browser does not support embedded videos.
+      </video>
+    );
+  }
+  // if (msg.indexOf('(link-audio)http') === 0) {
+  return (
+    <audio
+      controls
+      style={{ width: "100%" }}
+      src={msg.split('(link-audio)')[1]}
+    >
+      Your browser does not support the audio element.
+    </audio>
+  );
+}
 function GroupDetail(props) {
   // currGroup is the group ID!!
   const { currGroup } = props;
@@ -85,15 +116,6 @@ function GroupDetail(props) {
     setPostCards(groupPosts);
   }, []);
 
-  // event handler for file selection
-  const updateFileInput = async (evt, type) => {
-    const files = [...evt.target.files];
-    const { url } = await getS3Url();
-    await sendS3(url, files[0]);
-    const imageUrl = url.split('?')[0];
-    // sendMsg(`(link-${type})${imageUrl}`);
-  };
-
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
@@ -111,10 +133,20 @@ function GroupDetail(props) {
   const [open, setOpen] = React.useState(false);
   const [titleText, setTitleText] = React.useState('');
   const [postText, setPostText] = React.useState('');
+  const [postMediaLink, setPostMediaLink] = React.useState(null);
   const userID = sessionStorage.getItem('id');
   // To Do: how to get groupID?
   // const groupID = sessionStorage.getItem('id');
-
+  // event handler for file selection
+  
+  const updateFileInput = async (evt, type) => {
+    const files = [...evt.target.files];
+    const { url } = await getS3Url();
+    await sendS3(url, files[0]);
+    const imageUrl = url.split('?')[0];
+    setPostMediaLink(`(link-${type})${imageUrl}`);
+  };
+  
   const handleChangeTitleText = (event) => {
     setTitleText(event.target.value);
   };
@@ -129,12 +161,13 @@ function GroupDetail(props) {
 
   const handleClose = () => {
     setOpen(false);
+    setPostMediaLink(null);
   };
 
   const handleSubmitNewPost = async () => {
     const input = {
       title: titleText,
-      content: postText,
+      content: postMediaLink || postText,
       author_id: userID,
       group_id: currGroup,
     };
@@ -143,6 +176,7 @@ function GroupDetail(props) {
     const print = await res.json();
     console.log(print);
     setOpen(false);
+    setPostMediaLink(null);
   };
 
   // for invite someone dialog
@@ -223,9 +257,11 @@ function GroupDetail(props) {
                     sx={{ pb: 3 }}
                     onChange={handleChangeTitleText}
                   />
+                  {!postMediaLink && 
                   <DialogContentText>
                     Please type the new post content here. Your group is waiting for your input!
-                  </DialogContentText>
+                  </DialogContentText>}
+                  {!postMediaLink && 
                   <TextField
                     autoFocus
                     margin="dense"
@@ -238,12 +274,13 @@ function GroupDetail(props) {
                     variant="standard"
                     sx={{ pb: 3 }}
                     onChange={handleChangePostText}
-                  />
-
+                  />}
                   {/* 3 Media Upload Buttons */}
                   <DialogContentText>
-                    Please upload picture, video, or audio media.
+                    Or upload picture, video, or audio media.
                   </DialogContentText>
+                  {postMediaLink && 
+                  <PostMediaInput msg={postMediaLink} />}
                   <Grid
                     container
                     style={{
