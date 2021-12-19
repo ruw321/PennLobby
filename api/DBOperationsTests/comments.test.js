@@ -19,8 +19,8 @@ afterEach(async () => {
 describe("Database operations tests", () => {
   // test data
   const testComment = {
-    post_id: "61bcf100b497db77bd85cbff",
-    author_id: "61bcee5f57e7c375f1864081",
+    post_id: "61bd14a0b09613142eabf302",
+    author_id: "61bd73c71a25ef8e46b28d03",
     content: "test comment",
   };
 

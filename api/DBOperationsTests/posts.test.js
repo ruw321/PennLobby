@@ -22,8 +22,8 @@ describe("Database operations tests", () => {
     title: "test",
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est",
-    group_id: "61bcf00f4c83287793d63c9c",
-    author_id: "61bcee5f57e7c375f1864081",
+    group_id: "61bd2dfa598804265b55bbd9",
+    author_id: "61bd73c71a25ef8e46b28d03",
   };
 
   test("addPost successful", async () => {
