@@ -38,44 +38,26 @@ export default function TrendingTopics(props) {
         }
       ));
     const groupsByPopularitySorted = groupsMap.sort(
-      (group1, group2) => group2.memberIds.length - group1.memberIds.length
+      (group1, group2) => group2.size - group1.size
     );
-    // const date = new Date(user.created_at);
+    const groupsByPopularity2 = [];
+    const groupsByActive2 = [];
+
+    for (let i = 0; i < groupsByPopularitySorted.length; i++) {
+      groupsByPopularity2.push(groupsByPopularitySorted[i]);
+    }
+      
     const groupsByLastActiveSorted = groupsMap.sort(
       (group1, group2) => group2.last_active - group1.last_active
     );
 
-    setGroupsByPopularity(groupsByPopularitySorted);
-    setGroupsByLastActive(groupsByLastActiveSorted);
+    for (let i = 0; i < groupsByLastActiveSorted.length; i++) {
+      groupsByActive2.push(groupsByLastActiveSorted[i]);
+    }
+
+    setGroupsByPopularity(groupsByPopularity2);
+    setGroupsByLastActive(groupsByActive2);
   }, []);
-
-  // To do
-  // const trendingTopicsToday = [
-  //   "Music",
-  //   "Football",
-  //   "Sports",
-  //   "Ivy Leagues",
-  //   "Arts",
-  //   "Musical",
-  //   "Residential",
-  //   "Rent",
-  //   "Living",
-  //   "News",
-  // ];
-  // const trendingTopicsWeekly = [
-  //   "Sports",
-  //   "Ivy Leagues",
-  //   "Arts",
-  //   "Musical",
-  //   "Residential",
-  //   "Rent",
-  //   "Living",
-  //   "News",
-  //   "Music",
-  //   "Football",
-  // ];
-
-  // const { trendingTopicsToday, trendingTopicsWeekly } = props;
 
   const [value, setValue] = React.useState('1');
 
