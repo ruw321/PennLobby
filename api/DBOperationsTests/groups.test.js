@@ -4,13 +4,17 @@ const Group = require("../models/Group");
 const DBConnection = require("./connect");
 
 // clean up the database after each test
-const clearDatabase = async (dbLib) => {
+const clearDatabase = async (Model) => {
   try {
-    await dbLib.deleteOne({ name: "testGroup" });
+    await Model.deleteOne({ name: "testGroup" });
   } catch (err) {
     throw new Error(`Error clearing the database: ${err.message}`);
   }
 };
+
+ beforeAll(async () => {
+   await DBConnection.connect();
+ });
 
 afterEach(async () => {
   await clearDatabase(Group);
@@ -20,20 +24,18 @@ describe("Database operations tests", () => {
   // test data
   const testGroup = {
     name: "testGroup",
-    owner: "61bd73c71a25ef8e46b28d03",
+    owner: "61bfaebcf5521300169eae37",
     type: "public",
     description: "This is a test group",
   };
 
   test("addGroup successful", async () => {
-    await DBConnection.connect();
     await dbLib.addGroup(Group, testGroup);
     const insertedGroup = await Group.findOne({ name: "testGroup" });
     expect(insertedGroup.name).toEqual("testGroup");
   });
 
   test("addGroup exception", async () => {
-    await DBConnection.connect();
     try {
       await dbLib.addGroup(Group, testGroup.name);
     } catch (err) {
@@ -42,14 +44,12 @@ describe("Database operations tests", () => {
   });
 
   test("getGroups successful", async () => {
-    await DBConnection.connect();
     await dbLib.addGroup(Group, testGroup);
     const groups = await dbLib.getGroups(Group);
     expect(groups.length).not.toEqual(0);
   });
 
   test("getGroups exception", async () => {
-    await DBConnection.connect();
     const group = null;
     try {
       await dbLib.addGroup(Group, testGroup);
@@ -60,14 +60,12 @@ describe("Database operations tests", () => {
   });
 
   test("getPublicGroups successful", async () => {
-    await DBConnection.connect();
     await dbLib.addGroup(Group, testGroup);
     const groups = await dbLib.getPublicGroups(Group);
     expect(groups.length).not.toEqual(0);
   });
 
   test("getPublicGroups exception", async () => {
-    await DBConnection.connect();
     const group = null;
     try {
       await dbLib.addGroup(Group, testGroup);
@@ -78,15 +76,14 @@ describe("Database operations tests", () => {
   });
 
   test("getGroupById successful", async () => {
-    await DBConnection.connect();
     const group = await dbLib.addGroup(Group, testGroup);
     const group2 = await dbLib.getGroupById(Group, group._id);
     expect(group2.length).not.toEqual(0);
   });
 
   test("getGroupById exception", async () => {
-    await DBConnection.connect();
     try {
+      await dbLib.addGroup(Group, testGroup);
       await dbLib.getGroupById(Group, "badId");
     } catch (err) {
       expect(err.message).toContain("Error");
@@ -94,15 +91,14 @@ describe("Database operations tests", () => {
   });
 
   test("getGroupByName successful", async () => {
-    await DBConnection.connect();
     const group = await dbLib.addGroup(Group, testGroup);
     const group2 = await dbLib.getGroupByName(Group, group.name);
     expect(group2.length).not.toEqual(0);
   });
 
   test("getGroupByName exception", async () => {
-    await DBConnection.connect();
     try {
+      await dbLib.addGroup(Group, testGroup);
       await dbLib.getGroupByName(Group, "badName");
     } catch (err) {
       expect(err.message).toContain("Error");
@@ -110,15 +106,14 @@ describe("Database operations tests", () => {
   });
 
   test("deleteGroupById successful", async () => {
-    await DBConnection.connect();
     const result = await dbLib.addGroup(Group, testGroup);
     const result2 = await dbLib.deleteGroupById(Group, result._id);
     expect(result2.deletedCount).toEqual(1);
   });
 
   test("deleteGroupById exception", async () => {
-    await DBConnection.connect();
     try {
+      await dbLib.addGroup(Group, testGroup);
       await dbLib.deleteGroupById(Group, "badId");
     } catch (err) {
       expect(err.message).toContain("Error");
@@ -126,15 +121,14 @@ describe("Database operations tests", () => {
   });
 
   test("deleteGroupByOwner successful", async () => {
-    await DBConnection.connect();
     const result = await dbLib.addGroup(Group, testGroup);
     const result2 = await dbLib.deleteGroupByOwner(Group, result.owner);
     expect(result2.deletedCount).not.toEqual(0);
   });
 
   test("deleteGroupByOwner exception", async () => {
-    await DBConnection.connect();
     try {
+      await dbLib.addGroup(Group, testGroup);
       await dbLib.deleteGroupByOwner(Group, "badOwner");
     } catch (err) {
       expect(err.message).toContain("Error");
@@ -142,7 +136,6 @@ describe("Database operations tests", () => {
   });
 
   test("updateGroupById successful", async () => {
-    await DBConnection.connect();
     const group = await dbLib.addGroup(Group, testGroup);
     const updatedGroup = {
       name: "testGroup2",
@@ -154,8 +147,8 @@ describe("Database operations tests", () => {
   });
 
   test("updateGroupById exception", async () => {
-    await DBConnection.connect();
     try {
+      await dbLib.addGroup(Group, testGroup);
       await dbLib.updateGroupById(Group, "badId", "badObject");
     } catch (err) {
       expect(err.message).toContain("Error");
