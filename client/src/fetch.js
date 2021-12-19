@@ -132,11 +132,11 @@ async function updateUserById(id, obj) {
     return e;
   }
 }
-
 // register websocket for message
 async function registerMessage(username) {
   try {
     const theUrl = `${url}/api/message/register`;
+    // const data = `to=${receiver}&from=${sender}&message=${content}`;
     const data = { username };
     const result = await fetch(theUrl, {
       method: "POST", // or 'PUT'
@@ -238,6 +238,28 @@ async function getAllPosts() {
   try {
     const theUrl = `${url}/api/post`;
     const result = await fetch(theUrl, { method: "GET" });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
+// get a post by ID
+async function getPostByID(postID) {
+  const obj = { _id: postID };
+  const data = {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // you have to do JSON.stringify, otherwise CORS wouldnt allow it
+    body: JSON.stringify(obj),
+  };
+  try {
+    const theUrl = `${url}/api/post/${postID}`;
+    const result = await fetch(theUrl, data);
     const res = await result.json();
     return res;
   } catch (err) {
@@ -674,6 +696,7 @@ module.exports = {
   userChangePassword,
   deactivateAccount,
   getAllPosts,
+  getPostByID,
   addPost,
   getAllComment,
   addComment,
@@ -681,6 +704,7 @@ module.exports = {
   quitGroup,
   getAllGroups,
   getAllPublicGroups,
+  registerMessage,
   getAllPostsByGroupID,
   getAllPostsByUserID,
   getCommentByID,
@@ -689,7 +713,6 @@ module.exports = {
   editComment,
   promoteUser,
   demoteUser,
-  registerMessage,
   getAllTopics,
   getTopicByID,
   getTopicByName,

@@ -25,12 +25,12 @@ import FlagIcon from '@mui/icons-material/Flag';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
-  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, 
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import {
-  deletePost, addComment, getAllComment, flagPostForDeletion, deleteComment, editComment, getCommentByID, getUserByID
+  deletePost, addComment, postMessage, flagPostForDeletion, deleteComment, editComment, getCommentByID, getUserByID, getAllComment
 } from "../fetch";
 
 const ExpandMore = styled((props) => {
@@ -64,7 +64,7 @@ function PostMedia(props) {
           Sorry, your browser does not support embedded videos.
         </video>
       </Typography>
-      
+
     );
   }
   if (msg.indexOf('(link-audio)http') === 0) {
@@ -89,12 +89,12 @@ function PostMedia(props) {
 }
 
 export default function PostCard(props) {
-  const { 
-    hide, 
-    updateHide, 
-    post, 
-    allPosts, 
-    updateAllPosts 
+  const {
+    hide,
+    updateHide,
+    post,
+    allPosts,
+    updateAllPosts
   } = props;
 
   const userID = sessionStorage.getItem('id');
@@ -102,25 +102,30 @@ export default function PostCard(props) {
   const groupID = post.group_id;
   const authorID = post.author_id;
 
-  // get all comments
+  const [currUser, setCurrUser] = React.useState(null);
+  const [error, setError] = React.useState('');
+  const [openError, setOpenError] = React.useState(false);
+
   const [allComments, setAllComments] = React.useState([]);
   const [showNormalFlag, setShowNormalFlag] = React.useState(true);
+  function delay(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
   const [username, setUsername] = React.useState('');
+  const [refresh, setRefresh] = React.useState(false);
 
   React.useEffect(async () => {
     const commentIDs = post.comment_ids;
     const commentsToShow = [];
     const userObj = await getUserByID(userID);
-
+    setCurrUser(userObj);
     for (const eachID of commentIDs) {
-      // console.log("eachID = ", eachID);
-      // const comment = getCommentByID("61bd1dc0598804265b55ba0e");
       const comment = await getCommentByID(eachID);
       // console.log("comment object = ", comment);
       const commentAuthorObj = await getUserByID(comment.author_id);
-      comment.author_username = commentAuthorObj.username;
-      console.log(comment);
-      commentsToShow.push(comment);
+      const newComment = { ...comment, author_username: (commentAuthorObj && commentAuthorObj.username) || "invalid" };
+      console.log(newComment);
+      commentsToShow.push(newComment);
     }
 
     setAllComments(commentsToShow);
@@ -129,7 +134,7 @@ export default function PostCard(props) {
       setShowNormalFlag(false);
       console.log("ShowNormalFlag = ", showNormalFlag);
     }
-  }, []);
+  }, [refresh, props.refresh]);
 
   // comment toggle down
   const [expanded, setExpanded] = React.useState(false);
@@ -142,7 +147,15 @@ export default function PostCard(props) {
   const [openDeletePost, setOpenDeletePost] = React.useState(false);
 
   const handleClickOpenDeletePost = () => {
-    setOpenDeletePost(true);
+    // the user has to be either the author or the admin to delete the post
+    console.log(currUser._id);
+    console.log(authorID);
+    if (currUser._id === authorID || currUser.group_admins.includes(groupID)) {
+      setOpenDeletePost(true);
+    } else {
+      setError('You have to be the author or the group administrator to delete this post.');
+      setOpenError(true);
+    }
   };
 
   const handleCloseDeletePost = () => {
@@ -150,7 +163,6 @@ export default function PostCard(props) {
   };
 
   const handleConfirmDeletePost = async () => {
-    // console.log(userID, postID, groupID);
     const res = await deletePost(userID, postID, groupID);
     let tempPosts = [];
     if (res.ok) {
@@ -160,6 +172,11 @@ export default function PostCard(props) {
     // reflect the change of deleting the post
     updateAllPosts(tempPosts);
     setOpenDeletePost(false);
+    postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
+  };
+
+  const handleCloseError = () => {
+    setOpenError(false);
   };
 
   // hide a post
@@ -194,7 +211,6 @@ export default function PostCard(props) {
   const handleConfirmFlagPost = async () => {
     const res = await flagPostForDeletion(userID, postID);
     const print = await res.json();
-    console.log(print);
     setOpenFlagPost(false);
   };
 
@@ -212,8 +228,13 @@ export default function PostCard(props) {
   // delete a comment
   const [openDeleteComment, setOpenDeleteComment] = React.useState(false);
 
-  const handleClickOpenDeleteComment = () => {
-    setOpenDeleteComment(true);
+  const handleClickOpenDeleteComment = (currComment) => {
+    if (currComment.author_id === userID || currUser.group_admins.includes(groupID)) {
+      setOpenDeleteComment(true);
+    } else {
+      setError('You are not authorized to delete this comment!');
+      setOpenError(true);
+    }
   };
 
   const handleCloseDeleteComment = () => {
@@ -222,8 +243,11 @@ export default function PostCard(props) {
 
   const handleConfirmDeleteComment = async (commentID) => {
     const res = await deleteComment(userID, commentID);
-    const print = await res.json();
-    // console.log(print);
+    let tempComments = [];
+    if (res.ok) {
+      tempComments = allComments.filter((p) => String(p._id) !== commentID);
+    }
+    setAllComments(tempComments);
     setOpenDeleteComment(false);
   };
 
@@ -247,23 +271,26 @@ export default function PostCard(props) {
     // console.log(editedComment);
     const res = await editComment(editedComment, commentID, userID);
     const print = await res.json();
-    // console.log(print);
+
     setOpenEditComment(false);
   };
 
   // send a comment to a post
   const [newComment, setNewComment] = React.useState('');
+
   const handleChangeNewComment = (event) => {
     setNewComment(event.target.value);
   };
 
   const handleSendNewComment = async () => {
     const res = await addComment(newComment, userID, postID);
-    // if (res.ok) {
-    //   setRefresh(!refresh);
-    // }
     const print = await res.json();
-
+    await delay(2000);
+    console.log('after 2 second');
+    postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
+    await delay(2000);
+    console.log('after 2 second');
+    postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
     // console.log(print);
   };
 
@@ -285,6 +312,24 @@ export default function PostCard(props) {
               <DeleteIcon />
             </IconButton>
 
+            <Dialog
+              open={openError}
+              onClose={handleCloseError}
+            // aria-labelledby="alert-dialog-title"
+            // aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                Not Authorized!
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {error}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseError}>Close</Button>
+              </DialogActions>
+            </Dialog>
             <Dialog
               open={openDeletePost}
               onClose={handleCloseDeletePost}
@@ -372,7 +417,7 @@ export default function PostCard(props) {
                   The number of replies for this post: {post.comment_ids.length}
                 </DialogContentText>
                 <DialogContentText id="alert-dialog-description">
-                  The post was created: {post.created_at }
+                  The post was created: {post.created_at}
                 </DialogContentText>
                 <DialogContentText id="alert-dialog-description">
                   Possibility of inappropriate content: {post.flag_for_deletion ? "True" : "False"}
@@ -405,7 +450,7 @@ export default function PostCard(props) {
           <ExpandMoreIcon />
         </ExpandMore>
       </CardActions>
-  
+
       {/* Below is comment section */}
       <Collapse in={expanded} timeout="auto" unmountOnExit>
 
@@ -417,11 +462,11 @@ export default function PostCard(props) {
                 <Avatar sx={{ bgcolor: "#ffaa00" }} aria-label="recipe">
                   R
                 </Avatar>
-            }
+              }
               action={
                 <div>
                   {/* Delete a comment */}
-                  <IconButton aria-label="settings" onClick={handleClickOpenDeleteComment}>
+                  <IconButton aria-label="settings" onClick={() => { handleClickOpenDeleteComment(comment); }}>
                     <DeleteIcon />
                   </IconButton>
 
@@ -476,7 +521,7 @@ export default function PostCard(props) {
               title={comment.author_username}
               // subheader={comment.created_at}
             />
-          
+
             <CardContent>
               {/* <Typography variant="body1" color="text.primart">
                 
