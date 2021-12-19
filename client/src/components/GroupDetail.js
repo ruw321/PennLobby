@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-restricted-syntax */
@@ -32,7 +33,7 @@ import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
 import GroupMembers from "./GroupMembers";
 import {
-  addPost, getAllPostsByGroupID, sendS3, getS3Url, quitGroup, getAllPosts, getGroupByID, 
+  addPost, getAllPostsByGroupID, sendS3, getS3Url, quitGroup, getAllPosts, getGroupByID, getAllUsers, sendNotification,
 } from "../fetch";
 
 function Copyright() {
@@ -95,13 +96,24 @@ function GroupDetail(props) {
 
   const [postCards, setPostCards] = React.useState([]);
   const [group, setGroup] = React.useState('');
+  const [allUsers, setAllUsers] = React.useState([]);
 
+  // hide post
+
+  const [hide, setHide] = React.useState([]);
+  
+  const updateHide = (post) => {
+    setPostCards(postCards.filter((p) => !post.includes(p._id)));
+    setHide(post);
+  };
   // const [numMembers, setNumMembers] = React.useState(0);
   // const [numPosts, setNumPosts] = React.useState(0);  
   // const [numTopics, setNumTopics] = React.useState(0);  
 
   React.useEffect(async () => {
     const postCards = await getAllPosts();
+    const users = await getAllUsers();
+    setAllUsers(users);
     const curGroupObj = await getGroupByID(currGroup);
     setGroup(curGroupObj);
     const groupPosts = [];
@@ -184,7 +196,20 @@ function GroupDetail(props) {
   const handleClose2 = () => {
     setOpen2(false);
   };
+  const [inviteUsername, setInviteUsername] = React.useState("");
+  const handleChangeInvite = (event) => {
+    setInviteUsername(event.target.value);
+  };
 
+  const handelConfimInvite = async () => {
+    if (!allUsers.find((u) => u.username === inviteUsername)) {
+      return;
+    }
+    const id = allUsers.find((u) => u.username === inviteUsername)._id;
+    const data = { content: `(invite group)${currGroup}(user)${id}`, sender_id: userID, receiver_ids: allUsers.filter((u) => u.group_admins.includes(currGroup)).map((u) => u._id) };
+    await sendNotification(data);
+    setOpen2(false);
+  };
   // for leave a group dialog
   const [openLeaveGroup, setOpenLeaveGroup] = React.useState(false);
 
@@ -346,11 +371,12 @@ function GroupDetail(props) {
                     type="email"
                     fullWidth
                     variant="standard"
+                    onChange={handleChangeInvite}
                   />
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleClose2}>Cancel</Button>
-                  <Button onClick={handleClose2}>Confirm</Button>
+                  <Button onClick={handelConfimInvite}>Confirm</Button>
                 </DialogActions>
               </Dialog>
 
@@ -379,12 +405,21 @@ function GroupDetail(props) {
               </Dialog>
             </Box>
 
+            {/* All post inside this group */}
             <Grid container spacing={2}>
               <Grid item key={1} xs={6} md={9}>
                 <Container sx={{ pt: 2 }} maxWidth="lg">
                   <Grid container rowSpacing={3} columnSpacing={0}>
                     {postCards.map((post) => (
-                      <PostCard key={post.title} post={post} whetherIn />
+                      <PostCard
+                        key={post.title}
+                        post={post}
+                        hide={hide}
+                        updateHide={updateHide}
+                        allPosts={postCards}
+                        updateAllPosts={(newPosts) => setPostCards(newPosts)}
+                        whetherIn
+                      />
                     ))}
                   </Grid>
                 </Container>
@@ -422,6 +457,7 @@ function GroupDetail(props) {
             </Grid>
           </Container>
         </main>
+
         {/* Footer */}
         <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
           <Typography variant="h6" align="center" gutterBottom>
