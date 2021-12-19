@@ -186,7 +186,7 @@ function Chat(props) {
 
           <Divider orientation="vertical" flexItem style={{ marginRight: "-1px" }} />
 
-          <Grid item xs={9} stype={{ height: '100%' }}>
+          <Grid item xs={9} stype={{ position: "fixed", height: '100vh' }}>
             {currentChat
             && (
             <ListItem button key={currentChat}>
