@@ -62,7 +62,7 @@ app.use(session({
 app.use(logger("dev"));
 app.use(express.json());
 // TODO: delete CORS in production
-app.use(cors({ credentials: true, origin: ['http://localhost:3000', 'https://pennlobby.herokuapp.com/'] }));
+app.use(cors({ credentials: true, origin: 'https://pennlobby.herokuapp.com' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
