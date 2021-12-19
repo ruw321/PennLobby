@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const postSchema = new mongoose.Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
-  // media attachment
   author_id: { type: Schema.Types.ObjectId, ref: "User" },
   group_id: { type: Schema.Types.ObjectId, ref: "Group" },
   comment_ids: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
