@@ -151,7 +151,7 @@ function GroupCard(props) {
               </Typography>
               <Typography variant="subtitle1" color="text.secondary">
                 {/* <img className="groupSizeIcon" src="../../groupSize.png" alt="gpsz" /> */}
-                {post.size}
+                {`${post.size} Members`}
               </Typography>
               <Typography variant="subtitle1" paragraph>
                 {post.description}
