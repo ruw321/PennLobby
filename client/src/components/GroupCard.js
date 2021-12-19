@@ -1,3 +1,7 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
@@ -17,16 +21,30 @@ import { Dialog } from "@material-ui/core";
 import {
   DialogActions, DialogContent, DialogContentText, DialogTitle,
 } from "@mui/material";
-import { joinGroup, quitGroup } from '../fetch';
-
-const tags = ["Football", "Sports", "Entertainment"];
+import {
+  joinGroup, quitGroup, getAllTopics, getTopicByID, getAllUsers, sendNotification,
+} from '../fetch';
+import GroupMembers from "./GroupMembers";
 
 function GroupCard(props) {
   const {
-    post, whetherIn, groupId, updateCurrGroup, updateStatus,
+    post, whetherIn, updateCurrGroup, updateStatus, groupCards, updateGroupCards,
   } = props;
 
-  console.log(`Groupcard: ${JSON.stringify(post)}`);
+  const [tags, setTags] = React.useState([]);
+
+  React.useEffect(async () => {
+    const allTopicObj = [];
+    const allTopicTags = [];
+
+    for (let i = 0; i < post.topics.length; i++) {
+      const curTopicObj = await getTopicByID(post.topics[i]);
+      // console.log("curTopicObj = ", curTopicObj);
+      allTopicTags.push(curTopicObj.name);
+    }
+    setTags(allTopicTags);
+  }, []);
+
   // confirm join group button
   const [open, setOpen] = React.useState(false);
 
@@ -41,11 +59,14 @@ function GroupCard(props) {
   const handleJoinGroup = async () => {
     // Need to get user from session storage
     const userID = sessionStorage.getItem("id");
-    console.log(userID);
-    console.log(post.groupId);
-    const res = await joinGroup(userID, post.groupId);
-    const print = await res.json();
-    console.log(print);
+    const users = await getAllUsers();
+    // console.log(userID);
+    // console.log(post.groupId);
+    const content = `(join group)${post.groupId}`;
+    const senderId = userID;
+    const receiverIds = users.filter((u) => u.group_admins.includes(post.groupId)).map((u) => u._id);
+    const data = { content, sender_id: senderId, receiver_ids: receiverIds };
+    await sendNotification(data);
     setOpen(false);
   };
 
@@ -62,26 +83,50 @@ function GroupCard(props) {
 
   const handleQuitGroup = async () => {
     const userID = sessionStorage.getItem("id");
-    console.log(userID);
-    console.log(post.groupId);
     const res = await quitGroup(userID, post.groupId);
-    const print = await res.json();
-    console.log(print);
+    if (res.ok) {
+      let tempCards = groupCards;
+      tempCards = tempCards.filter((card) => card.groupId !== post.groupId);
+      updateGroupCards(tempCards);
+    }
     setOpen2(false);
   };
 
+  // group member dialog
+  const [openMembers, setOpenMembers] = React.useState(false);
+
+  const handleClickOpenMembers = () => {
+    setOpenMembers(true);
+  };
+
+  const handleCloseOpenMembers = () => {
+    setOpenMembers(false);
+  };
+
+  // open detail for groups that the user 
+  // has not joined yet 
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
   const buttonsNotIn = [
-    <Button key="one" onClick={() => updateStatus('groupdetail')} className="groupBtn1" style={{ textTransform: "none" }}>
+    <Button key="one" onClick={handleClickOpenDialog} className="groupBtn1" style={{ textTransform: "none" }}>
       View Detail
     </Button>,
 
     <Button key="two" className="groupBtn2" style={{ textTransform: "none" }} onClick={handleClickOpen}>
       Join Group
     </Button>,
-    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} onClick={() => { updateStatus('groupmembers'); }}>
+    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} onClick={handleClickOpenMembers}>
       Members
     </Button>,
   ];
+
   const buttonsIn = [
     <Button key="one" className="groupBtn1" style={{ textTransform: "none" }} onClick={() => { updateCurrGroup(post.groupId); updateStatus('groupdetail'); }}>
       View Detail
@@ -89,7 +134,7 @@ function GroupCard(props) {
     <Button key="two" className="groupBtn4" style={{ textTransform: "none" }} onClick={handleClickOpen2}>
       Quit Group
     </Button>,
-    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} onClick={() => { updateStatus('groupmembers'); }}>
+    <Button key="three" className="groupBtn3" style={{ textTransform: "none" }} onClick={handleClickOpenMembers}>
       Members
     </Button>,
   ];
@@ -145,7 +190,25 @@ function GroupCard(props) {
             className="groupBtnGroup"
           >
             {whetherIn ? buttonsIn : buttonsNotIn}
+            <Dialog
+              open={openDialog}
+              onClose={handleCloseDialog}
+            >
+              <DialogTitle id="alert-dialog-title">
+                Not authorized!
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  You have to be a member of this group to view the details!
+                  Please Click the Join Group button to request to join the group.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDialog}>Close</Button>
+              </DialogActions>
+            </Dialog>
           </ButtonGroup>
+
           {/* confirm join group */}
           <Dialog
             open={open}
@@ -169,7 +232,7 @@ function GroupCard(props) {
               </Button>
             </DialogActions>
           </Dialog>
-  
+
           {/* confirm quit group */}
           <Dialog
             open={open2}
@@ -190,6 +253,27 @@ function GroupCard(props) {
               <Button onClick={handleQuitGroup} autoFocus>
                 Yes
               </Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* group members dialog */}
+          <Dialog
+            open={openMembers}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            {/* <DialogTitle id="alert-dialog-title">
+              Group Members
+            </DialogTitle> */}
+            {/* <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                After quitting the group, you will not be able to view the posts and members in the group anymore.
+              </DialogContentText>
+            </DialogContent> */}
+            <GroupMembers groupID={post.groupId} />
+            <DialogActions>
+              <Button onClick={handleCloseOpenMembers}>Close</Button>
             </DialogActions>
           </Dialog>
         </Box>

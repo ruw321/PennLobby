@@ -31,6 +31,7 @@ const schema = {
     blocking: { type: "array" },
     blocked_by: { type: "array" },
     avatar_url: { type: "string" },
+    notification_ids: { type: "array" },
   },
   required: ["username", "email", "firstName", "lastName", "password"],
 };
@@ -133,7 +134,7 @@ router.route("/:id").put(async (req, res) => {
     try {
       const obj = req.body;
       const { _id, ...rest } = obj;
-      const user = await Users.updateUserById(User, req.body._id, rest);
+      const user = await Users.updateUserById(User, req.params.id, rest);
       res.status(200).send(user);
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -175,6 +176,75 @@ router.route("/join/").put(async (req, res) => {
     res.status(200).send(newUsers);
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+});
+
+// a group admin promotes another group member from member to admin
+router.route("/promote/:userToPromoteId").put(async (req, res) => {
+  if (req.isAuthenticated) {
+    try {
+      const user = await Users.getUserById(User, req.body.user_id);
+      const userToPromote = await Users.getUserById(
+        User,
+        req.params.userToPromoteId
+      );
+
+      const g_id = req.body.group_id;
+      if (userToPromote.group_ids.includes(req.body.group_id) && user.group_admins.includes(g_id)) {
+        const groupAdmins = userToPromote.group_admins;
+        groupAdmins.push(g_id);
+        const response = await Users.updateUserById(
+          User,
+          req.params.userToPromoteId,
+          { group_admins: groupAdmins }
+        );
+        res.status(200).send(response);
+      } else {
+        res
+          .status(400)
+          .json({ error: "You are either not authorized to promote this user, or this user is not in the group!" });
+        return;
+      }
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  } else {
+    res.status(401).json({ error: "You are not authorized." });
+  }
+});
+
+// a group admin demotes another group member from admin to member
+router.route("/demote/:userToDemote").put(async (req, res) => {
+  if (req.isAuthenticated) {
+    try {
+      const user = await Users.getUserById(User, req.body.user_id);
+      const UserToDemote = await Users.getUserById(
+        User,
+        req.params.userToDemote
+      );
+      const gIDs = user.group_admins;
+      const gID = req.body.group_id;
+      const currG = await Groups.getGroupById(Group, gID);
+      if (UserToDemote.group_ids.includes(gID) && gIDs.includes(gID) && currG.owner != req.params.userToDemote) {
+        const gIDs2 = UserToDemote.group_admins;
+        gIDs2.splice(gIDs2.indexOf(gID), 1);
+        const response = await Users.updateUserById(
+          User,
+          req.params.userToDemote,
+          { group_admins: gIDs2 }
+        );
+        res.status(200).send(response);
+      } else {
+        res
+          .status(400)
+          .json({ error: "You are either not authorized to demote this user, or this user is not in the group!" });
+        return;
+      }
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  } else {
+    res.status(401).json({ error: "You are not authorized." });
   }
 });
 

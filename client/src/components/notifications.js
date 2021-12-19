@@ -12,17 +12,22 @@ export const setupWSConnection = (updateContacts, updateMessages, texts) => {
 
   // Connection opened
   socket.addEventListener('open', () => {
-    console.log('ws connection opened');
+    // console.log('ws connection opened');
     socket.send('Hello Server!');
   });
 
   // Listener for messages
   socket.addEventListener('message', (event) => {
     // parse message to json
+    try {
+      JSON.parse(event.data);
+    } catch (e) {
+      return;
+    }
     const pushMessage = JSON.parse(event.data);
-    console.log('Message from server ', pushMessage);
+    // console.log('Message from server ', pushMessage);
     if (pushMessage.type === 'new user') {
-      console.log(`user ${pushMessage.user}`);
+      // console.log(`user ${pushMessage.user}`);
       updateContacts(); // update contacts to fire re-rendering
     }
     if (pushMessage.type === 'delivered') {
@@ -31,7 +36,7 @@ export const setupWSConnection = (updateContacts, updateMessages, texts) => {
       updateMessages(); // update messages to fire re-rendering
     }
     if (pushMessage.type === 'new message') {
-      console.log('new message');
+      // console.log('new message');
       texts.current.push(`${pushMessage.from}: ${pushMessage.text}`);
       // update previous message box via state and props
       updateMessages(); // update messages to fire re-rendering
@@ -40,6 +45,6 @@ export const setupWSConnection = (updateContacts, updateMessages, texts) => {
 
   // Connection closed
   socket.addEventListener('close', (_event) => {
-    console.log('Connection closed bye bye! ');
+    // console.log('Connection closed bye bye! ');
   });
 };

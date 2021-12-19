@@ -29,7 +29,7 @@ function App() {
   const [messages, setMessages] = useState(0); // counts messages sent and received - lift up state
   const texts = useRef([]); // mutable reference to store messages. Do not overuse!
   const [friends, setFriends] = useState([]);
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState(sessionStorage.getItem('username') || '');
   const [refresh, setRefresh] = useState(false);
   const [currGroup, setCurrGroup] = useState('');
   const updateStatus = (s) => setStatus(s);
@@ -44,11 +44,9 @@ function App() {
     getAllUsers().then((response) => {
       if (!response) { return; }
       setFriends(response.filter((r) => r.username !== sessionStorage.getItem('username')));
-      // .filter((r) => r !== sessionStorage.getItem('username'))
     });
     setRefresh(!refresh);
     const cleanup = () => { sessionStorage.getItem('token'); };
-    console.log('texts', texts);
     // we need to cleanup when leaving the tab
     window.addEventListener('beforeunload', cleanup);
     
@@ -56,7 +54,6 @@ function App() {
       window.removeEventListener('beforeunload', cleanup);
     };
   }, [contacts, messages, texts]);
-
   const authenticate = async () => {
     setupWSConnection(updateContacts, updateMessages, texts); // setup ws connection
     setContacts((contacts) => contacts + 1); // update state to trigger re-rendering and useEffect
@@ -91,13 +88,13 @@ function App() {
                 {(status !== 'login' && status !== 'signup') && <Menu updateStatus={updateStatus} />}
                 {status === 'login' && <Login updateUserName={updateUserName} updateStatus={updateStatus} />}
                 {status === 'signup' && <Signup updateStatus={updateStatus} />}
-                {status === 'lobby' && <Lobby />}
+                {status === 'lobby' && <Lobby updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />}
                 {status === 'group' && <Group updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />}
-                {status === 'post' && <Post refresh={refresh} />}
+                {status === 'post' && <Post refresh={refresh} updateStatus={updateStatus} />}
                 {status === 'profile' && <Profile updateStatus={updateStatus} />}
                 {status === 'message' && <Messages contacts={contacts} messages={messages} texts={texts} friends={friends} />}
                 {status === 'groupdetail' && <GroupDetail currGroup={currGroup} />}
-                {status === 'groupmembers' && <GroupMembers />}
+                {/* {status === 'groupmembers' && <GroupMembers />} */}
               </>
           }
           />

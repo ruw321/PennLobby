@@ -6,8 +6,7 @@ const passport = require('passport');
 //   name: 'webserver',
 // }, 'this_is_a_secret', { expiresIn: '1h' });
 // const url = 'ws://penn-lobby-websocket.herokuapp.com/';
-// const url = 'ws://localhost:8085/';
-
+// // const url = 'ws://localhost:8085/';
 // const connection = new WebSocket(url, {
 //   headers: { token: serverToken },
 // });
@@ -59,7 +58,7 @@ router.post('/login', function (req, res, next) {
     req.logIn(user, function(err) {    // if success
       if (err) { return next(err); }
       return res.status(200).json({ id: user.id, user: user.username});
-      // create jwt token
+      // // create jwt token
       // let userToken;
       // // create and send JWT to a the user
       // userToken = jwt.sign({
