@@ -162,8 +162,6 @@ export default function PostCard(props) {
 
   const handleClickOpenDeletePost = () => {
     // the user has to be either the author or the admin to delete the post
-    console.log(currUser._id);
-    console.log(authorID);
     if (currUser._id === authorID || currUser.group_admins.includes(groupID)) {
       setOpenDeletePost(true);
     } else {
