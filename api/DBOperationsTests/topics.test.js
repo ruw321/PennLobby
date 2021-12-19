@@ -12,6 +12,10 @@ const clearDatabase = async (dbLib) => {
   }
 };
 
+beforeAll(async () => {
+  await DBConnection.connect();
+});
+
 afterEach(async () => {
   await clearDatabase(Topic);
 });
@@ -24,14 +28,12 @@ describe("Database operations tests", () => {
   };
 
   test("addTopic successful", async () => {
-    await DBConnection.connect();
     await dbLib.addTopic(Topic, testTopic);
     const insertedTopic = await Topic.findOne({ name: "test" });
     expect(insertedTopic.name).toEqual("test");
   });
 
   test("addTopic exception", async () => {
-    await DBConnection.connect();
     try {
       await dbLib.addTopic(Topic, testTopic.name);
     } catch (err) {
@@ -40,14 +42,13 @@ describe("Database operations tests", () => {
   });
 
   test("getTopics successful", async () => {
-    await DBConnection.connect();
-    await dbLib.getTopics(Topic, testTopic);
+    await dbLib.addTopic(Topic, testTopic);
+    await dbLib.getTopics(Topic);
     const topics = await dbLib.getTopics(Topic);
     expect(topics.length).not.toEqual(0);
   });
 
   test("getTopics exception", async () => {
-    await DBConnection.connect();
     const topic = null;
     try {
       await dbLib.addTopic(Topic, testTopic);
@@ -58,14 +59,12 @@ describe("Database operations tests", () => {
   });
 
   test("getTopicbyName successful", async () => {
-    await DBConnection.connect();
     await dbLib.addTopic(Topic, testTopic);
     const topic = await dbLib.getTopicByName(Topic, testTopic.name);
     expect(topic.length).not.toEqual(0);
   });
 
   test("getTopicByName exception", async () => {
-    await DBConnection.connect();
     try {
       await dbLib.getTopicByName(Topic, "badName");
     } catch (err) {
@@ -74,7 +73,6 @@ describe("Database operations tests", () => {
   });
 
   test("getTopicbyId successful", async () => {
-    await DBConnection.connect();
     await dbLib.addTopic(Topic, testTopic);
     const result = await dbLib.getTopicByName(Topic, testTopic.name);
     const result2 = await dbLib.getTopicById(Topic, result._id);
@@ -82,7 +80,6 @@ describe("Database operations tests", () => {
   });
 
   test("getTopicById exception", async () => {
-    await DBConnection.connect();
     try {
       await dbLib.getTopicById(Topic, "badId");
     } catch (err) {
@@ -91,14 +88,12 @@ describe("Database operations tests", () => {
   });
 
   test("deleteTopicById successful", async () => {
-    await DBConnection.connect();
     const result = await dbLib.addTopic(Topic, testTopic);
     const result2 = await dbLib.deleteTopicById(Topic, result._id);
     expect(result2.deletedCount).toEqual(1);
   });
 
   test("deleteTopicById exception", async () => {
-    await DBConnection.connect();
     try {
       await dbLib.deleteTopicById(Topic, "badId");
     } catch (err) {
@@ -107,7 +102,6 @@ describe("Database operations tests", () => {
   });
 
   test("updateTopic successful", async () => {
-    await DBConnection.connect();
     const topic = await dbLib.addTopic(Topic, testTopic);
     const updatedTopic = {
       name: "test2",
@@ -119,7 +113,6 @@ describe("Database operations tests", () => {
   });
 
   test("updateTopicById exception", async () => {
-    await DBConnection.connect();
     try {
       await dbLib.updateTopicById(Topic, "badId", "badObject");
     } catch (err) {
@@ -128,7 +121,6 @@ describe("Database operations tests", () => {
   });
 
   test("addGroupIDToTopic successful", async () => {
-    await DBConnection.connect();
     const topic = await dbLib.addTopic(Topic, testTopic);
     await dbLib.addGroupIDToTopic(Topic, "61bd83aa74b9458e24e24426", topic._id);
     const insertedTopic = await dbLib.getTopicById(Topic, topic._id);
@@ -136,7 +128,6 @@ describe("Database operations tests", () => {
   });
 
   test("addGroupIDToTopic exception", async () => {
-    await DBConnection.connect();
     try {
       await dbLib.addGroupIDToTopic(Topic, "badId1", "badId2");
     } catch (err) {
