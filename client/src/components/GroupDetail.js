@@ -444,16 +444,16 @@ function GroupDetail(props) {
                     Group Analytics
                   </Typography>
 
-                  <Typography variant="body2">
+                  <Typography sx={{ pl: 2, pt: 2 }} variant="body2">
                     {`Number of members: ${group.member_ids.length}`} 
                   </Typography>
-                  <Typography variant="body2">
+                  <Typography sx={{ pl: 2, pt: 2 }} variant="body2">
                     {`Number of members: ${group.post_ids.length}`}
                   </Typography>
-                  <Typography variant="body2">
+                  <Typography sx={{ pl: 2, pt: 2 }} variant="body2">
                     {`Number of members: ${group.last_active}`} 
                   </Typography>
-                  <Typography variant="body2">
+                  <Typography sx={{ pl: 2, pt: 2, pb: 2 }} variant="body2">
                     {`Number of members: ${group.created_at}`} 
                   </Typography>
                 </Card>

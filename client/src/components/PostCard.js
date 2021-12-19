@@ -30,7 +30,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import {
-  deletePost, addComment, getAllComment, flagPostForDeletion, deleteComment, editComment, getCommentByID, getUserByID
+  deletePost, addComment, getAllComment, flagPostForDeletion, deleteComment, editComment, getCommentByID, getUserByID, getPostByID
 } from "../fetch";
 
 const ExpandMore = styled((props) => {
@@ -102,10 +102,10 @@ export default function PostCard(props) {
   const groupID = post.group_id;
   const authorID = post.author_id;
 
-  // get all comments
   const [allComments, setAllComments] = React.useState([]);
   const [showNormalFlag, setShowNormalFlag] = React.useState(true);
   const [username, setUsername] = React.useState('');
+  const [refresh, setRefresh] = React.useState(false);
 
   React.useEffect(async () => {
     const commentIDs = post.comment_ids;
@@ -118,9 +118,9 @@ export default function PostCard(props) {
       const comment = await getCommentByID(eachID);
       // console.log("comment object = ", comment);
       const commentAuthorObj = await getUserByID(comment.author_id);
-      comment.author_username = commentAuthorObj.username;
-      console.log(comment);
-      commentsToShow.push(comment);
+      const newComment = { ...comment, author_username: (commentAuthorObj && commentAuthorObj.username) || "invalid" };
+      console.log(newComment);
+      commentsToShow.push(newComment);
     }
 
     setAllComments(commentsToShow);
@@ -129,7 +129,7 @@ export default function PostCard(props) {
       setShowNormalFlag(false);
       console.log("ShowNormalFlag = ", showNormalFlag);
     }
-  }, []);
+  }, [refresh]);
 
   // comment toggle down
   const [expanded, setExpanded] = React.useState(false);
@@ -222,8 +222,11 @@ export default function PostCard(props) {
 
   const handleConfirmDeleteComment = async (commentID) => {
     const res = await deleteComment(userID, commentID);
-    const print = await res.json();
-    // console.log(print);
+    let tempComments = [];
+    if (res.ok) {
+      tempComments = allComments.filter((p) => String(p._id) !== commentID);
+    }
+    setAllComments(tempComments);
     setOpenDeleteComment(false);
   };
 
@@ -247,24 +250,20 @@ export default function PostCard(props) {
     // console.log(editedComment);
     const res = await editComment(editedComment, commentID, userID);
     const print = await res.json();
-    // console.log(print);
+
     setOpenEditComment(false);
   };
 
   // send a comment to a post
   const [newComment, setNewComment] = React.useState('');
+
   const handleChangeNewComment = (event) => {
     setNewComment(event.target.value);
   };
 
   const handleSendNewComment = async () => {
     const res = await addComment(newComment, userID, postID);
-    // if (res.ok) {
-    //   setRefresh(!refresh);
-    // }
     const print = await res.json();
-
-    // console.log(print);
   };
 
   return (
