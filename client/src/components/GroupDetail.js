@@ -444,11 +444,18 @@ function GroupDetail(props) {
                     Group Analytics
                   </Typography>
 
-                  <CardHeader subheader={`Number of members: ${group.member_ids.length}`} />
-                  <CardHeader subheader={`Number of posts: ${group.post_ids.length}`} />
-                  <CardHeader subheader={`Last active: ${group.last_active}`} />
-                  <CardHeader subheader={`Created at: ${group.created_at}`} />
-
+                  <Typography variant="body2">
+                    {`Number of members: ${group.member_ids.length}`} 
+                  </Typography>
+                  <Typography variant="body2">
+                    {`Number of members: ${group.post_ids.length}`}
+                  </Typography>
+                  <Typography variant="body2">
+                    {`Number of members: ${group.last_active}`} 
+                  </Typography>
+                  <Typography variant="body2">
+                    {`Number of members: ${group.created_at}`} 
+                  </Typography>
                 </Card>
 
                 <GroupMembers groupID={currGroup} />
