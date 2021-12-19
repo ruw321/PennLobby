@@ -440,6 +440,7 @@ function GroupDetail(props) {
                         updateAllPosts={(newPosts) => setPostCards(newPosts)}
                         whetherIn
                         refresh={props.refresh}
+                        allUsers={allUsers}
                       />
                     ))}
                   </Grid>
