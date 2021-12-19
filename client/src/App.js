@@ -98,9 +98,9 @@ function App() {
                 {status === 'profile' && <Profile updateStatus={updateStatus} />}
                 {status === 'message' && <Messages contacts={contacts} messages={messages} texts={texts} friends={friends} />}
                 {status === 'groupdetail' && <GroupDetail refresh={refresh} currGroup={currGroup} />}
-                <button onClick={testRefresh}>
+                {/* <button onClick={testRefresh}>
                   test refresh
-                </button>
+                </button> */}
                 {/* {status === 'groupmembers' && <GroupMembers />} */}
               </>
           }

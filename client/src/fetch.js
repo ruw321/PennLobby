@@ -1,6 +1,10 @@
 /* eslint-disable space-before-blocks */
-const url = !process.env.NODE_ENV || process.env.NODE_ENV === "development"
-  ? "http://localhost:8080"
+const dotenv = require("dotenv");
+
+dotenv.config({ path: ".env" });
+
+const url = !process.env.DEPLOY || process.env.DEPLOY === "development"
+  ? "https://penn-lobby-backend.herokuapp.com"
   : "https://penn-lobby-backend.herokuapp.com";
 async function login(u, p) {
   const user = {
@@ -212,6 +216,7 @@ async function getGroupByID(groupID) {
 // get all groups
 async function getAllGroups() {
   try {
+    console.log('DEPLOY=deploy', process.env);
     const theUrl = `${url}/api/group`;
     const result = await fetch(theUrl, { method: "GET" });
     const res = await result.json();
