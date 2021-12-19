@@ -469,13 +469,13 @@ function GroupDetail(props) {
                     {`Number of members: ${group.member_ids.length}`} 
                   </Typography>
                   <Typography sx={{ pl: 2, pt: 2 }} variant="body2">
-                    {`Number of members: ${group.post_ids.length}`}
+                    {`Number of posts: ${group.post_ids.length}`}
                   </Typography>
                   <Typography sx={{ pl: 2, pt: 2 }} variant="body2">
-                    {`Number of members: ${group.last_active}`} 
+                    {`Last active time: ${group.last_active}`} 
                   </Typography>
                   <Typography sx={{ pl: 2, pt: 2, pb: 2 }} variant="body2">
-                    {`Number of members: ${group.created_at}`} 
+                    {`Group creation time: ${group.created_at}`} 
                   </Typography>
                 </Card>
 

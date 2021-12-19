@@ -124,7 +124,6 @@ export default function PostCard(props) {
       // console.log("comment object = ", comment);
       const commentAuthorObj = await getUserByID(comment.author_id);
       const newComment = { ...comment, author_username: (commentAuthorObj && commentAuthorObj.username) || "invalid" };
-      console.log(newComment);
       commentsToShow.push(newComment);
     }
 
@@ -157,8 +156,6 @@ export default function PostCard(props) {
 
   const handleClickOpenDeletePost = () => {
     // the user has to be either the author or the admin to delete the post
-    console.log(currUser._id);
-    console.log(authorID);
     if (currUser._id === authorID || currUser.group_admins.includes(groupID)) {
       setOpenDeletePost(true);
     } else {
