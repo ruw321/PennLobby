@@ -30,7 +30,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import {
-  deletePost, addComment, postMessage, flagPostForDeletion, deleteComment, editComment, getCommentByID, getUserByID, getAllComment
+  deletePost, addComment, postMessage, flagPostForDeletion, deleteComment, editComment, getCommentByID, getUserByID, getAllUsers,
 } from "../fetch";
 
 const ExpandMore = styled((props) => {
@@ -94,7 +94,8 @@ export default function PostCard(props) {
     updateHide,
     post,
     allPosts,
-    updateAllPosts
+    updateAllPosts,
+    allUsers
   } = props;
 
   const userID = sessionStorage.getItem('id');
@@ -105,35 +106,48 @@ export default function PostCard(props) {
   const [currUser, setCurrUser] = React.useState(null);
   const [error, setError] = React.useState('');
   const [openError, setOpenError] = React.useState(false);
-
   const [allComments, setAllComments] = React.useState([]);
   const [showNormalFlag, setShowNormalFlag] = React.useState(true);
+  const [postAuthor, setPostAuthor] = React.useState('');
   function delay(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
   }
   const [username, setUsername] = React.useState('');
   const [refresh, setRefresh] = React.useState(false);
-
+  const [postAvatar, setPostAvatar] = React.useState('');
+  
   React.useEffect(async () => {
     const commentIDs = post.comment_ids;
     const commentsToShow = [];
-    const userObj = await getUserByID(userID);
+    // const userObj = await getUserByID(userID);
+    const userObj = allUsers.find((u) => u._id === authorID);
     setCurrUser(userObj);
     for (const eachID of commentIDs) {
       const comment = await getCommentByID(eachID);
       // console.log("comment object = ", comment);
-      const commentAuthorObj = await getUserByID(comment.author_id);
-      const newComment = { ...comment, author_username: (commentAuthorObj && commentAuthorObj.username) || "invalid" };
-      console.log(newComment);
+      // const commentAuthorObj = await getUserByID(comment.author_id);
+      const authorUsername = (allUsers.find((u) => u._id === comment.author_id) && allUsers.find((u) => u._id === comment.author_id).username) || "invalid";
+      const authorAvatar = (allUsers.find((u) => u._id === comment.author_id) && allUsers.find((u) => u._id === comment.author_id).avatar_url) || "";
+      const newComment = { ...comment, author_username: authorUsername, author_avatar: authorAvatar };
       commentsToShow.push(newComment);
     }
 
     setAllComments(commentsToShow);
-    setUsername(userObj.username);
-    if (userObj.group_admins.includes(groupID) && post.flag_for_deletion) {
-      setShowNormalFlag(false);
-      console.log("ShowNormalFlag = ", showNormalFlag);
+    if (userObj) {
+      setUsername(userObj.username);
     }
+    if (post.flag_for_deletion) {
+      setShowNormalFlag(false);
+    }
+    setPostAuthor((allUsers.find((u) => u._id === authorID) && allUsers.find((u) => u._id === authorID).username) || 'invalid');
+    setPostAvatar((allUsers.find((u) => u._id === authorID) && allUsers.find((u) => u._id === authorID).avatar_url) || '');
+    // const users = await getAllUsers();
+    // if (users.length) {
+    //   for (let i = 0; i < users.length; i += 1) {
+    //     console.log(users[i]._id);
+    //   }
+    //   setPostAuthor(users.find((u) => u._id === authorID) && users.find((u) => u._id === authorID).username);
+    // }
   }, [refresh, props.refresh]);
 
   // comment toggle down
@@ -148,8 +162,6 @@ export default function PostCard(props) {
 
   const handleClickOpenDeletePost = () => {
     // the user has to be either the author or the admin to delete the post
-    console.log(currUser._id);
-    console.log(authorID);
     if (currUser._id === authorID || currUser.group_admins.includes(groupID)) {
       setOpenDeletePost(true);
     } else {
@@ -212,6 +224,8 @@ export default function PostCard(props) {
     const res = await flagPostForDeletion(userID, postID);
     const print = await res.json();
     setOpenFlagPost(false);
+    setShowNormalFlag(false);
+    postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
   };
 
   // post analytics
@@ -286,10 +300,8 @@ export default function PostCard(props) {
     const res = await addComment(newComment, userID, postID);
     const print = await res.json();
     await delay(2000);
-    console.log('after 2 second');
     postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
     await delay(2000);
-    console.log('after 2 second');
     postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
     // console.log(print);
   };
@@ -301,9 +313,10 @@ export default function PostCard(props) {
     >
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            {username.charAt(0)}
-          </Avatar>
+          // <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+          //   {username.charAt(0)}
+          // </Avatar>
+          <Avatar alt={username} src={postAvatar} />
         }
         action={
           <div>
@@ -377,7 +390,7 @@ export default function PostCard(props) {
 
             {/* flag as inappropriate */}
             <IconButton aria-label="settings" onClick={handleClickOpenFlagPost}>
-              {showNormalFlag ? <FlagIcon /> : <FlagIcon sx={{ color: pink[500] }} /> } 
+              {showNormalFlag ? <FlagIcon /> : <FlagIcon sx={{ color: pink[500] }} />}
             </IconButton>
 
             <Dialog
@@ -430,7 +443,7 @@ export default function PostCard(props) {
 
           </div>
         }
-        title={username}
+        title={postAuthor}
         subheader={props.post.created_at}
       />
       <CardContent>
@@ -459,9 +472,7 @@ export default function PostCard(props) {
           <div key={comment._id} className="comments">
             <CardHeader
               avatar={
-                <Avatar sx={{ bgcolor: "#ffaa00" }} aria-label="recipe">
-                  R
-                </Avatar>
+                <Avatar alt={comment.author_username} src={comment.author_avatar} />
               }
               action={
                 <div>
@@ -517,9 +528,9 @@ export default function PostCard(props) {
                     </DialogActions>
                   </Dialog>
                 </div>
-            }
+              }
               title={comment.author_username}
-              // subheader={comment.created_at}
+            // subheader={comment.created_at}
             />
 
             <CardContent>

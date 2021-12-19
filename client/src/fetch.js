@@ -1,5 +1,9 @@
 /* eslint-disable space-before-blocks */
-const url = !process.env.NODE_ENV || process.env.NODE_ENV === "development"
+const dotenv = require("dotenv");
+
+dotenv.config({ path: ".env" });
+
+const url = !process.env.DEPLOY || process.env.DEPLOY === "development"
   ? "http://localhost:8080"
   : "https://penn-lobby-backend.herokuapp.com";
 async function login(u, p) {
