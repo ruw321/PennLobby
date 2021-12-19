@@ -24,7 +24,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import {
-  getUserbyUsername, getS3Url, sendS3, updateUserById, 
+  getUserbyUsername, getS3Url, sendS3, updateUserById, postMessage,
 } from '../fetch';
 import PasswordChange from './profile_components/PasswordChange';
 import AccountDeactivate from './profile_components/AccountDeactivate';
@@ -82,6 +82,7 @@ export default function Album({ updateStatus }) {
     const response = await getUserbyUsername(uname);
     const parsed = await response.json();
     setUser(parsed);
+    postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
   };
   if (user) {
     const date = new Date(user.created_at);

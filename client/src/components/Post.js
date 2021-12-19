@@ -19,7 +19,7 @@ import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
-import { getAllPosts } from "../fetch";
+import { getAllPosts, getAllUsers } from "../fetch";
 
 function Copyright() {
   return (
@@ -66,7 +66,7 @@ function MyPost(props) {
   const [allPosts, setAllPosts] = useState([]);
   const [theRefresh, setRefresh] = React.useState(refresh);
   const userID = sessionStorage.getItem('id');
-
+  const [allUsers, setAllUsers] = React.useState([]);
   React.useEffect(() => {
     // if the user is not signed in yet navigate to sign in page
     if (!userID) {
@@ -74,6 +74,8 @@ function MyPost(props) {
     }
     setRefresh(refresh);
     const loadData = async () => {
+      const users = await getAllUsers();
+      setAllUsers(users);
       const postCards = await getAllPosts();
       const myPosts = [];
       for (const post of postCards) {
@@ -122,6 +124,7 @@ function MyPost(props) {
                         updateHide={updateHide}
                         allPosts={allPosts}
                         updateAllPosts={(newPosts) => setAllPosts(newPosts)}
+                        allUsers={allUsers}
                       />
                     ))}
                   </Grid>
