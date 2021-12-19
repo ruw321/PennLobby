@@ -11,7 +11,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "cd api && npm start",
+    "start": "cd api && node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd api && npm install"
   },
