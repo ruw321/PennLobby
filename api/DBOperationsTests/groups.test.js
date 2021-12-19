@@ -20,7 +20,7 @@ describe("Database operations tests", () => {
   // test data
   const testGroup = {
     name: "testGroup",
-    owner: "61bcee5f57e7c375f1864081",
+    owner: "61bd73c71a25ef8e46b28d03",
     type: "public",
     description: "This is a test group",
   };
@@ -129,7 +129,7 @@ describe("Database operations tests", () => {
     await DBConnection.connect();
     const result = await dbLib.addGroup(Group, testGroup);
     const result2 = await dbLib.deleteGroupByOwner(Group, result.owner);
-    expect(result2.deletedCount).toEqual(1);
+    expect(result2.deletedCount).not.toEqual(0);
   });
 
   test("deleteGroupByOwner exception", async () => {

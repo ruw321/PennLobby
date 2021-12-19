@@ -17,10 +17,6 @@ const schema = {
   required: ["content", "sender_id"],
 };
 
-// TODO 1: Users can request to join a public group and get notified whether or not they were accepted
-
-// TODO 2: Users in a private group can invite other users to join their group, and admins need to approve them before they can join
-
 // add a new notification
 router.route("/").post(async (req, res) => {
   const valid = ajv.validate(schema, req.body);

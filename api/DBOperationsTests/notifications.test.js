@@ -19,7 +19,7 @@ afterEach(async () => {
 describe("Database operations tests", () => {
   // test data
   const testNotification = {
-    sender_id: "61bcee5f57e7c375f1864081",
+    sender_id: "61bd73c71a25ef8e46b28d03",
     content: "test",
   };
 
