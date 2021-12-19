@@ -1,18 +1,14 @@
-const { MongoClient } = require("mongodb");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 
-const connect = async (dbUrl) => {
+dotenv.config({ path: ".env" });
+
+const connect = async () => {
   try {
-    mongoose.connect(dbUrl, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-    });
-    const db = mongoose.connection;
-    db.on("error", console.error.bind(console, "connection error:"));
-    db.once("open", () => {
-      console.log("Database connected");
+    mongoose.Promise = global.Promise;
+    mongoose.connect(process.env.DB_URL, { useNewUrlParser: true });
+    mongoose.connection.on("error", () => {
+      process.exit();
     });
   } catch (err) {
     console.error(err.message);

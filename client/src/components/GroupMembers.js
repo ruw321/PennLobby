@@ -30,13 +30,15 @@ import { demoteUser, getAllUsers, promoteUser } from '../fetch';
 export default function GroupMembers(props) {
   const { groupID } = props;
   const userID = sessionStorage.getItem("id");
-
+  const [currUser, setCurrUser] = React.useState(null);
   const [groupMembers, setGroupMembers] = React.useState([]);
+  const [refresh, setRefresh] = React.useState(false);
+  const [openErrorLog, setOpenErrorLog] = React.useState(false);
+  const [error, setError] = React.useState('');
 
   React.useEffect(async () => {
     let allUsers = await getAllUsers();
     allUsers = allUsers.filter((x) => x.group_ids.includes(groupID));
-    // console.log("all users filtered = ", allUsers, groupID);
     const users = allUsers.map((g) =>
       (
         {
@@ -46,15 +48,21 @@ export default function GroupMembers(props) {
           group_admins: g.group_admins,
         }
       ));
-    // console.log("users mapped = ", users);
     setGroupMembers(users);
-  }, []);
+  }, [refresh]);
 
   // Promote as admin icon button
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpen = (u) => {
+    if (u.group_admins.includes(groupID)) {
+      // cannot promote users who are already admins 
+      setError('You cannot promote someone who is already an admin!');
+      setOpenErrorLog(true);
+    } else {
+      setCurrUser(u);
+      setOpen(true);
+    }
   };
 
   const handleClose = () => {
@@ -63,16 +71,28 @@ export default function GroupMembers(props) {
 
   const handleConfirmPromote = async (userToPromoteID) => {
     const res = await promoteUser(userToPromoteID, userID, groupID);
-    const print = await res.json();
-    // console.log(print);
+    if (res.ok) {
+      setRefresh(!refresh);
+    }
     setOpen(false);
   };
 
   // Demote admin
   const [open2, setOpen2] = React.useState(false);
 
-  const handleClickOpen2 = () => {
-    setOpen2(true);
+  const handleClickOpen2 = (u) => {
+    if (u.group_admins.includes(groupID)) {
+      setCurrUser(u);
+      setOpen2(true);
+    } else {
+      // cannot demote someone who is not an admin
+      setError('You cannot demote someone who is not an admin!');
+      setOpenErrorLog(true);
+    }
+  };
+
+  const handleCloseErrorLog = () => {
+    setOpenErrorLog(false);
   };
 
   const handleClose2 = () => {
@@ -80,12 +100,13 @@ export default function GroupMembers(props) {
   };
 
   const handleConfirmDemote = async (userToDemoteID) => {
-    // console.log("userToDemote ID", userToDemoteID);
     const res = await demoteUser(userToDemoteID, userID, groupID);
-    const print = await res.json();
-    // console.log(print);
+    if (res.ok) {
+      setRefresh(!refresh);
+    }
     setOpen2(false);
   };
+
   return (
     <div>
       <Grid>
@@ -109,14 +130,32 @@ export default function GroupMembers(props) {
                   <IconButton>
                     {user.group_admins.includes(groupID) ? <ManageAccountsIcon color="success" /> : <PeopleAltIcon />}
                   </IconButton>
-                  <IconButton onClick={handleClickOpen}>
+                  <IconButton onClick={() => { handleClickOpen(user); }}>
                     <ArrowUpwardIcon />
                   </IconButton>
-                  <IconButton onClick={handleClickOpen2}>
+                  <IconButton onClick={() => { handleClickOpen2(user); }}>
                     <ArrowDownwardIcon />
                   </IconButton>
+                  <Dialog
+                    open={openErrorLog}
+                    onClose={handleCloseErrorLog}
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      Error!
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        {error}
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseErrorLog}>
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </div>
-          )}
+              )}
               subheader={user.name}
             />
 
@@ -137,10 +176,9 @@ export default function GroupMembers(props) {
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={() => { handleConfirmPromote(user.userID); }} autoFocus>
+                <Button onClick={() => { handleConfirmPromote(currUser.userID); }} autoFocus>
                   Confirm
                 </Button>
-
               </DialogActions>
             </Dialog>
 
@@ -161,7 +199,7 @@ export default function GroupMembers(props) {
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose2}>Cancel</Button>
-                <Button onClick={() => { handleConfirmDemote(user.userID); }} autoFocus>
+                <Button onClick={() => { handleConfirmDemote(currUser.userID); }} autoFocus>
                   Confirm
                 </Button>
               </DialogActions>

@@ -33,15 +33,27 @@ router.route("/").post(async (req, res) => {
       Notification,
       req.body
     );
-    const user = await Users.getUserById(User, notification.receiver_id);
-    const userNotificationIds = user.notification_ids;
-    userNotificationIds.push(notification._id);
-    await Users.updateUserById(User, notification.receiver_id, {
-      notification_ids: userNotificationIds,
-    });
+    notification.receiver_ids.forEach(async (r_id)=>{
+      const user = await Users.getUserById(User, r_id);
+      const userNotificationIds = user.notification_ids;
+      userNotificationIds.push(notification._id);
+      await Users.updateUserById(User, r_id, {
+        notification_ids: userNotificationIds,
+      });
+    })
     res.status(201).send(notification);
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+//get all notifications
+router.route("/").get(async (req, res) => {
+  try {
+    const notifications = await Notifications.getNotifications(Notification);
+    res.status(200).send(notifications);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
