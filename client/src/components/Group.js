@@ -23,6 +23,8 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import {
   Dialog,
   DialogActions,
@@ -125,6 +127,7 @@ function MyGroup(props) {
   const [selectTopics, setSelectTopics] = React.useState([]);
   const [selectSortBy, setSelectSortBy] = React.useState([]);
   const [groupCards, setGroupCards] = React.useState([]);
+  const [errorOpen, setErrorOpen] = React.useState(false);
   // const navigate = useNavigate();
   const userName = sessionStorage.getItem("username");
   const userID = sessionStorage.getItem("id");
@@ -233,30 +236,35 @@ function MyGroup(props) {
 
   const handleSubmit = async () => {
     const id = sessionStorage.getItem("id");
-    const group = {
-      owner: id,
-      name: groupName,
-      description: groupDescription,
-      type: groupType,
-      topics: selectedTopic,
-    };
-    const res = await createGroup(group);
-    if (res.ok) {
-      const newgroups = groupCards;
-      const ngroup = await res.json();
-      const newGroupCard = {
-        title: ngroup.name,
-        size: ngroup.member_ids.length,
-        description: ngroup.description,
-        image: "https://source.unsplash.com/random",
-        imageLabel: "Image Text",
-        topics: ngroup.topic_ids,
-        groupId: ngroup._id,
+    if (!id || !groupName || !groupDescription || !groupType || selectedTopic.length === 0) {
+      // error tell user to fill up all the info
+      setErrorOpen(true);
+    } else {
+      const group = {
+        owner: id,
+        name: groupName,
+        description: groupDescription,
+        type: groupType,
+        topics: selectedTopic,
       };
-      newgroups.push(newGroupCard);
-      setGroupCards(newgroups);
+      const res = await createGroup(group);
+      if (res.ok) {
+        const newgroups = groupCards;
+        const ngroup = await res.json();
+        const newGroupCard = {
+          title: ngroup.name,
+          size: ngroup.member_ids.length,
+          description: ngroup.description,
+          image: "https://source.unsplash.com/random",
+          imageLabel: "Image Text",
+          topics: ngroup.topic_ids,
+          groupId: ngroup._id,
+        };
+        newgroups.push(newGroupCard);
+        setGroupCards(newgroups);
+      }
+      setOpen(false);
     }
-    setOpen(false);
   };
 
   if (userName) {
@@ -347,6 +355,7 @@ function MyGroup(props) {
                             label="Group Name"
                             fullWidth
                             variant="standard"
+                            required
                             onChange={handleChangeGroupName}
                           />
 
@@ -359,12 +368,13 @@ function MyGroup(props) {
                               row
                               aria-label="Group Type"
                               name="controlled-radio-buttons-group"
-                              // onChange={handleChangeGroupType}
+                            // onChange={handleChangeGroupType}
                             >
                               <FormControlLabel
                                 control={
                                   <Radio
                                     value="public"
+                                    required
                                     onChange={handleChangeGroupType}
                                   />
                                 }
@@ -374,6 +384,7 @@ function MyGroup(props) {
                                 control={
                                   <Radio
                                     value="private"
+                                    required
                                     onChange={handleChangeGroupType}
                                   />
                                 }
@@ -390,7 +401,7 @@ function MyGroup(props) {
                             margin="dense"
                             id="name"
                             label="Description"
-                            // type="email"
+                            required
                             fullWidth
                             variant="standard"
                             onChange={handleChangeGroupDescription}
@@ -424,6 +435,15 @@ function MyGroup(props) {
                             </Select>
                           </FormControl>
                         </DialogContent>
+
+                        {errorOpen
+                          ? (
+                            <Alert severity="error">
+                              <AlertTitle>Error</AlertTitle>
+                              <strong>Please fill up all the fields</strong>
+                            </Alert>
+                          )
+                          : (<Typography />)}
 
                         <DialogActions>
                           <Button onClick={handleClose}>Cancel</Button>
