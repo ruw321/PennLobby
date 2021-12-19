@@ -5,8 +5,9 @@ const WebSocket = require('ws');
 const serverToken = jwt.sign({
   name: 'webserver',
 }, 'this_is_a_secret', { expiresIn: '1h' });
-// const url = 'ws://penn-lobby-websocket.herokuapp.com/';
-const url = 'ws://localhost:8085/';
+const url = 'ws://penn-lobby-websocket.herokuapp.com/';
+// const url = 'ws://localhost:8085/';
+
 const connection = new WebSocket(url, {
   headers: { token: serverToken },
 });

@@ -22,7 +22,7 @@ import {
   DialogActions, DialogContent, DialogContentText, DialogTitle,
 } from "@mui/material";
 import {
-  joinGroup, quitGroup, getAllTopics, getTopicByID, getAllUsers, sendNotification,
+  joinGroup, quitGroup, getAllTopics, getTopicByID, getAllUsers, sendNotification, postMessage,
 } from '../fetch';
 import GroupMembers from "./GroupMembers";
 
@@ -67,6 +67,7 @@ function GroupCard(props) {
     const receiverIds = users.filter((u) => u.group_admins.includes(post.groupId)).map((u) => u._id);
     const data = { content, sender_id: senderId, receiver_ids: receiverIds };
     await sendNotification(data);
+    await postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
     setOpen(false);
   };
 

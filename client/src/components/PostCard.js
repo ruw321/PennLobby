@@ -30,7 +30,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import {
-  deletePost, addComment, postMessage, flagPostForDeletion, deleteComment, editComment, getCommentByID, getUserByID
+  deletePost, addComment, postMessage, flagPostForDeletion, deleteComment, editComment, getCommentByID, getUserByID, getAllComment
 } from "../fetch";
 
 const ExpandMore = styled((props) => {
@@ -108,6 +108,9 @@ export default function PostCard(props) {
 
   const [allComments, setAllComments] = React.useState([]);
   const [showNormalFlag, setShowNormalFlag] = React.useState(true);
+  function delay(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
   const [username, setUsername] = React.useState('');
   const [refresh, setRefresh] = React.useState(false);
 
@@ -131,7 +134,7 @@ export default function PostCard(props) {
       setShowNormalFlag(false);
       console.log("ShowNormalFlag = ", showNormalFlag);
     }
-  }, [refresh]);
+  }, [refresh, props.refresh]);
 
   // comment toggle down
   const [expanded, setExpanded] = React.useState(false);
@@ -282,6 +285,13 @@ export default function PostCard(props) {
   const handleSendNewComment = async () => {
     const res = await addComment(newComment, userID, postID);
     const print = await res.json();
+    await delay(2000);
+    console.log('after 2 second');
+    postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
+    await delay(2000);
+    console.log('after 2 second');
+    postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
+    // console.log(print);
   };
 
   return (

@@ -132,11 +132,11 @@ async function updateUserById(id, obj) {
     return e;
   }
 }
-
 // register websocket for message
 async function registerMessage(username) {
   try {
     const theUrl = `${url}/api/message/register`;
+    // const data = `to=${receiver}&from=${sender}&message=${content}`;
     const data = { username };
     const result = await fetch(theUrl, {
       method: "POST", // or 'PUT'
@@ -704,6 +704,7 @@ module.exports = {
   quitGroup,
   getAllGroups,
   getAllPublicGroups,
+  registerMessage,
   getAllPostsByGroupID,
   getAllPostsByUserID,
   getCommentByID,
@@ -712,7 +713,6 @@ module.exports = {
   editComment,
   promoteUser,
   demoteUser,
-  registerMessage,
   getAllTopics,
   getTopicByID,
   getTopicByName,

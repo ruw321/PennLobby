@@ -7,12 +7,12 @@ import {
 } from '@mui/material';
 import Button from "@mui/material/Button";
 import NotificationsNoneIcon from '@mui/icons-material/Notifications';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import {
-  logout, getAllNotifications, getAllUsers, getAllGroups, joinGroup, deleteNotification, sendNotification,
+  logout, getAllNotifications, getAllUsers, getAllGroups, joinGroup, deleteNotification, sendNotification, postMessage,
 } from '../fetch';
 
 function NotificationCard(props) {
-  console.log('props', props);
   const {
     msg, allUsers, allGroups, resetAllNotifications 
   } = props;
@@ -21,12 +21,14 @@ function NotificationCard(props) {
     const data = { content: `(join accept)${msg.content.split(')')[1]}`, sender_id: sessionStorage.getItem('id'), receiver_ids: [msg.sender_id] };
     await sendNotification(data);
     await deleteNotification(msg._id);
+    await postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
     resetAllNotifications();
   };
   const rejectJoin = async () => {
     const data = { content: `(join declined)${msg.content.split(')')[1]}`, sender_id: sessionStorage.getItem('id'), receiver_ids: [msg.sender_id] };
     await sendNotification(data);
     await deleteNotification(msg._id);
+    await postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
     resetAllNotifications();
   };
   const ok = async () => {
@@ -38,12 +40,14 @@ function NotificationCard(props) {
     const data = { content: `(invite accept)${msg.content.split('(invite group)')[1].split('(user)')[0]}`, sender_id: sessionStorage.getItem('id'), receiver_ids: [msg.sender_id] };
     await sendNotification(data);
     await deleteNotification(msg._id);
+    await postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
     resetAllNotifications();
   };
   const rejectInvite = async () => {
     const data = { content: `(invite declined)${msg.content.split('(invite group)')[1].split('(user)')[0]}`, sender_id: sessionStorage.getItem('id'), receiver_ids: [msg.sender_id] };
     await sendNotification(data);
     await deleteNotification(msg._id);
+    await postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
     resetAllNotifications();
   };
   if (msg.content.indexOf('(join group)') === 0) {
@@ -103,11 +107,11 @@ function NotificationCard(props) {
   );
 }
 
-export default function UserAvatar({ setLoggedin, updateStatus }) {
+export default function UserAvatar(props) {
   // const classes = useStyles();
   // const navigate = useNavigate();
   // const username = sessionStorage.getItem('username');
-
+  const { setLoggedin, updateStatus } = props;
   // eslint-disable-next-line no-unused-vars
   const [allNotification, setAllNotification] = React.useState([]);
   const [allUsers, setAllUsers] = React.useState([]);
@@ -119,7 +123,7 @@ export default function UserAvatar({ setLoggedin, updateStatus }) {
     setAllUsers(users);
     const groups = await getAllGroups();
     setAllGroups(groups);
-  }, []);
+  }, [props.refresh]);
   const resetAllNotifications = async () => {
     const notifications = await getAllNotifications();
     setAllNotification(notifications);
@@ -162,7 +166,9 @@ export default function UserAvatar({ setLoggedin, updateStatus }) {
   return (
     <div>
       <IconButton aria-label="delete" onClick={handleClickOpenInvitation}>
-        <NotificationsNoneIcon />
+        {allNotification.find((n) => n.receiver_ids.includes(sessionStorage.getItem('id'))) ?
+          <NotificationsActiveIcon /> :
+          <NotificationsNoneIcon />}
       </IconButton>
       <Button
         id="basic-button"
