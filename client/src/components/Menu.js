@@ -64,6 +64,7 @@ function Menu(props) {
             color="text.primary"
             sx={{ my: 1, mx: 7 }}
             id="home"
+            className="menuLink"
             onClick={() => updateStatus('lobby')}
           >
             <img className="barLogo" src="../../logo.png" alt="logo_pic" />
@@ -74,6 +75,7 @@ function Menu(props) {
             sx={{ my: 1, mx: 7 }}
             // fontWeight="600"
             id="home"
+            className="menuLink"
             onClick={() => updateStatus('lobby')}
           >
             Home
@@ -83,6 +85,7 @@ function Menu(props) {
             color="text.primary"
             sx={{ my: 1, mx: 7 }}
             id="mygroups"
+            className="menuLink"
             onClick={() => updateStatus('group')}
           >
             My Groups
@@ -92,6 +95,7 @@ function Menu(props) {
             color="text.primary"
             sx={{ my: 1, mx: 7 }}
             id="myposts"
+            className="menuLink"
             onClick={() => updateStatus('post')}
           >
             My Posts
@@ -101,6 +105,7 @@ function Menu(props) {
             color="text.primary"
             sx={{ my: 1, mx: 7 }}
             id="messages"
+            className="menuLink"
             onClick={() => updateStatus('message')}
           >
             Messages

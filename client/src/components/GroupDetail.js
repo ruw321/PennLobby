@@ -127,7 +127,6 @@ function GroupDetail(props) {
 
   React.useEffect(async () => {
     // setPostCards([]);
-    console.log('update groupDetail');
     const postCards = await getAllPosts();
     const users = await getAllUsers();
     setAllUsers(users);
