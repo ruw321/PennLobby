@@ -102,13 +102,10 @@ export default function PostCard(props) {
   const groupID = post.group_id;
   const authorID = post.author_id;
 
-  const [currUser, setCurrUser] = React.useState(null);
-  const [error, setError] = React.useState('');
-  const [openError, setOpenError] = React.useState(false);
-
-  // get all comments
   const [allComments, setAllComments] = React.useState([]);
   const [showNormalFlag, setShowNormalFlag] = React.useState(true);
+  const [username, setUsername] = React.useState('');
+  const [refresh, setRefresh] = React.useState(false);
 
   React.useEffect(async () => {
     const commentIDs = post.comment_ids;
@@ -117,14 +114,20 @@ export default function PostCard(props) {
     setCurrUser(userObj);
     for (const eachID of commentIDs) {
       const comment = await getCommentByID(eachID);
-      commentsToShow.push(comment);
+      // console.log("comment object = ", comment);
+      const commentAuthorObj = await getUserByID(comment.author_id);
+      const newComment = { ...comment, author_username: (commentAuthorObj && commentAuthorObj.username) || "invalid" };
+      console.log(newComment);
+      commentsToShow.push(newComment);
     }
+
     setAllComments(commentsToShow);
+    setUsername(userObj.username);
     if (userObj.group_admins.includes(groupID) && post.flag_for_deletion) {
       setShowNormalFlag(false);
       console.log("ShowNormalFlag = ", showNormalFlag);
     }
-  }, []);
+  }, [refresh]);
 
   // comment toggle down
   const [expanded, setExpanded] = React.useState(false);
@@ -231,8 +234,11 @@ export default function PostCard(props) {
 
   const handleConfirmDeleteComment = async (commentID) => {
     const res = await deleteComment(userID, commentID);
-    const print = await res.json();
-    // console.log(print);
+    let tempComments = [];
+    if (res.ok) {
+      tempComments = allComments.filter((p) => String(p._id) !== commentID);
+    }
+    setAllComments(tempComments);
     setOpenDeleteComment(false);
   };
 
@@ -256,12 +262,13 @@ export default function PostCard(props) {
     // console.log(editedComment);
     const res = await editComment(editedComment, commentID, userID);
     const print = await res.json();
-    // console.log(print);
+
     setOpenEditComment(false);
   };
 
   // send a comment to a post
   const [newComment, setNewComment] = React.useState('');
+
   const handleChangeNewComment = (event) => {
     setNewComment(event.target.value);
   };
@@ -269,7 +276,6 @@ export default function PostCard(props) {
   const handleSendNewComment = async () => {
     const res = await addComment(newComment, userID, postID);
     const print = await res.json();
-    // console.log(print);
   };
 
   return (
@@ -280,7 +286,7 @@ export default function PostCard(props) {
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            {props.post.title.charAt(0)}
+            {username.charAt(0)}
           </Avatar>
         }
         action={
@@ -289,6 +295,7 @@ export default function PostCard(props) {
             <IconButton aria-label="settings" onClick={handleClickOpenDeletePost}>
               <DeleteIcon />
             </IconButton>
+
             <Dialog
               open={openError}
               onClose={handleCloseError}
@@ -310,8 +317,6 @@ export default function PostCard(props) {
             <Dialog
               open={openDeletePost}
               onClose={handleCloseDeletePost}
-            // aria-labelledby="alert-dialog-title"
-            // aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
                 Do you want to delete this post?
@@ -356,8 +361,7 @@ export default function PostCard(props) {
 
             {/* flag as inappropriate */}
             <IconButton aria-label="settings" onClick={handleClickOpenFlagPost}>
-              {showNormalFlag ? <FlagIcon /> : <FlagIcon sx={{ color: pink[500] }} />}
-
+              {showNormalFlag ? <FlagIcon /> : <FlagIcon sx={{ color: pink[500] }} /> } 
             </IconButton>
 
             <Dialog
@@ -410,10 +414,13 @@ export default function PostCard(props) {
 
           </div>
         }
-        title={props.post.title}
+        title={username}
         subheader={props.post.created_at}
       />
       <CardContent>
+        <Typography variant="body1" color="text.primary">
+          Title: {props.post && props.post.title}
+        </Typography>
         <PostMedia msg={props.post && props.post.content} />
       </CardContent>
       <CardActions disableSpacing>
@@ -494,12 +501,15 @@ export default function PostCard(props) {
                     </DialogActions>
                   </Dialog>
                 </div>
-              }
-              title={comment.author_id}
-            // subheader={comment.created_at}
+            }
+              title={comment.author_username}
+              // subheader={comment.created_at}
             />
 
             <CardContent>
+              {/* <Typography variant="body1" color="text.primart">
+                
+              </Typography> */}
               <Typography variant="body2" color="text.secondary">
                 {comment.content}
               </Typography>

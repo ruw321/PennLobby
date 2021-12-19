@@ -245,6 +245,28 @@ async function getAllPosts() {
   }
 }
 
+// get a post by ID
+async function getPostByID(postID) {
+  const obj = { _id: postID };
+  const data = {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // you have to do JSON.stringify, otherwise CORS wouldnt allow it
+    body: JSON.stringify(obj),
+  };
+  try {
+    const theUrl = `${url}/api/post/${postID}`;
+    const result = await fetch(theUrl, data);
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
 // add a new group
 async function createGroup(group) {
   const data = {
@@ -599,11 +621,58 @@ async function getTopicByName(topicName) {
   }
 }
 
+// get all Notifications
+async function getAllNotifications() {
+  try {
+    const theUrl = `${url}/api/notification`;
+    const result = await fetch(theUrl, { method: "GET" });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
 // Get user by id
 async function getUserByID(userID) {
   try {
     const theUrl = `${url}/api/user/id/${userID}`;
     const result = await fetch(theUrl, { method: "GET" });
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+// send Notifications
+async function sendNotification(msg) {
+  try {
+    const theUrl = `${url}/api/notification`;
+    const data = {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(msg),
+    };
+    const result = await fetch(theUrl, data);
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
+// delete Notifications
+async function deleteNotification(id) {
+  try {
+    const theUrl = `${url}/api/notification/${id}`;
+    const data = {
+      credentials: "include",
+      method: "DELETE",
+    };
+    const result = await fetch(theUrl, data);
     const res = await result.json();
     return res;
   } catch (err) {
@@ -627,6 +696,7 @@ module.exports = {
   userChangePassword,
   deactivateAccount,
   getAllPosts,
+  getPostByID,
   addPost,
   getAllComment,
   addComment,
@@ -646,5 +716,8 @@ module.exports = {
   getAllTopics,
   getTopicByID,
   getTopicByName,
+  getAllNotifications,
+  sendNotification,
+  deleteNotification,
   getUserByID,
 };
