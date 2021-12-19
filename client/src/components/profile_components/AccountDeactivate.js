@@ -42,7 +42,7 @@ export default function AccountDeactivate({ updateStatus }) {
   }, [userID]);
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen2}>
+      <Button id="deactivate" variant="outlined" onClick={handleClickOpen2}>
         Deactivate account
       </Button>
       <Dialog
@@ -61,7 +61,7 @@ export default function AccountDeactivate({ updateStatus }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose2}>Cancel</Button>
-          <Button onClick={handleConfirm} autoFocus>
+          <Button id="confirm" onClick={handleConfirm} autoFocus>
             Confirm
           </Button>
         </DialogActions>

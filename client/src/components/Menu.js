@@ -26,9 +26,6 @@ function Menu(props) {
     }
   }, []);
 
-  // React.useEffect(async () => {
-  //   console.log('update MENU');
-  // }, [props.refresh]);
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
@@ -118,7 +115,7 @@ function Menu(props) {
               refresh={props.refresh}
             />
           ) : (
-            <Button variant="outlined" sx={{ my: 1, mx: 1.5 }} onClick={() => updateStatus('login')}>
+            <Button id="login" variant="outlined" sx={{ my: 1, mx: 1.5 }} onClick={() => updateStatus('login')}>
               Login
             </Button>
           )}

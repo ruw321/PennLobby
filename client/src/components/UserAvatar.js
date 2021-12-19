@@ -220,57 +220,9 @@ export default function UserAvatar(props) {
           },
         }}
       >
-        <MenuItem onClick={handleProfile}>Profile</MenuItem>
+        <MenuItem id="profilepage" onClick={handleProfile}>Profile</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </div>
-    // <Container sx={{ display: 'flex', marginLeft: "180px" }}>
-    //   <div className={classes.icon}>
-    //     <Badge badgeContent={notificationNumber} color="secondary">
-    //       <NotificationsIcon
-    //         sx={{
-    //           color: '#FFF5E1',
-    //           '&:hover': {
-    //             color: "#ffffff",
-    //             cursor: "pointer",
-    //           },
-    //         }}
-    //         size="large"
-    //       />
-    //     </Badge>
-    //   </div>
-    //   <div className={classes.icon}>
-    //     <IconButton onClick={handleClick}>
-    //       <Avatar />
-    //     </IconButton>
-    //   </div>
-    //   <Menu
-    //     id="userMenu"
-    //     anchorEl={anchor}
-    //     open={Boolean(anchor)}
-    //     onClose={handleClose}
-    //     anchorOrigin={{
-    //       vertical: 'top',
-    //       horizontal: 'right',
-    //     }}
-    //     transformOrigin={{
-    //       vertical: 'bottom',
-    //       horizontal: 'left',
-    //     }}
-    //   >
-    //     <div className={classes.username}>
-    //       <Typography
-    //         variant="subtitle1"
-    //         color="secondary"
-    //         align="center"
-    //       >
-    //         {username}
-    //       </Typography>
-    //     </div>
-    //     <MenuItem onClick={handleClickHome}> Home </MenuItem>
-    //     <MenuItem onClick={handleClickMessage}> Message </MenuItem>
-    //     <MenuItem onClick={handleLogout}> Logout </MenuItem>
-    //   </Menu>
-    // </Container>
   );
 }

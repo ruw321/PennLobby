@@ -7,6 +7,7 @@
     "doc": "doc"
   },
   "dependencies": {
+    "cypress": "^9.1.1",
     "heroku": "^7.59.2"
   },
   "devDependencies": {},

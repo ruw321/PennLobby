@@ -164,6 +164,7 @@ function Login(props) {
                 : (<Typography />)}
               <Button
                 className="login-button"
+                id="login-button"
                 type="submit"
                 fullWidth
                 variant="contained"
@@ -179,6 +180,7 @@ function Login(props) {
                 </Grid> */}
                 <Grid item>
                   <Link 
+                    id="signup"
                     variant="body2" 
                     onClick={() => updateStatus('signup')}
                   >

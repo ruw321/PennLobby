@@ -173,6 +173,7 @@ function Signup({ updateStatus }) {
               </Grid>
               <Button
                 className="signup-button"
+                id="signup-button"
                 type="submit"
                 fullWidth
                 variant="contained"
