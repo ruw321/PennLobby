@@ -104,8 +104,9 @@ app.use(function (req, res, next) {
 });
 
 const port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log(`Serving on port ${port}`);
-});
+// comment out when running backend supertest
+// app.listen(port, () => {
+//   console.log(`Serving on port ${port}`);
+// });
 
 module.exports = app;

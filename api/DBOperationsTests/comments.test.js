@@ -12,6 +12,10 @@ const clearDatabase = async (dbLib) => {
   }
 };
 
+beforeAll(async () => {
+  await DBConnection.connect();
+});
+
 afterEach(async () => {
   await clearDatabase(Comment);
 });
@@ -19,20 +23,18 @@ afterEach(async () => {
 describe("Database operations tests", () => {
   // test data
   const testComment = {
-    post_id: "61bd14a0b09613142eabf302",
-    author_id: "61bd73c71a25ef8e46b28d03",
+    post_id: "61bfaf2e250f00001636b715",
+    author_id: "61bd73c71a25ef8e46b28d04",
     content: "test comment",
   };
 
   test("addComment successful", async () => {
-    await DBConnection.connect();
     await dbLib.addComment(Comment, testComment);
     const insertedComment = await Comment.findOne({ content: "test comment" });
     expect(insertedComment.content).toEqual("test comment");
   });
 
   test("addComment exception", async () => {
-    await DBConnection.connect();
     try {
       await dbLib.addComment(Comment, testComment.content);
     } catch (err) {
@@ -41,14 +43,12 @@ describe("Database operations tests", () => {
   });
 
   test("getComments successful", async () => {
-    await DBConnection.connect();
     await dbLib.addComment(Comment, testComment);
     const comments = await dbLib.getComments(Comment);
     expect(comments.length).not.toEqual(0);
   });
 
   test("getComments exception", async () => {
-    await DBConnection.connect();
     const comment = null;
     try {
       await dbLib.addComment(Comment, testComment);
@@ -59,14 +59,12 @@ describe("Database operations tests", () => {
   });
 
   test("getCommentById successful", async () => {
-    await DBConnection.connect();
     const comment = await dbLib.addComment(Comment, testComment);
     const comment2 = await dbLib.getCommentById(Comment, comment._id);
     expect(comment2.length).not.toEqual(0);
   });
 
   test("getCommentById exception", async () => {
-    await DBConnection.connect();
     try {
       await dbLib.getCommentById(Comment, "badId");
     } catch (err) {
@@ -75,14 +73,12 @@ describe("Database operations tests", () => {
   });
 
   test("deleteCommentById successful", async () => {
-    await DBConnection.connect();
     const result = await dbLib.addComment(Comment, testComment);
     const result2 = await dbLib.deleteCommentById(Comment, result._id);
     expect(result2.deletedCount).toEqual(1);
   });
 
   test("deleteCommentById exception", async () => {
-    await DBConnection.connect();
     try {
       await dbLib.deleteCommentById(Comment, "badId");
     } catch (err) {
@@ -91,14 +87,12 @@ describe("Database operations tests", () => {
   });
 
   // test("deleteCommentByAuthor successful", async () => {
-  //   await DBConnection.connect();
   //   const result = await dbLib.addComment(Comment, testComment);
   //   const result2 = await dbLib.deleteCommentByAuthor(Comment, result.author_id);
   //   expect(result2.deletedCount).toEqual(1);
   // });
 
   test("deleteCommentByAuthor exception", async () => {
-    await DBConnection.connect();
     try {
       await dbLib.deleteCommentByAuthor(Comment, "badId");
     } catch (err) {
@@ -107,7 +101,6 @@ describe("Database operations tests", () => {
   });
 
   test("updateCommentById successful", async () => {
-    await DBConnection.connect();
     const comment = await dbLib.addComment(Comment, testComment);
     const updatedComment = {
       content: "testComment2",
@@ -119,7 +112,6 @@ describe("Database operations tests", () => {
   });
 
   test("updateCommentById exception", async () => {
-    await DBConnection.connect();
     try {
       await dbLib.updateCommentById(Comment, "badId", "badObject");
     } catch (err) {

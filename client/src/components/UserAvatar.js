@@ -177,7 +177,7 @@ export default function UserAvatar(props) {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        <Avatar src="https://material-ui.com/static/images/avatar/1.jpg" />
+        <Avatar src={(allUsers.find((u) => u._id === sessionStorage.getItem("id")) && allUsers.find((u) => u._id === sessionStorage.getItem("id")).avatar_url) || ''} />
       </Button>
 
       {/* Invitation / Request Dialog */}
