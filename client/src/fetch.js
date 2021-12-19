@@ -216,7 +216,6 @@ async function getGroupByID(groupID) {
 // get all groups
 async function getAllGroups() {
   try {
-    console.log('DEPLOY=deploy', process.env);
     const theUrl = `${url}/api/group`;
     const result = await fetch(theUrl, { method: "GET" });
     const res = await result.json();
