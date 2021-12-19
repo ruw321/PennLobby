@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: ".env" });
 
 const url = !process.env.DEPLOY || process.env.DEPLOY === "development"
-  ? "http://localhost:8080"
+  ? "https://penn-lobby-backend.herokuapp.com"
   : "https://penn-lobby-backend.herokuapp.com";
 async function login(u, p) {
   const user = {
