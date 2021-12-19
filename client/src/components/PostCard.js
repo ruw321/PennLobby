@@ -136,7 +136,7 @@ export default function PostCard(props) {
     if (userObj) {
       setUsername(userObj.username);
     }
-    if (userObj.group_admins.includes(groupID) && post.flag_for_deletion) {
+    if (post.flag_for_deletion) {
       setShowNormalFlag(false);
     }
     setPostAuthor((allUsers.find((u) => u._id === authorID) && allUsers.find((u) => u._id === authorID).username) || 'invalid');
@@ -224,6 +224,8 @@ export default function PostCard(props) {
     const res = await flagPostForDeletion(userID, postID);
     const print = await res.json();
     setOpenFlagPost(false);
+    setShowNormalFlag(false);
+    postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
   };
 
   // post analytics
