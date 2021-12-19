@@ -1,5 +1,9 @@
 /* eslint-disable space-before-blocks */
-const url = !process.env.NODE_ENV || process.env.NODE_ENV === "development"
+const dotenv = require("dotenv");
+
+dotenv.config({ path: ".env" });
+
+const url = !process.env.DEPLOY || process.env.DEPLOY === "development"
   ? "http://localhost:8080"
   : "https://penn-lobby-backend.herokuapp.com";
 async function login(u, p) {
@@ -132,11 +136,11 @@ async function updateUserById(id, obj) {
     return e;
   }
 }
-
 // register websocket for message
 async function registerMessage(username) {
   try {
     const theUrl = `${url}/api/message/register`;
+    // const data = `to=${receiver}&from=${sender}&message=${content}`;
     const data = { username };
     const result = await fetch(theUrl, {
       method: "POST", // or 'PUT'
@@ -212,6 +216,7 @@ async function getGroupByID(groupID) {
 // get all groups
 async function getAllGroups() {
   try {
+    console.log('DEPLOY=deploy', process.env);
     const theUrl = `${url}/api/group`;
     const result = await fetch(theUrl, { method: "GET" });
     const res = await result.json();
@@ -704,6 +709,7 @@ module.exports = {
   quitGroup,
   getAllGroups,
   getAllPublicGroups,
+  registerMessage,
   getAllPostsByGroupID,
   getAllPostsByUserID,
   getCommentByID,
@@ -712,7 +718,6 @@ module.exports = {
   editComment,
   promoteUser,
   demoteUser,
-  registerMessage,
   getAllTopics,
   getTopicByID,
   getTopicByName,

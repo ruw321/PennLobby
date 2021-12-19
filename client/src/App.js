@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 /* eslint-disable no-shadow */
@@ -21,7 +22,7 @@ import Messages from './components/Messages';
 import GroupDetail from './components/GroupDetail';
 import GroupMembers from './components/GroupMembers';
 import { setupWSConnection } from './components/notifications';
-import { getAllUsers } from './fetch';
+import { getAllUsers, postMessage } from './fetch';
 
 function App() {
   const [status, setStatus] = useState('lobby');
@@ -58,6 +59,9 @@ function App() {
     setupWSConnection(updateContacts, updateMessages, texts); // setup ws connection
     setContacts((contacts) => contacts + 1); // update state to trigger re-rendering and useEffect
   };
+  const testRefresh = async () => {
+    postMessage(userName, userName, 'update');
+  };
   return (
     <div className="App">
       <Router>
@@ -85,7 +89,7 @@ function App() {
             path="/"
             element={
               <>
-                {(status !== 'login' && status !== 'signup') && <Menu updateStatus={updateStatus} />}
+                {(status !== 'login' && status !== 'signup') && <Menu refresh={refresh} updateStatus={updateStatus} />}
                 {status === 'login' && <Login updateUserName={updateUserName} updateStatus={updateStatus} />}
                 {status === 'signup' && <Signup updateStatus={updateStatus} />}
                 {status === 'lobby' && <Lobby updateCurrGroup={updateCurrGroup} updateStatus={updateStatus} />}
@@ -93,7 +97,10 @@ function App() {
                 {status === 'post' && <Post refresh={refresh} updateStatus={updateStatus} />}
                 {status === 'profile' && <Profile updateStatus={updateStatus} />}
                 {status === 'message' && <Messages contacts={contacts} messages={messages} texts={texts} friends={friends} />}
-                {status === 'groupdetail' && <GroupDetail currGroup={currGroup} />}
+                {status === 'groupdetail' && <GroupDetail refresh={refresh} currGroup={currGroup} />}
+                {/* <button onClick={testRefresh}>
+                  test refresh
+                </button> */}
                 {/* {status === 'groupmembers' && <GroupMembers />} */}
               </>
           }

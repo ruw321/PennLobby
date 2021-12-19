@@ -33,7 +33,7 @@ import TrendingTopics from "./TrendingTopics";
 import PostCard from "./PostCard";
 import GroupMembers from "./GroupMembers";
 import {
-  addPost, getAllPostsByGroupID, sendS3, getS3Url, quitGroup, getAllPosts, getGroupByID, getAllUsers, sendNotification,
+  addPost, getAllPostsByGroupID, sendS3, getS3Url, quitGroup, getAllPosts, getGroupByID, getAllUsers, sendNotification, postMessage,
 } from "../fetch";
 
 function Copyright() {
@@ -125,6 +125,23 @@ function GroupDetail(props) {
     setPostCards(groupPosts);
   }, []);
 
+  React.useEffect(async () => {
+    // setPostCards([]);
+    console.log('update groupDetail');
+    const postCards = await getAllPosts();
+    const users = await getAllUsers();
+    setAllUsers(users);
+    const curGroupObj = await getGroupByID(currGroup);
+    setGroup(curGroupObj);
+    const groupPosts = [];
+    for (const post of postCards) {
+      if (post.group_id === currGroup) {
+        groupPosts.push(post);
+      }
+    }
+    setPostCards(groupPosts);
+  }, [props.refresh]);
+
   const useStyles = makeStyles({
     // This group of buttons will be aligned to the right
     rightToolbar: {
@@ -184,6 +201,7 @@ function GroupDetail(props) {
     const print = await res.json();
     setOpen(false);
     setPostMediaLink(null);
+    postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
   };
 
   // for invite someone dialog
@@ -208,6 +226,7 @@ function GroupDetail(props) {
     const id = allUsers.find((u) => u.username === inviteUsername)._id;
     const data = { content: `(invite group)${currGroup}(user)${id}`, sender_id: userID, receiver_ids: allUsers.filter((u) => u.group_admins.includes(currGroup)).map((u) => u._id) };
     await sendNotification(data);
+    await postMessage(sessionStorage.getItem('username'), sessionStorage.getItem('username'), 'update');
     setOpen2(false);
   };
   // for leave a group dialog
@@ -282,6 +301,7 @@ function GroupDetail(props) {
                   </DialogContentText>}
                   {!postMediaLink && 
                   <TextField
+                    required
                     autoFocus
                     margin="dense"
                     id="name"
@@ -419,6 +439,7 @@ function GroupDetail(props) {
                         allPosts={postCards}
                         updateAllPosts={(newPosts) => setPostCards(newPosts)}
                         whetherIn
+                        refresh={props.refresh}
                       />
                     ))}
                   </Grid>
