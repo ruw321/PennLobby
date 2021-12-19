@@ -348,6 +348,7 @@ function MyGroup(props) {
                             fullWidth
                             variant="standard"
                             onChange={handleChangeGroupName}
+                            required
                           />
 
                           <DialogContentText sx={{ pt: 4 }}>
@@ -366,6 +367,7 @@ function MyGroup(props) {
                                   <Radio
                                     value="public"
                                     onChange={handleChangeGroupType}
+                                    required
                                   />
                                 }
                                 label="Public"
@@ -375,6 +377,7 @@ function MyGroup(props) {
                                   <Radio
                                     value="private"
                                     onChange={handleChangeGroupType}
+                                    required
                                   />
                                 }
                                 label="Private"
