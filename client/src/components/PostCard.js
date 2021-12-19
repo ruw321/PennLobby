@@ -102,6 +102,10 @@ export default function PostCard(props) {
   const groupID = post.group_id;
   const authorID = post.author_id;
 
+  const [currUser, setCurrUser] = React.useState(null);
+  const [error, setError] = React.useState('');
+  const [openError, setOpenError] = React.useState(false);
+
   const [allComments, setAllComments] = React.useState([]);
   const [showNormalFlag, setShowNormalFlag] = React.useState(true);
   const [username, setUsername] = React.useState('');
@@ -141,6 +145,8 @@ export default function PostCard(props) {
 
   const handleClickOpenDeletePost = () => {
     // the user has to be either the author or the admin to delete the post
+    console.log(currUser._id);
+    console.log(authorID);
     if (currUser._id === authorID || currUser.group_admins.includes(groupID)) {
       setOpenDeletePost(true);
     } else {
