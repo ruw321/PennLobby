@@ -57,7 +57,14 @@ wss.on('connection', (ws, req) => {
       const msg = JSON.parse(message);
       if(msg.type === 'message'){
         console.log(`new message notification ${connectedUsers.has(msg.data.to)} - ${connectedUsers.has(msg.data.from)}`);
-        if(connectedUsers.has(msg.data.to) && connectedUsers.has(msg.data.from)){ 
+        if(msg.data.from === msg.data.to && msg.data.message=='update'){
+          connectedUsers.forEach(function (value, key, map) {
+            console.log('update', key);
+            const newMessage = {type: 'new message', from: key, text: msg.data.message};
+            connectedUsers.get(key).send(JSON.stringify(newMessage));
+         })
+        }
+        else if(connectedUsers.has(msg.data.to) && connectedUsers.has(msg.data.from)){ 
           console.log(`send message`);
           // send message to receiver
           const newMessage = {type: 'new message', from: msg.data.from, text: msg.data.message};
