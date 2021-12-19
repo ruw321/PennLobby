@@ -30,7 +30,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import {
-  deletePost, addComment, postMessage, flagPostForDeletion, deleteComment, editComment, getCommentByID, getUserByID, getAllComment
+  deletePost, addComment, postMessage, flagPostForDeletion, deleteComment, editComment, getCommentByID, getUserByID, getAllUsers,
 } from "../fetch";
 
 const ExpandMore = styled((props) => {
@@ -105,9 +105,9 @@ export default function PostCard(props) {
   const [currUser, setCurrUser] = React.useState(null);
   const [error, setError] = React.useState('');
   const [openError, setOpenError] = React.useState(false);
-
   const [allComments, setAllComments] = React.useState([]);
   const [showNormalFlag, setShowNormalFlag] = React.useState(true);
+  const [postAuthor, setPostAuthor] = React.useState('');
   function delay(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
   }
@@ -129,10 +129,19 @@ export default function PostCard(props) {
     }
 
     setAllComments(commentsToShow);
-    setUsername(userObj.username);
+    if (userObj) {
+      setUsername(userObj.username);
+    }
     if (userObj.group_admins.includes(groupID) && post.flag_for_deletion) {
       setShowNormalFlag(false);
-      console.log("ShowNormalFlag = ", showNormalFlag);
+    }
+
+    const users = await getAllUsers();
+    if (users.length) {
+      for (let i = 0; i < users.length; i += 1) {
+        console.log(users[i]._id);
+      }
+      setPostAuthor(users.find((u) => u._id === authorID) && users.find((u) => u._id === authorID).username);
     }
   }, [refresh, props.refresh]);
 
@@ -377,7 +386,7 @@ export default function PostCard(props) {
 
             {/* flag as inappropriate */}
             <IconButton aria-label="settings" onClick={handleClickOpenFlagPost}>
-              {showNormalFlag ? <FlagIcon /> : <FlagIcon sx={{ color: pink[500] }} /> } 
+              {showNormalFlag ? <FlagIcon /> : <FlagIcon sx={{ color: pink[500] }} />}
             </IconButton>
 
             <Dialog
@@ -430,7 +439,7 @@ export default function PostCard(props) {
 
           </div>
         }
-        title={username}
+        title={postAuthor}
         subheader={props.post.created_at}
       />
       <CardContent>
@@ -517,9 +526,9 @@ export default function PostCard(props) {
                     </DialogActions>
                   </Dialog>
                 </div>
-            }
+              }
               title={comment.author_username}
-              // subheader={comment.created_at}
+            // subheader={comment.created_at}
             />
 
             <CardContent>
