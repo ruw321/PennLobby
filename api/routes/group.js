@@ -18,11 +18,12 @@ const schema = {
     name: { type: "string" },
     owner: { type: "string" },
     type: { type: "string" },
+    description: { type: "string" },
     topic_ids: { type: "array" },
     member_ids: { type: "array" },
     post_ids: { type: "array" },
   },
-  required: ["name", "owner", "type"],
+  required: ["name", "owner", "type", "description"],
 };
 
 // get all groups

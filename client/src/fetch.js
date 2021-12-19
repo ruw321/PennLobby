@@ -245,6 +245,28 @@ async function getAllPosts() {
   }
 }
 
+// get a post by ID
+async function getPostByID(postID) {
+  const obj = { _id: postID };
+  const data = {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // you have to do JSON.stringify, otherwise CORS wouldnt allow it
+    body: JSON.stringify(obj),
+  };
+  try {
+    const theUrl = `${url}/api/post/${postID}`;
+    const result = await fetch(theUrl, data);
+    const res = await result.json();
+    return res;
+  } catch (err) {
+    return null;
+  }
+}
+
 // add a new group
 async function createGroup(group) {
   const data = {
@@ -674,6 +696,7 @@ module.exports = {
   userChangePassword,
   deactivateAccount,
   getAllPosts,
+  getPostByID,
   addPost,
   getAllComment,
   addComment,
