@@ -357,6 +357,7 @@ function MyGroup(props) {
                             variant="standard"
                             required
                             onChange={handleChangeGroupName}
+                            required
                           />
 
                           <DialogContentText sx={{ pt: 4 }}>
@@ -376,6 +377,7 @@ function MyGroup(props) {
                                     value="public"
                                     required
                                     onChange={handleChangeGroupType}
+                                    required
                                   />
                                 }
                                 label="Public"
@@ -386,6 +388,7 @@ function MyGroup(props) {
                                     value="private"
                                     required
                                     onChange={handleChangeGroupType}
+                                    required
                                   />
                                 }
                                 label="Private"
