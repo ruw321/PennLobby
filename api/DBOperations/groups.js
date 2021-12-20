@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // get all groups
 module.exports.getGroups = async (collection) => {
   try {
@@ -11,7 +12,7 @@ module.exports.getGroups = async (collection) => {
 // get all public groups
 module.exports.getPublicGroups = async (collection) => {
   try {
-    const p_groups = await collection.find({ type: "public" });
+    const p_groups = await collection.find({ type: 'public' });
     return p_groups;
   } catch (err) {
     throw new Error(`Error getting all public groups: ${err.message}`);
@@ -73,7 +74,7 @@ module.exports.updateGroupById = async (collection, ID, updatedObject) => {
   try {
     const response = await collection.updateOne(
       { _id: ID },
-      { $set: updatedObject }
+      { $set: updatedObject },
     );
     return response;
   } catch (err) {

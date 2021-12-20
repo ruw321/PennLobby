@@ -1,12 +1,15 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-undef */
+/* eslint-disable no-shadow */
 /* eslint-disable no-console */
-const dbLib = require("../DBOperations/comments");
-const Comment = require("../models/Comment");
-const DBConnection = require("./connect");
+const dbLib = require('../DBOperations/comments');
+const Comment = require('../models/Comment');
+const DBConnection = require('./connect');
 
 // clean up the database after each test
 const clearDatabase = async (dbLib) => {
   try {
-    await dbLib.deleteOne({ content: "test comment" });
+    await dbLib.deleteOne({ content: 'test comment' });
   } catch (err) {
     throw new Error(`Error clearing the database: ${err.message}`);
   }
@@ -20,69 +23,69 @@ afterEach(async () => {
   await clearDatabase(Comment);
 });
 
-describe("Database operations tests", () => {
+describe('Database operations tests', () => {
   // test data
   const testComment = {
-    post_id: "61bfaf2e250f00001636b715",
-    author_id: "61bd73c71a25ef8e46b28d04",
-    content: "test comment",
+    post_id: '61bfaf2e250f00001636b715',
+    author_id: '61bd73c71a25ef8e46b28d04',
+    content: 'test comment',
   };
 
-  test("addComment successful", async () => {
+  test('addComment successful', async () => {
     await dbLib.addComment(Comment, testComment);
-    const insertedComment = await Comment.findOne({ content: "test comment" });
-    expect(insertedComment.content).toEqual("test comment");
+    const insertedComment = await Comment.findOne({ content: 'test comment' });
+    expect(insertedComment.content).toEqual('test comment');
   });
 
-  test("addComment exception", async () => {
+  test('addComment exception', async () => {
     try {
       await dbLib.addComment(Comment, testComment.content);
     } catch (err) {
-      expect(err.message).toContain("Error");
+      expect(err.message).toContain('Error');
     }
   });
 
-  test("getComments successful", async () => {
+  test('getComments successful', async () => {
     await dbLib.addComment(Comment, testComment);
     const comments = await dbLib.getComments(Comment);
     expect(comments.length).not.toEqual(0);
   });
 
-  test("getComments exception", async () => {
+  test('getComments exception', async () => {
     const comment = null;
     try {
       await dbLib.addComment(Comment, testComment);
       await dbLib.getComments(comment);
     } catch (err) {
-      expect(err.message).toContain("Error");
+      expect(err.message).toContain('Error');
     }
   });
 
-  test("getCommentById successful", async () => {
+  test('getCommentById successful', async () => {
     const comment = await dbLib.addComment(Comment, testComment);
     const comment2 = await dbLib.getCommentById(Comment, comment._id);
     expect(comment2.length).not.toEqual(0);
   });
 
-  test("getCommentById exception", async () => {
+  test('getCommentById exception', async () => {
     try {
-      await dbLib.getCommentById(Comment, "badId");
+      await dbLib.getCommentById(Comment, 'badId');
     } catch (err) {
-      expect(err.message).toContain("Error");
+      expect(err.message).toContain('Error');
     }
   });
 
-  test("deleteCommentById successful", async () => {
+  test('deleteCommentById successful', async () => {
     const result = await dbLib.addComment(Comment, testComment);
     const result2 = await dbLib.deleteCommentById(Comment, result._id);
     expect(result2.deletedCount).toEqual(1);
   });
 
-  test("deleteCommentById exception", async () => {
+  test('deleteCommentById exception', async () => {
     try {
-      await dbLib.deleteCommentById(Comment, "badId");
+      await dbLib.deleteCommentById(Comment, 'badId');
     } catch (err) {
-      expect(err.message).toContain("Error");
+      expect(err.message).toContain('Error');
     }
   });
 
@@ -92,30 +95,30 @@ describe("Database operations tests", () => {
   //   expect(result2.deletedCount).toEqual(1);
   // });
 
-  test("deleteCommentByAuthor exception", async () => {
+  test('deleteCommentByAuthor exception', async () => {
     try {
-      await dbLib.deleteCommentByAuthor(Comment, "badId");
+      await dbLib.deleteCommentByAuthor(Comment, 'badId');
     } catch (err) {
-      expect(err.message).toContain("Error");
+      expect(err.message).toContain('Error');
     }
   });
 
-  test("updateCommentById successful", async () => {
+  test('updateCommentById successful', async () => {
     const comment = await dbLib.addComment(Comment, testComment);
     const updatedComment = {
-      content: "testComment2",
+      content: 'testComment2',
     };
     await dbLib.updateCommentById(Comment, comment._id, updatedComment);
     const updatedResult = await dbLib.getCommentById(Comment, comment._id);
     await dbLib.deleteCommentById(Comment, updatedResult._id);
-    expect(updatedResult.content).toEqual("testComment2");
+    expect(updatedResult.content).toEqual('testComment2');
   });
 
-  test("updateCommentById exception", async () => {
+  test('updateCommentById exception', async () => {
     try {
-      await dbLib.updateCommentById(Comment, "badId", "badObject");
+      await dbLib.updateCommentById(Comment, 'badId', 'badObject');
     } catch (err) {
-      expect(err.message).toContain("Error");
+      expect(err.message).toContain('Error');
     }
   });
 });
