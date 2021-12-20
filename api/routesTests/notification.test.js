@@ -1,13 +1,16 @@
-const request = require("supertest");
-const dbLib = require("../DBOperations/notifications");
-const Notification = require("../models/Notification");
-const DBConnection = require("../DBOperationsTests/connect");
-const webapp = require("../app");
+/* eslint-disable no-undef */
+/* eslint-disable no-shadow */
+/* eslint-disable no-unused-vars */
+const request = require('supertest');
+const dbLib = require('../DBOperations/notifications');
+const Notification = require('../models/Notification');
+const DBConnection = require('../DBOperationsTests/connect');
+const webapp = require('../app');
 
 // clean up the database after each test
 const clearDatabase = async (dbLib) => {
   try {
-    await dbLib.deleteOne({ content: "test1" });
+    await dbLib.deleteOne({ content: 'test1' });
   } catch (err) {
     throw new Error(`Error clearing the database: ${err.message}`);
   }
@@ -21,16 +24,16 @@ afterEach(async () => {
   await clearDatabase(Notification);
 });
 
-describe("Endpoint API & integration tests", () => {
+describe('Endpoint API & integration tests', () => {
   // test data
   const testNotification = {
-    sender_id: "61bfaf74250f00001636b730",
-    content: "test1",
+    sender_id: '61bfaf74250f00001636b730',
+    content: 'test1',
   };
 
-  test("add a new notification", async () => {
+  test('add a new notification', async () => {
     request(webapp)
-      .post("/api/notification/")
+      .post('/api/notification/')
       .send(testNotification)
       .expect(201)
       .then((response) => {
@@ -39,15 +42,14 @@ describe("Endpoint API & integration tests", () => {
       });
   });
 
-  test("get all notifications", async () =>
-    request(webapp)
-      .get("/api/notification/")
-      .expect(200)
-      .then((response) => {
-        const notifications = response.body;
-        // notifications.length
-        expect(0).toEqual(0);
-      }));
+  test('get all notifications', async () => request(webapp)
+    .get('/api/notification/')
+    .expect(200)
+    .then((response) => {
+      const notifications = response.body;
+      // notifications.length
+      expect(0).toEqual(0);
+    }));
 
   // test("get notification by id", async () => {
   //   const insertedNotification = await Notification.create(testNotification);

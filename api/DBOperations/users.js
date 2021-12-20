@@ -8,7 +8,7 @@ module.exports.getUsers = async (collection) => {
   }
 };
 
-// TODO: add the function: req.isAuthenticated() 
+// TODO: add the function: req.isAuthenticated()
 // to make sure that only logged in users can access
 
 module.exports.getUserbyEmail = async (collection, theEmail) => {
@@ -65,7 +65,7 @@ module.exports.updateUserById = async (collection, ID, updatedObject) => {
   try {
     const response = await collection.updateOne(
       { _id: ID },
-      { $set: updatedObject }
+      { $set: updatedObject },
     );
     return response;
   } catch (err) {

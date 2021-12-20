@@ -53,7 +53,7 @@ module.exports.updateTopicById = async (collection, ID, updatedObject) => {
   try {
     const response = await collection.updateOne(
       { _id: ID },
-      { $set: updatedObject }
+      { $set: updatedObject },
     );
     return response;
   } catch (err) {

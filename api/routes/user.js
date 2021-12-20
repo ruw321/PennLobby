@@ -1,48 +1,53 @@
-const express = require("express");
+/* eslint-disable eqeqeq */
+/* eslint-disable max-len */
+/* eslint-disable camelcase */
+/* eslint-disable no-underscore-dangle */
+const express = require('express');
+
 const router = express.Router();
 // make sure the name is different from the class instance
 // for example, it cannot be users = require(./users)
-const Users = require("../DBOperations/users");
-const User = require("../models/User");
-const Comment = require("../models/Comment");
-const Comments = require("../DBOperations/comments");
-const Posts = require("../DBOperations/posts");
-const Post = require("../models/Post");
-const Groups = require("../DBOperations/groups");
-const Group = require("../models/Group");
+const Ajv = require('ajv');
+const Users = require('../DBOperations/users');
+const User = require('../models/User');
+const Comment = require('../models/Comment');
+const Comments = require('../DBOperations/comments');
+const Posts = require('../DBOperations/posts');
+const Post = require('../models/Post');
+const Groups = require('../DBOperations/groups');
+const Group = require('../models/Group');
 // data validator
-const Ajv = require("ajv");
 
-//data validator
+// data validator
 const ajv = new Ajv({ coerceTypes: true });
 const schema = {
-  type: "object",
+  type: 'object',
   properties: {
-    username: { type: "string" },
-    email: { type: "string" },
-    firstName: { type: "string" },
-    lastName: { type: "string" },
-    password: { type: "string" },
-    comment_ids: { type: "array" },
-    group_ids: { type: "array" },
-    post_ids: { type: "array" },
-    following: { type: "array" },
-    followers: { type: "array" },
-    blocking: { type: "array" },
-    blocked_by: { type: "array" },
-    avatar_url: { type: "string" },
-    notification_ids: { type: "array" },
+    username: { type: 'string' },
+    email: { type: 'string' },
+    firstName: { type: 'string' },
+    lastName: { type: 'string' },
+    password: { type: 'string' },
+    comment_ids: { type: 'array' },
+    group_ids: { type: 'array' },
+    post_ids: { type: 'array' },
+    following: { type: 'array' },
+    followers: { type: 'array' },
+    blocking: { type: 'array' },
+    blocked_by: { type: 'array' },
+    avatar_url: { type: 'string' },
+    notification_ids: { type: 'array' },
   },
-  required: ["username", "email", "firstName", "lastName", "password"],
+  required: ['username', 'email', 'firstName', 'lastName', 'password'],
 };
 
 // in this file, we will assume the database connection is
 // already established and successful
 
 // get all users
-router.route("/").get(async (req, res) => {
+router.route('/').get(async (req, res) => {
   try {
-    console.log(" !!get all!!user!");
+    // console.log(' !!get all!!user!');
     const users = await Users.getUsers(User);
     res.status(200).send(users);
   } catch (error) {
@@ -51,7 +56,7 @@ router.route("/").get(async (req, res) => {
 });
 
 // add a new user
-router.route("/").post(async (req, res) => {
+router.route('/').post(async (req, res) => {
   // console.log(req.body);
   const valid = ajv.validate(schema, req.body);
   if (!valid) {
@@ -62,13 +67,13 @@ router.route("/").post(async (req, res) => {
     // check if the user already exists in the database
     const exists = await Users.getUserbyEmail(User, req.body.email);
     if (exists) {
-      res.status(409).json({ error: "this email is already in the database" });
+      res.status(409).json({ error: 'this email is already in the database' });
       return;
     }
     if (await Users.getUserByUsername(User, req.body.username)) {
       res
         .status(409)
-        .json({ error: "this username is already in the database" });
+        .json({ error: 'this username is already in the database' });
       return;
     }
     const result = await Users.addUser(User, req.body);
@@ -79,7 +84,7 @@ router.route("/").post(async (req, res) => {
 });
 
 // get a user by id
-router.route("/id/:id").get(async (req, res) => {
+router.route('/id/:id').get(async (req, res) => {
   try {
     const user = await Users.getUserById(User, req.params.id);
     res.status(200).send(user);
@@ -89,7 +94,7 @@ router.route("/id/:id").get(async (req, res) => {
 });
 
 // get a user by username
-router.route("/username/:username").get(async (req, res) => {
+router.route('/username/:username').get(async (req, res) => {
   if (req.isAuthenticated) {
     try {
       const user = await Users.getUserByUsername(User, req.params.username);
@@ -98,12 +103,12 @@ router.route("/username/:username").get(async (req, res) => {
       res.status(400).json({ error: error.message });
     }
   } else {
-    res.status(401).json({ error: "You are not authorized." });
+    res.status(401).json({ error: 'You are not authorized.' });
   }
 });
 
 // get a user by email
-router.route("/email/:email").get(async (req, res) => {
+router.route('/email/:email').get(async (req, res) => {
   try {
     const user = await Users.getUserByEmail(User, req.params.email);
     res.status(200).send(user);
@@ -113,23 +118,23 @@ router.route("/email/:email").get(async (req, res) => {
 });
 
 // user change password
-router.route("/password/:id").put(async (req, res) => {
+router.route('/password/:id').put(async (req, res) => {
   if (req.isAuthenticated) {
     try {
       const pass = req.body.password;
-      const id = req.params.id;
+      const { id } = req.params;
       const user = await Users.changePassword(User, id, pass);
       res.status(200).send(user);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
   } else {
-    res.status(401).json({ error: "You are not authorized." });
+    res.status(401).json({ error: 'You are not authorized.' });
   }
 });
 
 // update a user by id
-router.route("/:id").put(async (req, res) => {
+router.route('/:id').put(async (req, res) => {
   if (req.isAuthenticated) {
     try {
       const obj = req.body;
@@ -140,12 +145,12 @@ router.route("/:id").put(async (req, res) => {
       res.status(400).json({ error: error.message });
     }
   } else {
-    res.status(401).json({ error: "You are not authorized." });
+    res.status(401).json({ error: 'You are not authorized.' });
   }
 });
 
 // deactivate a user by id
-router.route("/:id").delete(async (req, res) => {
+router.route('/:id').delete(async (req, res) => {
   try {
     const user = await Users.deleteUserById(User, req.params.id);
     // delete the comments, posts and groups created by this user
@@ -159,18 +164,18 @@ router.route("/:id").delete(async (req, res) => {
 });
 
 // join a group by id
-router.route("/join/").put(async (req, res) => {
+router.route('/join/').put(async (req, res) => {
   try {
-    console.log(" !!put!!user!");
+    // console.log(' !!put!!user!');
     const userId = req.body._id;
     const groupId = req.body._group_id;
     const user = await Users.getUserById(User, userId);
     if (user.group_ids.includes(groupId)) {
-      res.status(400).json({ error: "already in this group" });
+      res.status(400).json({ error: 'already in this group' });
       return;
     }
     user.group_ids.push(groupId);
-    console.log(" !!user!", user);
+    // console.log(' !!user!', user);
     const { _id, ...rest } = user;
     const newUsers = await Users.updateUserById(User, req.body._id, rest);
     res.status(200).send(newUsers);
@@ -180,13 +185,13 @@ router.route("/join/").put(async (req, res) => {
 });
 
 // a group admin promotes another group member from member to admin
-router.route("/promote/:userToPromoteId").put(async (req, res) => {
+router.route('/promote/:userToPromoteId').put(async (req, res) => {
   if (req.isAuthenticated) {
     try {
       const user = await Users.getUserById(User, req.body.user_id);
       const userToPromote = await Users.getUserById(
         User,
-        req.params.userToPromoteId
+        req.params.userToPromoteId,
       );
 
       const g_id = req.body.group_id;
@@ -196,31 +201,31 @@ router.route("/promote/:userToPromoteId").put(async (req, res) => {
         const response = await Users.updateUserById(
           User,
           req.params.userToPromoteId,
-          { group_admins: groupAdmins }
+          { group_admins: groupAdmins },
         );
         res.status(200).send(response);
       } else {
         res
           .status(400)
-          .json({ error: "You are either not authorized to promote this user, or this user is not in the group!" });
+          .json({ error: 'You are either not authorized to promote this user, or this user is not in the group!' });
         return;
       }
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
   } else {
-    res.status(401).json({ error: "You are not authorized." });
+    res.status(401).json({ error: 'You are not authorized.' });
   }
 });
 
 // a group admin demotes another group member from admin to member
-router.route("/demote/:userToDemote").put(async (req, res) => {
+router.route('/demote/:userToDemote').put(async (req, res) => {
   if (req.isAuthenticated) {
     try {
       const user = await Users.getUserById(User, req.body.user_id);
       const UserToDemote = await Users.getUserById(
         User,
-        req.params.userToDemote
+        req.params.userToDemote,
       );
       const gIDs = user.group_admins;
       const gID = req.body.group_id;
@@ -231,20 +236,20 @@ router.route("/demote/:userToDemote").put(async (req, res) => {
         const response = await Users.updateUserById(
           User,
           req.params.userToDemote,
-          { group_admins: gIDs2 }
+          { group_admins: gIDs2 },
         );
         res.status(200).send(response);
       } else {
         res
           .status(400)
-          .json({ error: "You are either not authorized to demote this user, or this user is not in the group!" });
+          .json({ error: 'You are either not authorized to demote this user, or this user is not in the group!' });
         return;
       }
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
   } else {
-    res.status(401).json({ error: "You are not authorized." });
+    res.status(401).json({ error: 'You are not authorized.' });
   }
 });
 

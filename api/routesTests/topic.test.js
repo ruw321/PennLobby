@@ -1,13 +1,16 @@
-const request = require("supertest");
-const dbLib = require("../DBOperations/topics");
-const Topic = require("../models/Topic");
-const DBConnection = require("../DBOperationsTests/connect");
-const webapp = require("../app");
+/* eslint-disable no-undef */
+/* eslint-disable no-shadow */
+/* eslint-disable no-unused-vars */
+const request = require('supertest');
+const dbLib = require('../DBOperations/topics');
+const Topic = require('../models/Topic');
+const DBConnection = require('../DBOperationsTests/connect');
+const webapp = require('../app');
 
 // clean up the database after each test
 const clearDatabase = async (dbLib) => {
   try {
-    await dbLib.deleteOne({ name: "test1" })
+    await dbLib.deleteOne({ name: 'test1' });
   } catch (err) {
     throw new Error(`Error clearing the database: ${err.message}`);
   }
@@ -21,10 +24,10 @@ afterEach(async () => {
   await clearDatabase(Topic);
 });
 
-describe("Endpoint API & integration tests", () => {
+describe('Endpoint API & integration tests', () => {
   // test data
   const testTopic = {
-    name: "test1",
+    name: 'test1',
     group_ids: [],
   };
 
@@ -39,15 +42,14 @@ describe("Endpoint API & integration tests", () => {
   //     });
   // });
 
-  test("get all topics", async () =>
-    request(webapp)
-      .get("/api/topic/")
-      .expect(200)
-      .then((response) => {
-        const topics = response.body;
-        // topics.length
-        expect(0).toEqual(0);
-      }));
+  test('get all topics', async () => request(webapp)
+    .get('/api/topic/')
+    .expect(200)
+    .then((response) => {
+      const topics = response.body;
+      // topics.length
+      expect(0).toEqual(0);
+    }));
 
   // test("get topic by id", async () => {
   //   const insertedTopic = await Topic.create(testTopic);
