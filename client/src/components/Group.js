@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable no-underscore-dangle */
@@ -357,6 +358,7 @@ function MyGroup(props) {
                             variant="standard"
                             required
                             onChange={handleChangeGroupName}
+                            required
                           />
 
                           <DialogContentText sx={{ pt: 4 }}>
@@ -376,6 +378,7 @@ function MyGroup(props) {
                                     value="public"
                                     required
                                     onChange={handleChangeGroupType}
+                                    required
                                   />
                                 }
                                 label="Public"
@@ -386,6 +389,7 @@ function MyGroup(props) {
                                     value="private"
                                     required
                                     onChange={handleChangeGroupType}
+                                    required
                                   />
                                 }
                                 label="Private"

@@ -20,14 +20,26 @@ const notificationRouter = require("./routes/notification");
 const session = require('express-session');  // session middleware
 // const bodyParser = require('body-parser'); // parser middleware
 const passport = require('passport');
+const indexRouter = require('./routes/index');
+const userRouter = require('./routes/user');
+const authRouter = require('./routes/auth');
+const groupRouter = require('./routes/group');
+const postRouter = require('./routes/post');
+const commentRouter = require('./routes/comment');
+const topicRouter = require('./routes/topic');
+const messageRouter = require('./routes/message');
+const joinRouter = require('./routes/join');
+const quitRouter = require('./routes/quit');
+const notificationRouter = require('./routes/notification');
+const ExpressError = require('./utils/ExpressError');
+// const bodyParser = require('body-parser'); // parser middleware
 const MongoStore = require('connect-mongo')(session);
 const sThree = require('./s3.js');
 
-dotenv.config({ path: ".env" });
+dotenv.config({ path: '.env' });
 
-const dbUrl =
-  process.env.DB_URL ||
-  "mongodb+srv://cis557:pennlobby@pennlobby.3poyg.mongodb.net/cis557?retryWrites=true&w=majority";
+const dbUrl = process.env.DB_URL
+  || 'mongodb+srv://cis557:pennlobby@pennlobby.3poyg.mongodb.net/cis557?retryWrites=true&w=majority';
 
 mongoose.connect(dbUrl, {
   useNewUrlParser: true,
@@ -37,9 +49,9 @@ mongoose.connect(dbUrl, {
 });
 
 const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-  console.log("Database connected");
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+  console.log('Database connected');
 });
 
 const sessionStore = new MongoStore({
@@ -55,16 +67,16 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   store: sessionStore,
-  cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
+  cookie: { maxAge: 60 * 60 * 1000 }, // 1 hour
 }));
 
-app.use(logger("dev"));
+app.use(logger('dev'));
 app.use(express.json());
 // TODO: delete CORS in production
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, 'public')));
 // app.use(bodyParser.urlencoded({ extended: false }));
 
 // app.use(function(_req, res, next) {
@@ -76,36 +88,36 @@ app.use(passport.initialize());
 app.use(passport.session());
 require('./passport')(passport); // for authentication
 
-app.use("/", indexRouter);
+app.use('/', indexRouter);
 
-app.use("/auth", authRouter)
-app.use("/api/user", userRouter);
-app.use("/api/group", groupRouter);
-app.use("/api/post", postRouter);
-app.use("/api/comment", commentRouter);
-app.use("/api/topic", topicRouter);
-app.use("/api/message", messageRouter);
+app.use('/auth', authRouter);
+app.use('/api/user', userRouter);
+app.use('/api/group', groupRouter);
+app.use('/api/post', postRouter);
+app.use('/api/comment', commentRouter);
+app.use('/api/topic', topicRouter);
+app.use('/api/message', messageRouter);
 app.use('/api/join', joinRouter);
 app.use('/api/quit', quitRouter);
-app.use("/api/notification", notificationRouter);
+app.use('/api/notification', notificationRouter);
 app.get('/api/s3Url', async (req, res) => {
-  const url = await sThree.generator()
-  res.send({ url })
-})
+  const url = await sThree.generator();
+  res.send({ url });
+});
 
 // '*': match any other url if all previous urls do not match
 app.all('*', (req, res, next) => {
   next(createError(404));
 });
 
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 const port = process.env.PORT || 8080;
 // comment out when running backend supertest
-// app.listen(port, () => {
-//   console.log(`Serving on port ${port}`);
-// });
+app.listen(port, () => {
+  console.log(`Serving on port ${port}`);
+});
 
 module.exports = app;

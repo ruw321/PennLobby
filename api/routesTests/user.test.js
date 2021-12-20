@@ -41,9 +41,9 @@ describe("Endpoint API & integration tests", () => {
       });
   });
 
-  test("get all users", async () => {
+  test('get all users', async () => {
     request(webapp)
-      .get("/api/user/")
+      .get('/api/user/')
       .expect(200)
       .then((response) => {
         const users = response.body;

@@ -1,22 +1,24 @@
-const express = require("express");
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-unused-vars */
+const express = require('express');
+
 const router = express.Router();
-// make sure the name is different from the class instance 
+// make sure the name is different from the class instance
 // for example, it cannot be users = require(./users)
-const Users = require("../DBOperations/users");
+const Ajv = require('ajv');
+const Users = require('../DBOperations/users');
 const User = require('../models/User');
-const Groups = require("../DBOperations/groups");
+const Groups = require('../DBOperations/groups');
 const Group = require('../models/Group');
-// data validator 
-const Ajv = require("ajv");
+// data validator
 
-//data validator
-const ajv = new Ajv({ coerceTypes: true })
-
+// data validator
+const ajv = new Ajv({ coerceTypes: true });
 
 // quit a group by id
-router.route("/").delete(async (req, res) => {
+router.route('/').delete(async (req, res) => {
   try {
-    console.log('check: start deleting user ');
+    // console.log('check: start deleting user ');
     const userId = req.body._id;
     const groupId = req.body._group_id;
     const user = await Users.getUserById(User, userId);
@@ -25,8 +27,8 @@ router.route("/").delete(async (req, res) => {
       return;
     }
     user.group_ids.remove(groupId);
-    console.log(' user = ', user)
-    let { _id, ...rest } = user;
+    // console.log(' user = ', user);
+    const { _id, ...rest } = user;
     const newUsers = await Users.updateUserById(User, userId, rest);
 
     const group = await Groups.getGroupById(Group, groupId);
@@ -42,6 +44,5 @@ router.route("/").delete(async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
 
 module.exports = router;
