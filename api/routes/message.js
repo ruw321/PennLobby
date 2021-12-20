@@ -16,14 +16,14 @@ connection.onopen = () => {
 };
 
 connection.onerror = (error) => {
-  console.log(`WebSocket error: ${error}`);
+  // console.log(`WebSocket error: ${error}`);
 };
 connection.onmessage = (e) => {
-  console.log(e.data);
+  // console.log(e.data);
 };
 
 router.post('/register', function (req, _res) {
-  console.log('register````', req.body);
+  // console.log('register````', req.body);
   // create jwt token
   let userToken;
   // create and send JWT to a the user
@@ -37,7 +37,7 @@ router.post('/register', function (req, _res) {
 });
 
 router.post('/', function (req, _res) {
-  console.log('Received a message');
+  // console.log('Received a message');
   if (!req.body.to || !req.body.from || !req.body.message) {
     _res.status(400).json({ error: 'missing to or from or message' });
     return;
