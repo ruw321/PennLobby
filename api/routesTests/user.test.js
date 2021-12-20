@@ -1,13 +1,13 @@
 const request = require("supertest");
-const dbLib = require("../DBOperations/users");
+const Users = require("../DBOperations/users");
 const User = require("../models/User");
 const DBConnection = require("../DBOperationsTests/connect");
 const webapp = require("../app");
 
 // clean up the database after each test
-const clearDatabase = async (dbLib) => {
+const clearDatabase = async (User) => {
   try {
-    await dbLib.deleteOne({ username: "testUser1" });
+    await User.deleteOne({ username: "testUser1" });
   } catch (err) {
     throw new Error(`Error clearing the database: ${err.message}`);
   }
@@ -15,14 +15,6 @@ const clearDatabase = async (dbLib) => {
 
 beforeAll(async () => {
   await DBConnection.connect();
-  const testUser = {
-    username: "testUser1",
-    email: "test1@gmail.com",
-    firstName: "ruichen",
-    lastName: "zhang",
-    password: "test",
-  };
-  await User.create(testUser);
 });
 
 afterEach(async () => {
@@ -30,27 +22,24 @@ afterEach(async () => {
 });
 
 describe("Endpoint API & integration tests", () => {
-  const testUser2 = {
-    username: "testUser2",
-    email: "test2@gmail.com",
-    firstName: "ruichen2",
-    lastName: "zhang2",
-    password: "test2",
+  const testUser = {
+    username: "testUser1",
+    email: "test1@gmail.com",
+    firstName: "ruichen",
+    lastName: "zhang",
+    password: "test",
   };
 
-  // test("add a new user", async () => {
-  //   request(webapp)
-  //     .post("/api/user/")
-  //     .send(testUser2)
-  //     .expect(201)
-  //     .then((response) => {
-  //       // console.log("This is response", response);
-  //       const user = response.body;
-  //       // console.log("This is response body", response.body);
-  //       expect(user.username).toEqual(testUser2.username);
-  //     });
-  //   await User.deleteOne({ username: "testUser2" });
-  // });
+  test("add a new user", async () => {
+    request(webapp)
+      .post("/api/user/")
+      .send(testUser)
+      .expect(201)
+      .then((response) => {
+        const user = response.body;
+        expect(user.username).toEqual(testUser.username);
+      });
+  });
 
   test("get all users", async () => {
     request(webapp)
@@ -58,15 +47,40 @@ describe("Endpoint API & integration tests", () => {
       .expect(200)
       .then((response) => {
         const users = response.body;
-        // users.length
-        expect(0).toEqual(0);
+        expect(users.length).not.toEqual(0);
       });
   });
 
-  // test("get user by id", async () => {
-  //   console.log("This is user", insertedUser);
+  test("get user by id", async () => {
+    // const users = await User.find({});
+    // console.log("haha", users);
+    // const insertedUser = await Users.addUser(User, testUser);
+    // const insertedUser = await User.create(testUser);
+    // console.log("haha", insertedUser);
+    request(webapp)
+      .get("/api/user/id/61bfaebcf5521300169eae37")
+      .expect(200)
+      .then((response) => {
+        const user = response.body;
+        expect(user.length).not.toEqual(0);
+      });
+  });
+
+  test("get user by username", async () => {
+    request(webapp)
+      .get("/api/user/username/t")
+      .expect(200)
+      .then((response) => {
+        const user = response.body;
+        expect(user.length).not.toEqual(0);
+      });
+  });
+
+  // test("get user by email", async () => {
+  //   const insertedUser = await Users.addUser(User, testUser);
+  //   const email = "t@gmail.com";
   //   request(webapp)
-  //     .get(`/api/user/id/${insertedUser._id}`)
+  //     .get(`/api/user/email/${email}`)
   //     .expect(200)
   //     .then((response) => {
   //       const user = response.body;
@@ -74,10 +88,23 @@ describe("Endpoint API & integration tests", () => {
   //     });
   // });
 
-  // test("get user by username", async () => {
+    // test("update user by id", async () => {
+    //   await request(webapp)
+    //     .put(`/player/${insertedUser.id}`)
+    //     .send("name=testuser&points=10&maxpoints=10")
+    //     .expect(200)
+    //     .then((response) => {
+    //       const result = response.body;
+    //       expect(result.matchedCount).toEqual(1);
+    //     });
+    // });
+
+  // test("delete user by id", async () => {
+  //   const insertedUser = await Users.addUser(User, testUser);
+  //   // console.log("This is user id", insertedUser._id);
   //   request(webapp)
-  //     .get(`/api/user/username/testUser1`)
-  //     .expect(200)
+  //     .delete(`/api/user/${insertedUser._id}`)
+  //     .expect(400)
   //     .then((response) => {
   //       const user = response.body;
   //       expect(user.length).not.toEqual(0);

@@ -5,9 +5,9 @@ const DBConnection = require("../DBOperationsTests/connect");
 const webapp = require("../app");
 
 // clean up the database after each test
-const clearDatabase = async (dbLib) => {
+const clearDatabase = async (Topic) => {
   try {
-    await dbLib.deleteOne({ name: "test1" })
+    await Topic.deleteOne({ name: "test1" })
   } catch (err) {
     throw new Error(`Error clearing the database: ${err.message}`);
   }
@@ -44,8 +44,6 @@ describe("Endpoint API & integration tests", () => {
       .get("/api/topic/")
       .expect(200)
       .then((response) => {
-        const topics = response.body;
-        // topics.length
         expect(0).toEqual(0);
       }));
 
@@ -57,15 +55,6 @@ describe("Endpoint API & integration tests", () => {
   //     .then((response) => {
   //       const topic = response.body;
   //       expect(topic.length).not.toEqual(0);
-  //     });
-  // });
-
-  // test("delete topic by id", async () => {
-  //   request(webapp)
-  //     .delete("/api/topic/testid")
-  //     .expect(400)
-  //     .then((response) => {
-  //       expect(0).toEqual(0);
   //     });
   // });
 });
