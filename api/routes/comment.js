@@ -1,27 +1,31 @@
-const express = require("express");
+/* eslint-disable eqeqeq */
+/* eslint-disable no-underscore-dangle */
+// eslint-disable-next-line import/newline-after-import
+const express = require('express');
 const router = express.Router();
-const Comments = require("../DBOperations/comments");
-const Posts = require("../DBOperations/posts");
-const Users = require("../DBOperations/users");
-const Comment = require("../models/Comment");
-const Post = require("../models/Post");
-const User = require("../models/User");
-const Ajv = require("ajv");
+const Comments = require('../DBOperations/comments');
+const Posts = require('../DBOperations/posts');
+const Users = require('../DBOperations/users');
+const Comment = require('../models/Comment');
+const Post = require('../models/Post');
+const User = require('../models/User');
+// eslint-disable-next-line import/order
+const Ajv = require('ajv');
 
 const ajv = new Ajv({ coerceTypes: true });
 const schema = {
-  type: "object",
+  type: 'object',
   properties: {
-    content: { type: "string" },
-    post_id: { type: "string" },
-    author_id: { type: "string" },
+    content: { type: 'string' },
+    post_id: { type: 'string' },
+    author_id: { type: 'string' },
   },
-  required: ["content", "post_id", "author_id"],
+  required: ['content', 'post_id', 'author_id'],
 };
 
 // get all comments
 // add "all" in url to differentiate with get a comment by id
-router.route("/all/:postId").get(async (req, res) => {
+router.route('/all/:postId').get(async (req, res) => {
   try {
     const post = await Posts.getPostById(Post, req.params.postId);
     const comments = post.comment_ids;
@@ -32,7 +36,7 @@ router.route("/all/:postId").get(async (req, res) => {
 });
 
 // add a new comment
-router.route("/").post(async (req, res) => {
+router.route('/').post(async (req, res) => {
   const valid = ajv.validate(schema, req.body);
   if (!valid) {
     res.status(400).json({ error: ajv.errors });
@@ -57,7 +61,7 @@ router.route("/").post(async (req, res) => {
 });
 
 // get a comment by id
-router.route("/:id").get(async (req, res) => {
+router.route('/:id').get(async (req, res) => {
   try {
     const comment = await Comments.getCommentById(Comment, req.params.id);
     res.status(200).send(comment);
@@ -67,23 +71,24 @@ router.route("/:id").get(async (req, res) => {
 });
 
 // update a comment by id
-router.route("/:id").put(async (req, res) => {
+router.route('/:id').put(async (req, res) => {
   try {
     const obj = req.body;
     // const { _id, ...rest } = obj;
     const comment = await Comments.getCommentById(Comment, req.params.id);
+    // eslint-disable-next-line eqeqeq
     if (obj.user_id == comment.author_id) {
       const updatedObject = { content: obj.content };
       const response = await Comments.updateCommentById(
         Comment,
         req.params.id,
-        updatedObject
+        updatedObject,
       );
       res.status(200).send(response);
     } else {
       res
         .status(400)
-        .json({ error: "You are not authorized to edit this comment!" });
+        .json({ error: 'You are not authorized to edit this comment!' });
       return;
     }
   } catch (error) {
@@ -92,7 +97,7 @@ router.route("/:id").put(async (req, res) => {
 });
 
 // delete a comment by comment id
-router.route("/:id").delete(async (req, res) => {
+router.route('/:id').delete(async (req, res) => {
   try {
     const comment = await Comments.getCommentById(Comment, req.params.id);
     const curUser = await Users.getUserById(User, req.body.userId);
@@ -100,14 +105,14 @@ router.route("/:id").delete(async (req, res) => {
       await Comments.deleteCommentById(Comment, req.params.id);
       const user = await Users.getUserById(User, comment.author_id);
       const userCommentIds = user.comment_ids.filter(
-        (id) => id != req.params.id
+        (id) => id != req.params.id,
       );
       await Users.updateUserById(User, comment.author_id, {
         comment_ids: userCommentIds,
       });
       const post = await Posts.getPostById(Post, comment.post_id);
       const postCommentIds = post.comment_ids.filter(
-        (id) => id != req.params.id
+        (id) => id != req.params.id,
       );
       await Posts.updatePostById(Post, comment.post_id, {
         comment_ids: postCommentIds,
@@ -115,7 +120,7 @@ router.route("/:id").delete(async (req, res) => {
     } else {
       res
         .status(400)
-        .json({ error: "You are not authorized to delete this comment!" });
+        .json({ error: 'You are not authorized to delete this comment!' });
       return;
     }
     res.status(200).send(comment);

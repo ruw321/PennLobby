@@ -1,7 +1,12 @@
-const router = require('express').Router();   
+/* eslint-disable func-names */
+/* eslint-disable prefer-const */
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable no-unused-vars */
+const router = require('express').Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const WebSocket = require('ws');
+
 const serverToken = jwt.sign({
   name: 'webserver',
 }, 'this_is_a_secret', { expiresIn: '1h' });
@@ -31,9 +36,9 @@ router.post('/register', function (req, _res) {
     name: req.body.username,
   }, 'this_is_a_secret', { expiresIn: '1h' });
   // Notify WS Server to update all connected clients
-  const msg = {type: 'new user', data: req.body.username}
-  connection.send(JSON.stringify(msg));  
-  return _res.status(200).json({ token: userToken, username: req.body.username});
+  const msg = { type: 'new user', data: req.body.username };
+  connection.send(JSON.stringify(msg));
+  return _res.status(200).json({ token: userToken, username: req.body.username });
 });
 
 router.post('/', function (req, _res) {
@@ -47,12 +52,12 @@ router.post('/', function (req, _res) {
   //   _res.status(401).json({ error: 'unauthorized user' });
   //   return;
   // }
-    const msg = {type: 'message', data: {to: req.body.to, from: req.body.from, message: req.body.message}}
-    // Notify WS Server
-    connection.send(JSON.stringify(msg)); 
-    _res.json({
-      message: 'message received',
-    });
+  const msg = { type: 'message', data: { to: req.body.to, from: req.body.from, message: req.body.message } };
+  // Notify WS Server
+  connection.send(JSON.stringify(msg));
+  _res.json({
+    message: 'message received',
+  });
 });
 
 module.exports = router;

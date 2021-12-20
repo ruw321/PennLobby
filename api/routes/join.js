@@ -1,20 +1,24 @@
-const express = require("express");
+/* eslint-disable no-unused-vars */
+/* eslint-disable prefer-const */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable import/order */
+const express = require('express');
+
 const router = express.Router();
-// make sure the name is different from the class instance 
+// make sure the name is different from the class instance
 // for example, it cannot be users = require(./users)
-const Users = require("../DBOperations/users");
+const Users = require('../DBOperations/users');
 const User = require('../models/User');
-const Groups = require("../DBOperations/groups");
+const Groups = require('../DBOperations/groups');
 const Group = require('../models/Group');
-// data validator 
-const Ajv = require("ajv");
+// data validator
+const Ajv = require('ajv');
 
-//data validator
-const ajv = new Ajv({ coerceTypes: true })
-
+// data validator
+const ajv = new Ajv({ coerceTypes: true });
 
 // join a group by id
-router.route("/").put(async (req, res) => {
+router.route('/').put(async (req, res) => {
   try {
     const userId = req.body._id;
     const groupId = req.body._group_id;
@@ -42,6 +46,5 @@ router.route("/").put(async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
 
 module.exports = router;

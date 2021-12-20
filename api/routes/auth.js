@@ -1,4 +1,9 @@
-const router = require('express').Router();   
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-shadow */
+/* eslint-disable consistent-return */
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable func-names */
+const router = require('express').Router();
 const passport = require('passport');
 
 router.post('/login', function (req, res, next) {
@@ -14,7 +19,7 @@ router.post('/login', function (req, res, next) {
         req.session.requestCount = 1;
       }
       if (req.session.requestCount > 4) {
-        return res.status(401).json({ error: "too many failed requests"})
+        return res.status(401).json({ error: 'too many failed requests' });
       }
       return res.status(401).json(err);
     }
@@ -26,18 +31,19 @@ router.post('/login', function (req, res, next) {
         req.session.requestCount = 1;
       }
       if (req.session.requestCount > 4) {
-        return res.status(401).json({ error: "too many failed requests"})
+        return res.status(401).json({ error: 'too many failed requests' });
       }
       return res.status(401).json(info);
     }
     // because we used the customized callback function
-    // so we have to manually call logIn function which 
-    // will trigger the userserialize functions to add 
+    // so we have to manually call logIn function which
+    // will trigger the userserialize functions to add
     // user information to the session
-    req.logIn(user, function(err) {    // if success
+    // eslint-disable-next-line space-before-function-paren
+    req.logIn(user, function(err) { // if success
       if (err) { return next(err); }
-      return res.status(200).json({ id: user.id, user: user.username});
-    })
+      return res.status(200).json({ id: user.id, user: user.username });
+    });
   })(req, res, next);
 });
 

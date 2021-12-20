@@ -19,7 +19,6 @@ module.exports = {
     "react/jsx-one-expression-per-line": "off",
     "implicit-arrow-linebreak": "off",
     "no-confusing-arrow": "off",
-    "react/jsx-filename-extension": "off",
     "react/prop-types": "off",
     "linebreak-style": 0,
     "import/no-extraneous-dependencies": "off",
