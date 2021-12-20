@@ -7,10 +7,12 @@
 |     master      |       main branch to accept production-ready codes only       |
 |   development   | dev branch to merge incoming changes from 4 personal branches |
 | deploy-backend  |                deployment branch for back-end                 |
+| deploy-pennlobby|                deployment branch for front-end                |
+| deploy-websocket|                deployment branch for websocket                |
+|      yang       |                 Yang Zhang's personal branch                  |
 |     miaoyan     |                Miaoyan Zhang's personal branch                |
 |     ruichen     |                Ruichen Zhang's personal branch                |
 |      wang       |                 Ruifan Wang's personal branch                 |
-|      yang       |                 Yang Zhang's personal branch                  |
 |    unit-test    |                       unit test branch                        |
 | end-to-end-test |                      cypress test branch                      |
 
@@ -84,6 +86,9 @@ api
 10. Run `npm start` in the `api` directory, then open `localhost:8080` in browser to see backend;
 11. Test the APIs using `curl` commands or Postman; make sense of the data format by checking out the Mongo Atlas console;
 12. Resolve ESLint errors during development (both frontend and backend); make sure to pass TravisCI check when committing changes to repo and merging into branches.
+
+
+<p align="center">< img src="https://github.com/cis557/fall-2021-project-group-centric-social-network-team-31/blob/93b835fb53b4d0081d9e3fa5577aba5db3710b37/doc/Figma.png" alt="Campground Page"></p >
 
 ### 5. Links
 
