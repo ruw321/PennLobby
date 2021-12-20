@@ -6,6 +6,7 @@
 | :-------------: | :-----------------------------------------------------------: |
 |     master      |       main branch to accept production-ready codes only       |
 |   development   | dev branch to merge incoming changes from 4 personal branches |
+| deploy-backend  |                deployment branch for back-end                 |
 |     miaoyan     |                Miaoyan Zhang's personal branch                |
 |     ruichen     |                Ruichen Zhang's personal branch                |
 |      wang       |                 Ruifan Wang's personal branch                 |
