@@ -28,5 +28,4 @@ jobs:
         - npm run build
 branches:
   only:
-  - main
   - unitTest

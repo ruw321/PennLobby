@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
-    "test": "NODE_ENV=test jest --coverage --forceExit --runInBand",
+    "test": "jest --coverage --forceExit --runInBand",
     "build": "npm install && cd .. && cd client && npm install && npm run build",
     "lint": "eslint DBOperations/ routes/ --ext .js,.ts,.jsx,.tsx --ignore-pattern *.test.jsx --ignore-pattern *.test.tsx"
   },

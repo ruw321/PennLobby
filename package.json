@@ -12,7 +12,7 @@
   "devDependencies": {},
   "scripts": {
     "start": "cd client && npm start",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cd client && npm test",
     "build": "cd client && npm install && cd ../api && npm install && cd..",
     "lint": "cd client && npm run lint && cd ../api && npm run lint && cd.."
   },
