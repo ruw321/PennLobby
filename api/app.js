@@ -18,21 +18,7 @@ const joinRouter = require("./routes/join");
 const quitRouter = require("./routes/quit");
 const notificationRouter = require("./routes/notification");
 const session = require('express-session');  // session middleware
-// const bodyParser = require('body-parser'); // parser middleware
 const passport = require('passport');
-const indexRouter = require('./routes/index');
-const userRouter = require('./routes/user');
-const authRouter = require('./routes/auth');
-const groupRouter = require('./routes/group');
-const postRouter = require('./routes/post');
-const commentRouter = require('./routes/comment');
-const topicRouter = require('./routes/topic');
-const messageRouter = require('./routes/message');
-const joinRouter = require('./routes/join');
-const quitRouter = require('./routes/quit');
-const notificationRouter = require('./routes/notification');
-const ExpressError = require('./utils/ExpressError');
-// const bodyParser = require('body-parser'); // parser middleware
 const MongoStore = require('connect-mongo')(session);
 const sThree = require('./s3.js');
 
@@ -119,5 +105,4 @@ const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`Serving on port ${port}`);
 });
-
 module.exports = app;
