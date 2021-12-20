@@ -248,6 +248,9 @@ userSchema.methods.verifyPassword = function(candidatePassword, cb) {
 * We stored MONGODB URL that contains our account's password in the .env file. The environment variable is manually added to the Heroku deployment.
 
 ## Final Webpage Implementation:
+After 4 months of hard work, PennLobby was successfully deployed on Heroku. We are extremely glad to see that the final implementation perfectly lives up to what was expected during the initial UI/UX design. 
+
+## Final Webpage Implementation:
 1. Home
 
 ***
