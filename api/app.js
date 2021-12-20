@@ -17,7 +17,6 @@ const messageRouter = require("./routes/message");
 const joinRouter = require("./routes/join");
 const quitRouter = require("./routes/quit");
 const notificationRouter = require("./routes/notification");
-const ExpressError = require("./utils/ExpressError");
 const session = require('express-session');  // session middleware
 // const bodyParser = require('body-parser'); // parser middleware
 const passport = require('passport');
@@ -96,7 +95,7 @@ app.get('/api/s3Url', async (req, res) => {
 
 // '*': match any other url if all previous urls do not match
 app.all('*', (req, res, next) => {
-  next(new ExpressError('Page Not Found', 404));
+  next(createError(404));
 });
 
 app.use(function (req, res, next) {
