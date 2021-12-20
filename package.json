@@ -12,9 +12,9 @@
   "devDependencies": {},
   "scripts": {
     "start": "cd client && npm start",
-    "test": "cd client && npm test",
-    "build": "cd client && npm install && cd ../api && npm install && cd..",
-    "lint": "cd client && npm run lint && cd ../api && npm run lint && cd.."
+    "test": "cd api && npm test && cd ..",
+    "build": "cd client && npm install && cd ../api && npm install && cd ..",
+    "lint": "cd client && npm run lint && cd ../api && npm run lint && cd .."
   },
   "engines": {
     "node": "v14.15.1"

@@ -47,7 +47,6 @@ const schema = {
 // get all users
 router.route('/').get(async (req, res) => {
   try {
-    // console.log(' !!get all!!user!');
     const users = await Users.getUsers(User);
     res.status(200).send(users);
   } catch (error) {
@@ -95,15 +94,11 @@ router.route('/id/:id').get(async (req, res) => {
 
 // get a user by username
 router.route('/username/:username').get(async (req, res) => {
-  if (req.isAuthenticated) {
-    try {
-      const user = await Users.getUserByUsername(User, req.params.username);
-      res.status(200).send(user);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  } else {
-    res.status(401).json({ error: 'You are not authorized.' });
+  try {
+    const user = await Users.getUserByUsername(User, req.params.username);
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -119,33 +114,25 @@ router.route('/email/:email').get(async (req, res) => {
 
 // user change password
 router.route('/password/:id').put(async (req, res) => {
-  if (req.isAuthenticated) {
-    try {
-      const pass = req.body.password;
-      const { id } = req.params;
-      const user = await Users.changePassword(User, id, pass);
-      res.status(200).send(user);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  } else {
-    res.status(401).json({ error: 'You are not authorized.' });
+  try {
+    const pass = req.body.password;
+    const { id } = req.params;
+    const user = await Users.changePassword(User, id, pass);
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
 // update a user by id
 router.route('/:id').put(async (req, res) => {
-  if (req.isAuthenticated) {
-    try {
-      const obj = req.body;
-      const { _id, ...rest } = obj;
-      const user = await Users.updateUserById(User, req.params.id, rest);
-      res.status(200).send(user);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  } else {
-    res.status(401).json({ error: 'You are not authorized.' });
+  try {
+    const obj = req.body;
+    const { _id, ...rest } = obj;
+    const user = await Users.updateUserById(User, req.params.id, rest);
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -163,93 +150,83 @@ router.route('/:id').delete(async (req, res) => {
   }
 });
 
-// join a group by id
-router.route('/join/').put(async (req, res) => {
+// // join a group by id
+// router.route("/join/").put(async (req, res) => {
+//   try {
+//     const userId = req.body._id;
+//     const groupId = req.body._group_id;
+//     const user = await Users.getUserById(User, userId);
+//     if (user.group_ids.includes(groupId)) {
+//       res.status(400).json({ error: "already in this group" });
+//       return;
+//     }
+//     user.group_ids.push(groupId);
+//     const { _id, ...rest } = user;
+//     const newUsers = await Users.updateUserById(User, req.body._id, rest);
+//     res.status(200).send(newUsers);
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//   }
+// });
+
+// a group admin promotes another group member from member to admin
+router.route('/promote/:userToPromoteId').put(async (req, res) => {
   try {
-    // console.log(' !!put!!user!');
-    const userId = req.body._id;
-    const groupId = req.body._group_id;
-    const user = await Users.getUserById(User, userId);
-    if (user.group_ids.includes(groupId)) {
-      res.status(400).json({ error: 'already in this group' });
+    const user = await Users.getUserById(User, req.body.user_id);
+    const userToPromote = await Users.getUserById(
+      User,
+      req.params.userToPromoteId,
+    );
+
+    const g_id = req.body.group_id;
+    if (userToPromote.group_ids.includes(req.body.group_id) && user.group_admins.includes(g_id)) {
+      const groupAdmins = userToPromote.group_admins;
+      groupAdmins.push(g_id);
+      const response = await Users.updateUserById(
+        User,
+        req.params.userToPromoteId,
+        { group_admins: groupAdmins },
+      );
+      res.status(200).send(response);
+    } else {
+      res
+        .status(400)
+        .json({ error: 'You are either not authorized to promote this user, or this user is not in the group!' });
       return;
     }
-    user.group_ids.push(groupId);
-    // console.log(' !!user!', user);
-    const { _id, ...rest } = user;
-    const newUsers = await Users.updateUserById(User, req.body._id, rest);
-    res.status(200).send(newUsers);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
-// a group admin promotes another group member from member to admin
-router.route('/promote/:userToPromoteId').put(async (req, res) => {
-  if (req.isAuthenticated) {
-    try {
-      const user = await Users.getUserById(User, req.body.user_id);
-      const userToPromote = await Users.getUserById(
-        User,
-        req.params.userToPromoteId,
-      );
-
-      const g_id = req.body.group_id;
-      if (userToPromote.group_ids.includes(req.body.group_id) && user.group_admins.includes(g_id)) {
-        const groupAdmins = userToPromote.group_admins;
-        groupAdmins.push(g_id);
-        const response = await Users.updateUserById(
-          User,
-          req.params.userToPromoteId,
-          { group_admins: groupAdmins },
-        );
-        res.status(200).send(response);
-      } else {
-        res
-          .status(400)
-          .json({ error: 'You are either not authorized to promote this user, or this user is not in the group!' });
-        return;
-      }
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  } else {
-    res.status(401).json({ error: 'You are not authorized.' });
-  }
-});
-
 // a group admin demotes another group member from admin to member
 router.route('/demote/:userToDemote').put(async (req, res) => {
-  if (req.isAuthenticated) {
-    try {
-      const user = await Users.getUserById(User, req.body.user_id);
-      const UserToDemote = await Users.getUserById(
+  try {
+    const user = await Users.getUserById(User, req.body.user_id);
+    const UserToDemote = await Users.getUserById(
+      User,
+      req.params.userToDemote,
+    );
+    const gIDs = user.group_admins;
+    const gID = req.body.group_id;
+    const currG = await Groups.getGroupById(Group, gID);
+    if (UserToDemote.group_ids.includes(gID) && gIDs.includes(gID) && currG.owner != req.params.userToDemote) {
+      const gIDs2 = UserToDemote.group_admins;
+      gIDs2.splice(gIDs2.indexOf(gID), 1);
+      const response = await Users.updateUserById(
         User,
         req.params.userToDemote,
+        { group_admins: gIDs2 },
       );
-      const gIDs = user.group_admins;
-      const gID = req.body.group_id;
-      const currG = await Groups.getGroupById(Group, gID);
-      if (UserToDemote.group_ids.includes(gID) && gIDs.includes(gID) && currG.owner != req.params.userToDemote) {
-        const gIDs2 = UserToDemote.group_admins;
-        gIDs2.splice(gIDs2.indexOf(gID), 1);
-        const response = await Users.updateUserById(
-          User,
-          req.params.userToDemote,
-          { group_admins: gIDs2 },
-        );
-        res.status(200).send(response);
-      } else {
-        res
-          .status(400)
-          .json({ error: 'You are either not authorized to demote this user, or this user is not in the group!' });
-        return;
-      }
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(200).send(response);
+    } else {
+      res
+        .status(400)
+        .json({ error: 'You are either not authorized to demote this user, or this user is not in the group!' });
+      return;
     }
-  } else {
-    res.status(401).json({ error: 'You are not authorized.' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 

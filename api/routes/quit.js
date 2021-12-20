@@ -10,15 +10,10 @@ const Users = require('../DBOperations/users');
 const User = require('../models/User');
 const Groups = require('../DBOperations/groups');
 const Group = require('../models/Group');
-// data validator
-
-// data validator
-const ajv = new Ajv({ coerceTypes: true });
 
 // quit a group by id
 router.route('/').delete(async (req, res) => {
   try {
-    // console.log('check: start deleting user ');
     const userId = req.body._id;
     const groupId = req.body._group_id;
     const user = await Users.getUserById(User, userId);

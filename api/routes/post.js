@@ -137,7 +137,6 @@ router.route('/:postId').delete(async (req, res) => {
     }
     res.status(200).send(post);
   } catch (error) {
-    // console.log('exception');
     res.status(400).json({ error: error.message });
   }
 });

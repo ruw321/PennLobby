@@ -20,7 +20,6 @@ const ajv = new Ajv({ coerceTypes: true });
 // join a group by id
 router.route('/').put(async (req, res) => {
   try {
-    // console.log('check: start putting user ');
     const userId = req.body._id;
     const groupId = req.body._group_id;
     const user = await Users.getUserById(User, userId);
@@ -30,7 +29,6 @@ router.route('/').put(async (req, res) => {
     }
 
     user.group_ids.push(groupId);
-    // console.log(' user = ', user);
     let { _id, ...rest } = user;
     const newUsers = await Users.updateUserById(User, userId, rest);
 

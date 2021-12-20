@@ -100,8 +100,6 @@ router.route('/:id').put(async (req, res) => {
 router.route('/:id').delete(async (req, res) => {
   try {
     const comment = await Comments.getCommentById(Comment, req.params.id);
-    // console.log(req.params.id);
-    // console.log(comment);
     const curUser = await Users.getUserById(User, req.body.userId);
     if (req.body.userId == comment.author_id || curUser.admin) {
       await Comments.deleteCommentById(Comment, req.params.id);

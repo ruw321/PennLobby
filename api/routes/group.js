@@ -8,11 +8,11 @@ const express = require('express');
 
 const router = express.Router();
 const Groups = require('../DBOperations/groups');
-const Posts = require('../DBOperations/posts');
+// const Posts = require('../DBOperations/posts');
 const Users = require('../DBOperations/users');
-const Topics = require('../DBOperations/topics');
+// const Topics = require('../DBOperations/topics');
 const Group = require('../models/Group');
-const Post = require('../models/Post');
+// const Post = require('../models/Post');
 const User = require('../models/User');
 const Topic = require('../models/Topic');
 const Ajv = require('ajv');
@@ -118,49 +118,6 @@ router.route('/:id').put(async (req, res) => {
     const obj = req.body;
     const { _id, ...rest } = obj;
     const group = await Groups.updateGroupById(Group, req.body._id, rest);
-    res.status(200).send(group);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-// delete a group by id
-router.route('/:groupId').delete(async (req, res) => {
-  try {
-    const group = await Groups.getGroupById(Group, req.params.groupId);
-    const owner = await Users.getUserById(User, group.owner);
-    const curUser = await Users.getUserById(User, req.body.userId);
-    const groupAdmins = curUser.group_admins;
-
-    if (owner == curUser || groupAdmins.includes(req.params.groupId)) {
-      const topicIds = group.topic_ids;
-      for (let i = 0; i < topicIds.length; i++) {
-        const topic = await Topics.getTopicById(Topic, topicIds[i]);
-        const topicGroupIds = topic.group_ids.filter((id) => id != topicIds[i]);
-        await Topics.updateTopicById(Topic, topicIds[i], {
-          group_ids: topicGroupIds,
-        });
-      }
-
-      const memberIds = group.member_ids;
-      for (let i = 0; i < memberIds.length; i++) {
-        const user = await Users.getUserById(User, memberIds[i]);
-        const userGroupIds = user.group_ids.filter((id) => id != memberIds[i]);
-        await Users.updateUserById(User, memberIds[i], {
-          group_ids: userGroupIds,
-        });
-      }
-
-      const postIds = group.post_ids;
-      for (let i = 0; i < postIds.length; i++) {
-        await Posts.deletePostById(Post, postIds[i]);
-      }
-    } else {
-      res
-        .status(400)
-        .json({ error: 'You are not authorized to delete this group!' });
-      return;
-    }
     res.status(200).send(group);
   } catch (error) {
     res.status(400).json({ error: error.message });
