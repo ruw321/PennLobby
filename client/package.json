@@ -18,6 +18,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.24.0",
     "dotenv": "^10.0.0",
+    "jest-fetch-mock": "^3.0.3",
     "js-cookie": "^3.0.1",
     "material-ui": "^0.20.2",
     "prop-types": "^15.7.2",
@@ -65,5 +66,8 @@
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": ".eslintrc.js",
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "jest": {
+    "resetMocks": false
+  }
 }
