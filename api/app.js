@@ -1,15 +1,24 @@
-/* eslint-disable no-console */
-/* eslint-disable import/extensions */
-/* eslint-disable import/order */
-const createError = require('http-errors');
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const session = require('express-session'); // session middleware
+const createError = require("http-errors");
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const indexRouter = require("./routes/index");
+const userRouter = require("./routes/user");
+const authRouter = require("./routes/auth");
+const groupRouter = require("./routes/group");
+const postRouter = require("./routes/post");
+const commentRouter = require("./routes/comment");
+const topicRouter = require("./routes/topic");
+const messageRouter = require("./routes/message");
+const joinRouter = require("./routes/join");
+const quitRouter = require("./routes/quit");
+const notificationRouter = require("./routes/notification");
+const session = require('express-session');  // session middleware
+// const bodyParser = require('body-parser'); // parser middleware
 const passport = require('passport');
 const indexRouter = require('./routes/index');
 const userRouter = require('./routes/user');
@@ -98,7 +107,7 @@ app.get('/api/s3Url', async (req, res) => {
 
 // '*': match any other url if all previous urls do not match
 app.all('*', (req, res, next) => {
-  next(new ExpressError('Page Not Found', 404));
+  next(createError(404));
 });
 
 app.use((req, res, next) => {
