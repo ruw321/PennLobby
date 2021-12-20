@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable prefer-const */
 /* eslint-disable prefer-arrow-callback */
 /* eslint-disable no-unused-vars */
