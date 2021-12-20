@@ -88,7 +88,7 @@ api
 12. Resolve ESLint errors during development (both frontend and backend); make sure to pass TravisCI check when committing changes to repo and merging into branches.
 
 
-<p align="center">< img src="https://github.com/cis557/fall-2021-project-group-centric-social-network-team-31/blob/93b835fb53b4d0081d9e3fa5577aba5db3710b37/doc/Figma.png" alt="Campground Page"></p >
+<p align="center">< img src="https://drive.google.com/file/d/1KgAZLse3hNsqIzDoRD4v4pFZ-T5p5GiB/view?usp=sharing" alt="Campground Page"></p >
 
 ### 5. Links
 
