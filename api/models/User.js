@@ -1,5 +1,11 @@
-const mongoose = require("mongoose");
+/* eslint-disable no-shadow */
+/* eslint-disable consistent-return */
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable func-names */
+/* eslint-disable prefer-destructuring */
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'); // this is used for hashing password
+
 const SALT_WORK_FACTOR = 10; // this is used for hashing password
 const passportLocalMongoose = require('passport-local-mongoose');
 
@@ -11,50 +17,51 @@ const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   password: { type: String, required: true },
-  group_ids: [{ type: Schema.Types.ObjectId, ref: "Group" }],
-  post_ids: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-  comment_ids: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  following: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  blocking: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  blocked_by: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  group_admins: [{ type: Schema.Types.ObjectId, ref: "Group" }],
+  group_ids: [{ type: Schema.Types.ObjectId, ref: 'Group' }],
+  post_ids: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+  comment_ids: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+  following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  blocking: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  blocked_by: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  group_admins: [{ type: Schema.Types.ObjectId, ref: 'Group' }],
   created_at: { type: Date, default: Date.now(), required: true },
-  avatar_url: { type: String, default: "" },
-  notification_ids: [ { type: Schema.Types.ObjectId, ref: "Notification" } ],
+  avatar_url: { type: String, default: '' },
+  // eslint-disable-next-line array-bracket-spacing
+  notification_ids: [ { type: Schema.Types.ObjectId, ref: 'Notification' } ],
 });
 
-// this function is referenced from: 
+// this function is referenced from:
 // https://stackoverflow.com/questions/14588032/mongoose-password-hashing
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
   const user = this;
 
   // only hash the password if it has been modified (or is new)
   if (!user.isModified('password')) return next();
 
   // generate a salt
-  bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-      if (err) return next(err);
+  bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
+    if (err) return next(err);
 
-      // hash the password using our new salt
-      bcrypt.hash(user.password, salt, function(err, hash) {
-          if (err) return next(err);
-          // override the cleartext password with the hashed one
-          user.password = hash;
-          next();
-      });
+    // hash the password using our new salt
+    bcrypt.hash(user.password, salt, function (err, hash) {
+      if (err) return next(err);
+      // override the cleartext password with the hashed one
+      user.password = hash;
+      next();
+    });
   });
 });
 
-userSchema.methods.verifyPassword = function(candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-      if (err) return cb(err);
-      cb(null, isMatch);
+userSchema.methods.verifyPassword = function (candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+    if (err) return cb(err);
+    cb(null, isMatch);
   });
 };
 
 userSchema.plugin(passportLocalMongoose);
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

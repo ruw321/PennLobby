@@ -1,13 +1,16 @@
-const request = require("supertest");
-const dbLib = require("../DBOperations/users");
-const User = require("../models/User");
-const DBConnection = require("../DBOperationsTests/connect");
-const webapp = require("../app");
+/* eslint-disable no-undef */
+/* eslint-disable no-shadow */
+/* eslint-disable no-unused-vars */
+const request = require('supertest');
+const dbLib = require('../DBOperations/users');
+const User = require('../models/User');
+const DBConnection = require('../DBOperationsTests/connect');
+const webapp = require('../app');
 
 // clean up the database after each test
 const clearDatabase = async (dbLib) => {
   try {
-    await dbLib.deleteOne({ username: "testUser1" });
+    await dbLib.deleteOne({ username: 'testUser1' });
   } catch (err) {
     throw new Error(`Error clearing the database: ${err.message}`);
   }
@@ -16,11 +19,11 @@ const clearDatabase = async (dbLib) => {
 beforeAll(async () => {
   await DBConnection.connect();
   const testUser = {
-    username: "testUser1",
-    email: "test1@gmail.com",
-    firstName: "ruichen",
-    lastName: "zhang",
-    password: "test",
+    username: 'testUser1',
+    email: 'test1@gmail.com',
+    firstName: 'ruichen',
+    lastName: 'zhang',
+    password: 'test',
   };
   await User.create(testUser);
 });
@@ -29,13 +32,13 @@ afterEach(async () => {
   await clearDatabase(User);
 });
 
-describe("Endpoint API & integration tests", () => {
+describe('Endpoint API & integration tests', () => {
   const testUser2 = {
-    username: "testUser2",
-    email: "test2@gmail.com",
-    firstName: "ruichen2",
-    lastName: "zhang2",
-    password: "test2",
+    username: 'testUser2',
+    email: 'test2@gmail.com',
+    firstName: 'ruichen2',
+    lastName: 'zhang2',
+    password: 'test2',
   };
 
   // test("add a new user", async () => {
@@ -52,9 +55,9 @@ describe("Endpoint API & integration tests", () => {
   //   await User.deleteOne({ username: "testUser2" });
   // });
 
-  test("get all users", async () => {
+  test('get all users', async () => {
     request(webapp)
-      .get("/api/user/")
+      .get('/api/user/')
       .expect(200)
       .then((response) => {
         const users = response.body;

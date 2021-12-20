@@ -1,21 +1,22 @@
-const express = require("express");
+const express = require('express');
+
 const router = express.Router();
-const Topics = require("../DBOperations/topics");
-const Topic = require("../models/Topic");
-const Ajv = require("ajv");
+const Ajv = require('ajv');
+const Topics = require('../DBOperations/topics');
+const Topic = require('../models/Topic');
 
 const ajv = new Ajv({ coerceTypes: true });
 const schema = {
-  type: "object",
+  type: 'object',
   properties: {
-    name: { type: "string" },
-    group_ids: { type: "array" },
+    name: { type: 'string' },
+    group_ids: { type: 'array' },
   },
-  required: ["name"],
+  required: ['name'],
 };
 
 // get all topics
-router.route("/").get(async (req, res) => {
+router.route('/').get(async (req, res) => {
   try {
     const topics = await Topics.getTopics(Topic);
     res.status(200).send(topics);
@@ -25,14 +26,14 @@ router.route("/").get(async (req, res) => {
 });
 
 // add a new topic
-router.route("/").post(async (req, res) => {
+router.route('/').post(async (req, res) => {
   const valid = ajv.validate(schema, req.body);
   if (!valid) {
     res.status(400).json({ error: ajv.errors });
     return;
   }
   try {
-    // const exists = await Topics.getTopicById(Topic, req.body._id); 
+    // const exists = await Topics.getTopicById(Topic, req.body._id);
     // if (exists) {
     //   res.status(409).json({ error: "topic is already in the database" });
     //   return;
@@ -45,9 +46,9 @@ router.route("/").post(async (req, res) => {
 });
 
 // get a topic by id
-router.route("/id/:topicId").get(async (req, res) => {
+router.route('/id/:topicId').get(async (req, res) => {
   try {
-    const topic = await Topics.getTopicById(Topic, req.params.topicId); 
+    const topic = await Topics.getTopicById(Topic, req.params.topicId);
     res.status(200).send(topic);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -55,9 +56,9 @@ router.route("/id/:topicId").get(async (req, res) => {
 });
 
 // get a topic by name
-router.route("/name/:topicName").get(async (req, res) => {
+router.route('/name/:topicName').get(async (req, res) => {
   try {
-    const topic = await Topics.getTopicByName(Topic, req.params.topicName); 
+    const topic = await Topics.getTopicByName(Topic, req.params.topicName);
     res.status(200).send(topic);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -65,10 +66,10 @@ router.route("/name/:topicName").get(async (req, res) => {
 });
 
 // update a topic by id
-router.route("/:id").put(async (req, res) => {
+router.route('/:id').put(async (req, res) => {
   try {
     const obj = req.body;
-    const { _id, ...rest} = obj;
+    const { _id, ...rest } = obj;
     const topic = await Topics.updateTopicById(Topic, req.params.id, rest);
     res.status(200).send(topic);
   } catch (error) {
@@ -77,7 +78,7 @@ router.route("/:id").put(async (req, res) => {
 });
 
 // delete a topic by id
-router.route("/:id").delete(async (req, res) => {
+router.route('/:id').delete(async (req, res) => {
   try {
     const topic = await Topics.deleteTopicById(Topic, req.params.id);
     res.status(200).send(topic);

@@ -1,30 +1,36 @@
-const express = require("express");
+/* eslint-disable no-plusplus */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable eqeqeq */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-underscore-dangle */
+const express = require('express');
+
 const router = express.Router();
-const Posts = require("../DBOperations/posts");
-const Users = require("../DBOperations/users");
-const Comments = require("../DBOperations/comments");
-const Groups = require("../DBOperations/groups");
-const Post = require("../models/Post");
-const User = require("../models/User");
-const Comment = require("../models/Comment");
-const Group = require("../models/Group");
-const Ajv = require("ajv");
+const Ajv = require('ajv');
+const Posts = require('../DBOperations/posts');
+const Users = require('../DBOperations/users');
+const Comments = require('../DBOperations/comments');
+const Groups = require('../DBOperations/groups');
+const Post = require('../models/Post');
+const User = require('../models/User');
+const Comment = require('../models/Comment');
+const Group = require('../models/Group');
 
 const ajv = new Ajv({ coerceTypes: true });
 const schema = {
-  type: "object",
+  type: 'object',
   properties: {
-    title: { type: "string" },
-    content: { type: "string" },
-    author_id: { type: "string" },
-    group_id: { type: "string" },
-    comment_ids: { type: "array" },
+    title: { type: 'string' },
+    content: { type: 'string' },
+    author_id: { type: 'string' },
+    group_id: { type: 'string' },
+    comment_ids: { type: 'array' },
   },
-  required: ["title", "content", "author_id", "group_id"],
+  required: ['title', 'content', 'author_id', 'group_id'],
 };
 
 // get all posts
-router.route("/").get(async (req, res) => {
+router.route('/').get(async (req, res) => {
   try {
     const posts = await Posts.getPosts(Post);
     res.status(200).send(posts);
@@ -34,7 +40,7 @@ router.route("/").get(async (req, res) => {
 });
 
 // add a new post
-router.route("/").post(async (req, res) => {
+router.route('/').post(async (req, res) => {
   const valid = ajv.validate(schema, req.body);
   if (!valid) {
     res.status(400).json({ error: ajv.errors });
@@ -66,7 +72,7 @@ router.route("/").post(async (req, res) => {
 });
 
 // get a post by post id
-router.route("/:id").get(async (req, res) => {
+router.route('/:id').get(async (req, res) => {
   try {
     const post = await Posts.getPostById(Post, req.body._id); // req.body.post_id
     res.status(200).send(post);
@@ -76,7 +82,7 @@ router.route("/:id").get(async (req, res) => {
 });
 
 // update a post by post id
-router.route("/:id").put(async (req, res) => {
+router.route('/:id').put(async (req, res) => {
   try {
     const obj = req.body;
     const { _id, ...rest } = obj;
@@ -88,7 +94,7 @@ router.route("/:id").put(async (req, res) => {
 });
 
 // an admin user marks a post for deletion
-router.route("/flag/:postId").put(async (req, res) => {
+router.route('/flag/:postId').put(async (req, res) => {
   try {
     const userId = req.body.user_id;
     const post = await Posts.updatePostById(Post, req.params.postId, {
@@ -101,7 +107,7 @@ router.route("/flag/:postId").put(async (req, res) => {
 });
 
 // delete a post by post id
-router.route("/:postId").delete(async (req, res) => {
+router.route('/:postId').delete(async (req, res) => {
   try {
     const post = await Posts.getPostById(Post, req.params.postId);
     const group = await Groups.getGroupById(Group, req.body.groupId);
@@ -110,7 +116,7 @@ router.route("/:postId").delete(async (req, res) => {
       await Posts.deletePostById(Post, req.params.postId);
 
       const groupPostIds = group.post_ids.filter(
-        (id) => id != req.params.postId
+        (id) => id != req.params.postId,
       );
       await Groups.updateGroupById(Group, req.body.groupId, {
         post_ids: groupPostIds,
@@ -126,12 +132,12 @@ router.route("/:postId").delete(async (req, res) => {
     } else {
       res
         .status(400)
-        .json({ error: "You are not authorized to delete this post!" });
+        .json({ error: 'You are not authorized to delete this post!' });
       return;
     }
     res.status(200).send(post);
   } catch (error) {
-    console.log("exception");
+    // console.log('exception');
     res.status(400).json({ error: error.message });
   }
 });

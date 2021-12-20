@@ -45,7 +45,7 @@ module.exports.deleteNotificationByReceiver = async (collection, authorID) => {
     return res;
   } catch (err) {
     throw new Error(
-      `Error deleting the notification by author: ${err.message}`
+      `Error deleting the notification by author: ${err.message}`,
     );
   }
 };
@@ -55,7 +55,7 @@ module.exports.updateNotificationById = async (collection, ID, updatedObject) =>
   try {
     const response = await collection.updateOne(
       { _id: ID },
-      { $set: updatedObject }
+      { $set: updatedObject },
     );
     return response;
   } catch (err) {

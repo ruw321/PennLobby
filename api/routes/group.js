@@ -1,33 +1,40 @@
-const express = require("express");
+/* eslint-disable eqeqeq */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-plusplus */
+/* eslint-disable camelcase */
+/* eslint-disable import/order */
+const express = require('express');
+
 const router = express.Router();
-const Groups = require("../DBOperations/groups");
-const Posts = require("../DBOperations/posts");
-const Users = require("../DBOperations/users");
-const Topics = require("../DBOperations/topics");
-const Group = require("../models/Group");
-const Post = require("../models/Post");
-const User = require("../models/User");
-const Topic = require("../models/Topic");
-const Ajv = require("ajv");
-const top = require("../DBOperations/topics");
+const Groups = require('../DBOperations/groups');
+const Posts = require('../DBOperations/posts');
+const Users = require('../DBOperations/users');
+const Topics = require('../DBOperations/topics');
+const Group = require('../models/Group');
+const Post = require('../models/Post');
+const User = require('../models/User');
+const Topic = require('../models/Topic');
+const Ajv = require('ajv');
+const top = require('../DBOperations/topics');
 
 const ajv = new Ajv({ coerceTypes: true });
 const schema = {
-  type: "object",
+  type: 'object',
   properties: {
-    name: { type: "string" },
-    owner: { type: "string" },
-    type: { type: "string" },
-    description: { type: "string" },
-    topic_ids: { type: "array" },
-    member_ids: { type: "array" },
-    post_ids: { type: "array" },
+    name: { type: 'string' },
+    owner: { type: 'string' },
+    type: { type: 'string' },
+    description: { type: 'string' },
+    topic_ids: { type: 'array' },
+    member_ids: { type: 'array' },
+    post_ids: { type: 'array' },
   },
-  required: ["name", "owner", "type", "description"],
+  required: ['name', 'owner', 'type', 'description'],
 };
 
 // get all groups
-router.route("/").get(async (req, res) => {
+router.route('/').get(async (req, res) => {
   try {
     const groups = await Groups.getGroups(Group);
     res.status(200).send(groups);
@@ -37,7 +44,7 @@ router.route("/").get(async (req, res) => {
 });
 
 // get all public groups
-router.route("/public").get(async (_req, res) => {
+router.route('/public').get(async (_req, res) => {
   try {
     const p_groups = await Groups.getPublicGroups(Group);
     res.status(200).send(p_groups);
@@ -47,7 +54,7 @@ router.route("/public").get(async (_req, res) => {
 });
 
 // add a new group
-router.route("/").post(async (req, res) => {
+router.route('/').post(async (req, res) => {
   const valid = ajv.validate(schema, req.body);
   if (!valid) {
     res.status(400).json({ error: ajv.errors });
@@ -96,7 +103,7 @@ router.route("/").post(async (req, res) => {
 });
 
 // get a group by id
-router.route("/:id").get(async (req, res) => {
+router.route('/:id').get(async (req, res) => {
   try {
     const group = await Groups.getGroupById(Group, req.params.id);
     res.status(200).send(group);
@@ -106,7 +113,7 @@ router.route("/:id").get(async (req, res) => {
 });
 
 // update a group by id
-router.route("/:id").put(async (req, res) => {
+router.route('/:id').put(async (req, res) => {
   try {
     const obj = req.body;
     const { _id, ...rest } = obj;
@@ -118,7 +125,7 @@ router.route("/:id").put(async (req, res) => {
 });
 
 // delete a group by id
-router.route("/:groupId").delete(async (req, res) => {
+router.route('/:groupId').delete(async (req, res) => {
   try {
     const group = await Groups.getGroupById(Group, req.params.groupId);
     const owner = await Users.getUserById(User, group.owner);
@@ -151,7 +158,7 @@ router.route("/:groupId").delete(async (req, res) => {
     } else {
       res
         .status(400)
-        .json({ error: "You are not authorized to delete this group!" });
+        .json({ error: 'You are not authorized to delete this group!' });
       return;
     }
     res.status(200).send(group);
